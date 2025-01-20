@@ -1,18 +1,20 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 
 @Service
-class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository) {
+class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @Value("\${frontend.url}") val frontendUrl: String) {
 
   fun createBreachNotice(breachNotice: BreachNotice) =
     breachNoticeRepository.save(
@@ -33,7 +35,7 @@ class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository) {
         offenderAddress = breachNotice.offenderAddress?.toEntity(),
         replyAddress = breachNotice.replyAddress?.toEntity()
       )
-    ).id
+    ).id.let{ CreateResponse(it, "$frontendUrl/breach-notice?uuid=$it") }
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
     BreachNoticeDetails(

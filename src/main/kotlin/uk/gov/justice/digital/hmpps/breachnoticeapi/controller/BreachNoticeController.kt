@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
@@ -45,11 +46,11 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   @PostMapping
   @Tag(name = "Breach Notice")
   @Operation(
-    summary = "Insert a Breach Notice",
-    description = "Calls through the breach notice service to insert a breach notice",
+    summary = "Create a Breach Notice",
+    description = "Calls through the breach notice service to create a breach notice",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
-      ApiResponse(responseCode = "200", description = "breach notice inserted"),
+      ApiResponse(responseCode = "201", description = "Breach Notice created"),
       ApiResponse(
         responseCode = "401",
         description = "Unauthorized to access this endpoint",
@@ -62,5 +63,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
       ),
     ],
   )
-  fun createBreachNotice(@RequestBody breachNotice: BreachNotice): UUID? = breachNoticeService.createBreachNotice(breachNotice)
+  @ResponseStatus(HttpStatus.CREATED)
+  fun createBreachNotice(@RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 }

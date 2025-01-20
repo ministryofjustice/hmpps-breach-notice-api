@@ -17,21 +17,21 @@ data class BreachNoticeEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
   val crn: String,
-  val dateOfLetter: LocalDate,
-  val referenceNumber: String,
+  val dateOfLetter: LocalDate? = null,
+  val referenceNumber: String? = null,
 
-  val responseRequiredDate: LocalDate,
-  val breachNoticeTypeCode: String,
-  val breachConditionTypeCode: String,
-  val responsibleOfficer: String,
-  val contactNumber: String,
-  val nextAppointmentType: String,
-  val nextAppointmentDate: LocalDateTime,
-  val nextAppointmentLocation: String,
-  val nextAppointmentOfficer: String,
+  val responseRequiredDate: LocalDate? = null,
+  val breachNoticeTypeCode: String? = null,
+  val breachConditionTypeCode: String? = null,
+  val responsibleOfficer: String? = null,
+  val contactNumber: String? = null,
+  val nextAppointmentType: String? = null,
+  val nextAppointmentDate: LocalDateTime? = null,
+  val nextAppointmentLocation: String? = null,
+  val nextAppointmentOfficer: String? = null,
   @OneToOne
   val nextAppointmentContact: BreachNoticeContactEntity? = null,
-  val completedDate: LocalDateTime,
+  val completedDate: LocalDateTime? = null,
 
   @CreatedBy
   val createdByUser: String? = null,
