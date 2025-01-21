@@ -40,9 +40,9 @@ class AuthorisationTest : IntegrationTestBase() {
 //        .expectBody()
 //        .jsonPath("$").value<String> {
 //          assertThat(it).startsWith("${LocalDate.now()}")
-        }
     }
   }
+}
 
 //  @Nested
 //  @DisplayName("GET /breach-notice-service/breach-notice/{parameter}")
@@ -111,4 +111,4 @@ class AuthorisationTest : IntegrationTestBase() {
 //      hmppsAuth.verify(1, WireMock.postRequestedFor(WireMock.urlEqualTo("/auth/oauth/token")))
 //    }
 //  }
-//}
+// }

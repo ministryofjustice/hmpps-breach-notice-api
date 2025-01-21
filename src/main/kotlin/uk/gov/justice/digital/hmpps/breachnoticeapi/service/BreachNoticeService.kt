@@ -12,7 +12,6 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepos
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-
 @Service
 class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @Value("\${frontend.url}") val frontendUrl: String) {
 
@@ -33,9 +32,9 @@ class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @V
         nextAppointmentOfficer = breachNotice.nextAppointmentOfficer,
         completedDate = breachNotice.completedDate,
         offenderAddress = breachNotice.offenderAddress?.toEntity(),
-        replyAddress = breachNotice.replyAddress?.toEntity()
-      )
-    ).id.let{ CreateResponse(it, "$frontendUrl/breach-notice?uuid=$it") }
+        replyAddress = breachNotice.replyAddress?.toEntity(),
+      ),
+    ).id.let { CreateResponse(it, "$frontendUrl/breach-notice?uuid=$it") }
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
     BreachNoticeDetails(
@@ -55,7 +54,7 @@ class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @V
 
       completedDate = it.completedDate,
       offenderAddress = it.offenderAddress?.toModel(),
-      replyAddress = it.replyAddress?.toModel()
+      replyAddress = it.replyAddress?.toModel(),
     )
   }
 
@@ -66,7 +65,7 @@ class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @V
     district = district,
     townCity = townCity,
     county = county,
-    postcode = postcode
+    postcode = postcode,
   )
 
   private fun Address.toEntity() = AddressEntity(
@@ -76,6 +75,6 @@ class BreachNoticeService(val breachNoticeRepository: BreachNoticeRepository, @V
     district = district,
     townCity = townCity,
     county = county,
-    postcode = postcode
+    postcode = postcode,
   )
 }

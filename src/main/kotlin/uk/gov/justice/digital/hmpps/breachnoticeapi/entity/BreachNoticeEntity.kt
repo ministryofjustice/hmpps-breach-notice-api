@@ -1,6 +1,10 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.EntityListeners
+import jakarta.persistence.Id
+import jakarta.persistence.OneToOne
+import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
@@ -45,5 +49,5 @@ data class BreachNoticeEntity(
   @OneToOne
   val offenderAddress: AddressEntity? = null,
   @OneToOne
-  val replyAddress: AddressEntity? = null
+  val replyAddress: AddressEntity? = null,
 )

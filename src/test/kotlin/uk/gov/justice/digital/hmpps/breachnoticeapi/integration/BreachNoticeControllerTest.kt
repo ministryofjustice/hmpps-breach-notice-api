@@ -12,34 +12,32 @@ class BreachNoticeControllerTest : IntegrationTestBase() {
   @Autowired
   private lateinit var objectMapper: ObjectMapper
 
-
-
-    @Test
-    fun `should return unauthorized if no token`() {
-      webTestClient.post()
-        .uri("/breach-notice")
-        .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-        .bodyValue( BreachNotice(
-        crn = "X03489B",
-      dateOfLetter = LocalDate.now(),
-      referenceNumber = "ABC1234565",
-      responseRequiredDate = LocalDate.now(),
-      breachNoticeTypeCode = "TYPE0NOGATIVE",
-      breachConditionTypeCode = "TYPE0NOGATIVE",
-      responsibleOfficer = "RESPONSIBLEPETE",
-      contactNumber = "01912525252",
-      nextAppointmentType = "TEST",
-      nextAppointmentDate = LocalDateTime.now(),
-      nextAppointmentLocation = "TEST_LOCATION",
-      nextAppointmentOfficer = "TEST_OFFICER",
+  @Test
+  fun `should return unauthorized if no token`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .bodyValue(
+        BreachNotice(
+          crn = "X03489B",
+          dateOfLetter = LocalDate.now(),
+          referenceNumber = "ABC1234565",
+          responseRequiredDate = LocalDate.now(),
+          breachNoticeTypeCode = "TYPE0NOGATIVE",
+          breachConditionTypeCode = "TYPE0NOGATIVE",
+          responsibleOfficer = "RESPONSIBLEPETE",
+          contactNumber = "01912525252",
+          nextAppointmentType = "TEST",
+          nextAppointmentDate = LocalDateTime.now(),
+          nextAppointmentLocation = "TEST_LOCATION",
+          nextAppointmentOfficer = "TEST_OFFICER",
 //      nextAppointmentContactId = null,
-      completedDate = LocalDateTime.now(),
+          completedDate = LocalDateTime.now(),
 
+        ),
       )
-        )
-        .exchange()
-        .expectStatus()
-        .isUnauthorized
-    }
-
- }
+      .exchange()
+      .expectStatus()
+      .isUnauthorized
+  }
+}
