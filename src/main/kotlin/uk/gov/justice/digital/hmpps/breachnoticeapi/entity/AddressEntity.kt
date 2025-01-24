@@ -1,10 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.entity
 
 import jakarta.persistence.Entity
-<<<<<<< HEAD
 import jakarta.persistence.EntityListeners
-=======
->>>>>>> 6dae659 (initial setup and endpoints)
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
