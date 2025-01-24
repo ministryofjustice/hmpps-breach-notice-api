@@ -1,20 +1,24 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.entity
 
 import jakarta.persistence.Entity
+import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
 @Table(name = "address")
+@EntityListeners(AuditingEntityListener::class)
 data class AddressEntity(
   @Id
-  val id: UUID? = null,
+  val id: UUID = UUID.randomUUID(),
+  val type: String? = null,
   val buildingName: String? = null,
   val addressNumber: String? = null,
   val streetName: String? = null,
@@ -23,11 +27,11 @@ data class AddressEntity(
   val county: String? = null,
   val postcode: String? = null,
   @CreatedBy
-  val createdByUser: String? = null,
+  var createdByUser: String? = null,
   @CreatedDate
-  val createdDatetime: LocalDateTime? = null,
+  var createdDatetime: LocalDateTime? = null,
   @LastModifiedDate
-  val lastUpdatedDatetime: LocalDateTime? = null,
+  var lastUpdatedDatetime: LocalDateTime? = null,
   @LastModifiedBy
-  val lastUpdatedUser: String? = null,
+  var lastUpdatedUser: String? = null,
 )

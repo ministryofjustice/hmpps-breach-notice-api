@@ -5,8 +5,9 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class BreachNoticeDetails(
-  val id: UUID,
+  val id: UUID?,
   val crn: String,
+  val titleAndFullName: String? = null,
   val dateOfLetter: LocalDate? = null,
   val referenceNumber: String? = null,
   val responseRequiredByDate: LocalDate? = null,

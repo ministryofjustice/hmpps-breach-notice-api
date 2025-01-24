@@ -1,5 +1,6 @@
 CREATE TABLE public.breach_notice(id uuid not null primary key,
                            crn char(7) not null,
+                           title_and_full_name varchar(200) NULL,
                            date_of_letter timestamp without time zone NULL,
                            reference_number varchar(50) NULL,
                            response_required_date timestamp without time zone NULL,
@@ -19,11 +20,16 @@ CREATE TABLE public.breach_notice(id uuid not null primary key,
                            last_updated_datetime timestamp without time zone NULL,
                            last_updated_user varchar(50) NULL,
                            offender_address_id uuid NULL,
-                           reply_address_id uuid NULL);
+                           reply_address_id uuid NULL,
+                           basic_details_saved boolean NULL,
+                           warning_type_saved boolean NULL,
+                           warning_details_saved boolean NULL,
+                           next_appointment_saved boolean NULL);
 
 ALTER TABLE public.breach_notice OWNER TO postgres;
 
 CREATE TABLE public.address(id uuid not null primary Key,
+                     type varchar(100) NULL,
                      building_name varchar(35) NULL,
                      address_number varchar(35) NULL,
                      street_name varchar(35) NULL,

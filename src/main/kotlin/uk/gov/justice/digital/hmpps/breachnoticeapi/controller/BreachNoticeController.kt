@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -69,4 +70,27 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   )
   @ResponseStatus(HttpStatus.CREATED)
   fun createBreachNotice(@RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
+
+
+  @PutMapping("/{id}")
+  @Tag(name = "Breach Notice")
+  @Operation(
+    summary = "Update a Breach Notice",
+    description = "Calls through the breach notice service to update a breach notice",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Breach Notice updated"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) = breachNoticeService.updateBreachNotice(id, breachNotice)
 }

@@ -1,8 +1,10 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.entity
 
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
@@ -21,22 +23,22 @@ data class BreachNoticeEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
   val crn: String,
-  val dateOfLetter: LocalDate? = null,
-  val referenceNumber: String? = null,
-
-  val responseRequiredDate: LocalDate? = null,
-  val breachNoticeTypeCode: String? = null,
-  val breachConditionTypeCode: String? = null,
-  val responsibleOfficer: String? = null,
-  val contactNumber: String? = null,
-  val nextAppointmentType: String? = null,
-  val nextAppointmentDate: LocalDateTime? = null,
-  val nextAppointmentLocation: String? = null,
-  val nextAppointmentOfficer: String? = null,
-  @OneToOne
-  val nextAppointmentContact: BreachNoticeContactEntity? = null,
-  val completedDate: LocalDateTime? = null,
-
+  var titleAndFullName: String? = null,
+  var dateOfLetter: LocalDate? = null,
+  var referenceNumber: String? = null,
+  var responseRequiredDate: LocalDate? = null,
+  var breachNoticeTypeCode: String? = null,
+  var breachConditionTypeCode: String? = null,
+  var responsibleOfficer: String? = null,
+  var contactNumber: String? = null,
+  var nextAppointmentType: String? = null,
+  var nextAppointmentDate: LocalDateTime? = null,
+  var nextAppointmentLocation: String? = null,
+  var nextAppointmentOfficer: String? = null,
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "next_appointment_contact_id", unique = true)
+  var nextAppointmentContact: BreachNoticeContactEntity? = null,
+  var completedDate: LocalDateTime? = null,
   @CreatedBy
   val createdByUser: String? = null,
   @CreatedDate
@@ -45,9 +47,14 @@ data class BreachNoticeEntity(
   val lastUpdatedDatetime: LocalDateTime? = null,
   @LastModifiedBy
   val lastUpdatedUser: String? = null,
-
-  @OneToOne
-  val offenderAddress: AddressEntity? = null,
-  @OneToOne
-  val replyAddress: AddressEntity? = null,
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "offender_address_id", unique = true)
+  var offenderAddress: AddressEntity? = null,
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "reply_address_id", unique = true)
+  var replyAddress: AddressEntity? = null,
+  var basicDetailsSaved: Boolean? = null,
+  var warningTypeSaved: Boolean? = null,
+  var warningDetailsSaved: Boolean? = null,
+  var nextAppointmentSaved: Boolean? = null,
 )

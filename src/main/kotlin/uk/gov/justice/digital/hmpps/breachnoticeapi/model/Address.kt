@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
 data class Address(
+  val type: String? = null,
   val buildingName: String? = null,
   val addressNumber: String? = null,
   val streetName: String? = null,
