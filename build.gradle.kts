@@ -19,6 +19,7 @@ dependencies {
 
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.0.5")
   testImplementation("org.wiremock:wiremock-standalone:3.9.1")
+  testImplementation("org.testcontainers:postgresql")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.22") {
     exclude(group = "io.swagger.core.v3")
   }

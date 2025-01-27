@@ -6,7 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -23,7 +25,7 @@ import java.util.*
 
 @RestController
 // Role here is specific to the UI.
-// @PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
+@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
   @GetMapping("/{uuid}")
@@ -69,7 +71,7 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     ],
   )
   @ResponseStatus(HttpStatus.CREATED)
-  fun createBreachNotice(@RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
+  fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 
 
   @PutMapping("/{id}")

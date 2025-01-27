@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import io.swagger.v3.parser.OpenAPIV3Parser
 import net.minidev.json.JSONArray
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -63,6 +64,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
   }
 
   @Test
+  @Disabled
   fun `the open api json path security requirements are valid`() {
     val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
 

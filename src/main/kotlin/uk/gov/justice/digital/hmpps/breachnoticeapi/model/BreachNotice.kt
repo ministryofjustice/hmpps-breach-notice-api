@@ -1,9 +1,13 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class BreachNotice(
+  @field:NotBlank(message = "CRN must not be blank")
+  @field:Size(min = 7, max = 7 , message ="CRN must be 7 characters long" )
   val crn: String,
   val titleAndFullName: String? = null,
   val dateOfLetter: LocalDate? = null,

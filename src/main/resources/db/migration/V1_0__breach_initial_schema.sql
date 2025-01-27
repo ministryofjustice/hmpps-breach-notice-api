@@ -26,8 +26,6 @@ CREATE TABLE public.breach_notice(id uuid not null primary key,
                            warning_details_saved boolean NULL,
                            next_appointment_saved boolean NULL);
 
-ALTER TABLE public.breach_notice OWNER TO postgres;
-
 CREATE TABLE public.address(id uuid not null primary Key,
                      type varchar(100) NULL,
                      building_name varchar(35) NULL,
@@ -42,8 +40,6 @@ CREATE TABLE public.address(id uuid not null primary Key,
                      last_updated_user varchar(50) not null,
                      last_updated_datetime timestamp without time zone not null);
 
-ALTER TABLE public.address OWNER TO postgres;
-
 CREATE TABLE public.breach_notice_contact(id uuid not null primary key,
                                           breach_notice_id uuid not null ,
                                           contact_date timestamp without time zone not null,
@@ -55,9 +51,6 @@ CREATE TABLE public.breach_notice_contact(id uuid not null primary key,
                                           last_updated_user varchar(50) not null,
                                           last_updated_datetime timestamp without time zone NULL);
 
-ALTER TABLE public.breach_notice_contact OWNER TO postgres;
-
-
 CREATE TABLE public.breach_notice_requirement(id uuid not null primary key,
                                           breach_notice_id uuid not null,
                                           requirement_id bigint not null,
@@ -68,9 +61,6 @@ CREATE TABLE public.breach_notice_requirement(id uuid not null primary key,
                                           created_datetime timestamp without time zone NULL,
                                           last_updated_user varchar(50) not null,
                                           last_updated_datetime timestamp without time zone NULL);
-
-ALTER TABLE public.breach_notice_requirement OWNER TO postgres;
-
 
 ALTER TABLE public.breach_notice_requirement ADD CONSTRAINT xfk1_breach_notice_requirement
     FOREIGN KEY (breach_notice_id) REFERENCES public.breach_notice (id) ON DELETE No Action ON UPDATE No Action;
