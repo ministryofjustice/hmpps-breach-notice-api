@@ -98,6 +98,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .bodyValue(
+        /* body = */
         BreachNotice(
           crn = "X00001E",
         ),
