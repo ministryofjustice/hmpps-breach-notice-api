@@ -125,10 +125,13 @@ class BreachNoticeService(
       nextAppointmentDate = it.nextAppointmentDate,
       nextAppointmentLocation = it.nextAppointmentLocation,
       nextAppointmentOfficer = it.nextAppointmentOfficer,
-
       completedDate = it.completedDate,
       offenderAddress = it.offenderAddress?.toModel(),
       replyAddress = it.replyAddress?.toModel(),
+      basicDetailsSaved = it.basicDetailsSaved,
+      warningTypeSaved = it.warningTypeSaved,
+      warningDetailsSaved = it.warningDetailsSaved,
+      nextAppointmentSaved = it.nextAppointmentSaved,
     )
   }
 

@@ -19,8 +19,12 @@ data class BreachNoticeDetails(
   val nextAppointmentDate: LocalDateTime? = null,
   val nextAppointmentLocation: String? = null,
   val nextAppointmentOfficer: String? = null,
-//  val nextAppointmentContactId: UUID,
+  val nextAppointmentContact: BreachNoticeContact? = null,
   val completedDate: LocalDateTime? = null,
   val offenderAddress: Address? = null,
   val replyAddress: Address? = null,
+  val basicDetailsSaved: Boolean? = null,
+  val warningTypeSaved: Boolean? = null,
+  val warningDetailsSaved: Boolean? = null,
+  val nextAppointmentSaved: Boolean? = null,
 )
