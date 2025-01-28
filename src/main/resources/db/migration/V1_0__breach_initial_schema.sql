@@ -27,6 +27,7 @@ CREATE TABLE public.breach_notice(id uuid not null primary key,
                            next_appointment_saved boolean NULL);
 
 CREATE TABLE public.address(id uuid not null primary Key,
+                     address_id bigint not null,
                      type varchar(100) NULL,
                      building_name varchar(35) NULL,
                      address_number varchar(35) NULL,

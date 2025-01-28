@@ -23,7 +23,7 @@ class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
   val addressRepository: AddressRepository,
   @Value("\${frontend.url}") val frontendUrl: String,
-  private val contactRepository: ContactRepository
+  private val contactRepository: ContactRepository,
 ) {
 
   fun createBreachNotice(breachNotice: BreachNotice) =
@@ -33,24 +33,24 @@ class BreachNoticeService(
       CreateResponse(it, "$frontendUrl/breach-notice/$it")
     }
 
-  fun updateBreachNotice(id:UUID, breachNotice: BreachNotice): BreachNoticeEntity {
+  fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNoticeEntity {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
     breachNoticeEntity.titleAndFullName = breachNotice.titleAndFullName
     breachNoticeEntity.dateOfLetter = breachNotice.dateOfLetter
     breachNoticeEntity.referenceNumber = breachNotice.referenceNumber
     breachNoticeEntity.responseRequiredDate = breachNotice.responseRequiredDate
-    breachNoticeEntity.breachNoticeTypeCode =  breachNotice.breachNoticeTypeCode
-    breachNoticeEntity.breachConditionTypeCode =  breachNotice.breachConditionTypeCode
+    breachNoticeEntity.breachNoticeTypeCode = breachNotice.breachNoticeTypeCode
+    breachNoticeEntity.breachConditionTypeCode = breachNotice.breachConditionTypeCode
     breachNoticeEntity.responsibleOfficer = breachNotice.responsibleOfficer
-    breachNoticeEntity.contactNumber  = breachNotice.contactNumber
+    breachNoticeEntity.contactNumber = breachNotice.contactNumber
     breachNoticeEntity.nextAppointmentType = breachNotice.nextAppointmentType
     breachNoticeEntity.nextAppointmentDate = breachNotice.nextAppointmentDate
     breachNoticeEntity.nextAppointmentLocation = breachNotice.nextAppointmentLocation
     breachNoticeEntity.nextAppointmentOfficer = breachNotice.nextAppointmentOfficer
     breachNoticeEntity.completedDate = breachNotice.completedDate
-    breachNoticeEntity.offenderAddress = breachNotice.offenderAddress?.toEntity(breachNoticeEntity.offenderAddress?.id)
-    breachNoticeEntity.replyAddress = breachNotice.replyAddress?.toEntity(breachNoticeEntity.replyAddress?.id)
-    breachNoticeEntity.nextAppointmentContact = breachNotice.nextAppointmentContact?.toEntity(breachNoticeEntity.nextAppointmentContact?.id)
+    breachNoticeEntity.offenderAddress = breachNotice.offenderAddress?.toEntity(breachNoticeEntity.offenderAddress)
+    breachNoticeEntity.replyAddress = breachNotice.replyAddress?.toEntity(breachNoticeEntity.replyAddress)
+    breachNoticeEntity.nextAppointmentContact = breachNotice.nextAppointmentContact?.toEntity(breachNoticeEntity.nextAppointmentContact)
     breachNoticeEntity.basicDetailsSaved = breachNotice.basicDetailsSaved
     breachNoticeEntity.warningTypeSaved = breachNotice.warningTypeSaved
     breachNoticeEntity.warningDetailsSaved = breachNotice.warningDetailsSaved
@@ -58,7 +58,8 @@ class BreachNoticeService(
     return breachNoticeRepository.save(breachNoticeEntity);
   }
 
-  private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity = breachNoticeRepository.findByIdOrNull(id)?: throw NotFoundException("BreachNoticeEntity","id",id)
+  private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
+    breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
 
   private fun BreachNotice.toEntity() =
     BreachNoticeEntity(
@@ -81,7 +82,7 @@ class BreachNoticeService(
       basicDetailsSaved = basicDetailsSaved,
       warningTypeSaved = warningTypeSaved,
       warningDetailsSaved = warningDetailsSaved,
-      nextAppointmentSaved = nextAppointmentSaved
+      nextAppointmentSaved = nextAppointmentSaved,
     )
 
   private fun BreachNoticeEntity.toModel() =
@@ -105,8 +106,8 @@ class BreachNoticeService(
       basicDetailsSaved = basicDetailsSaved,
       warningTypeSaved = warningTypeSaved,
       warningDetailsSaved = warningDetailsSaved,
-      nextAppointmentSaved = nextAppointmentSaved
-  )
+      nextAppointmentSaved = nextAppointmentSaved,
+    )
 
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -127,11 +128,13 @@ class BreachNoticeService(
 
       completedDate = it.completedDate,
       offenderAddress = it.offenderAddress?.toModel(),
-      replyAddress = it.replyAddress?.toModel()
+      replyAddress = it.replyAddress?.toModel(),
     )
   }
 
   private fun AddressEntity.toModel() = Address(
+    addressId = addressId,
+    type = type,
     buildingName = buildingName,
     addressNumber = addressNumber,
     streetName = streetName,
@@ -139,34 +142,52 @@ class BreachNoticeService(
     townCity = townCity,
     county = county,
     postcode = postcode,
-    type = type
   )
 
-  private fun Address.toEntity(id: UUID? =null) = AddressEntity(
-    id = id?:UUID.randomUUID(),
-    buildingName = buildingName,
-    addressNumber = addressNumber,
-    streetName = streetName,
-    district = district,
-    townCity = townCity,
-    county = county,
-    postcode = postcode
-  )
+  private fun Address.toEntity(existingEntity: AddressEntity? = null) =
+    existingEntity?.copy(
+      addressId = addressId,
+      type = type,
+      buildingName = buildingName,
+      addressNumber = addressNumber,
+      streetName = streetName,
+      district = district,
+      townCity = townCity,
+      county = county,
+      postcode = postcode,
+    ) ?: AddressEntity(
+      addressId = addressId,
+      type = type,
+      buildingName = buildingName,
+      addressNumber = addressNumber,
+      streetName = streetName,
+      district = district,
+      townCity = townCity,
+      county = county,
+      postcode = postcode,
+    )
 
-  private fun BreachNoticeContact.toEntity(id: UUID? =null) = BreachNoticeContactEntity(
-    id = id?:UUID.randomUUID(),
-    breachNoticeId = breachNoticeId,
-    contactDate = contactDate,
-    contactType = contactType,
-    contactOutcome = contactOutcome,
-    contactId = contactId
-  )
+
+  private fun BreachNoticeContact.toEntity(existingEntity: BreachNoticeContactEntity? = null) =
+    existingEntity?.copy(
+      breachNoticeId = breachNoticeId,
+      contactDate = contactDate,
+      contactType = contactType,
+      contactOutcome = contactOutcome,
+      contactId = contactId,
+    ) ?: BreachNoticeContactEntity(
+      breachNoticeId = breachNoticeId,
+      contactDate = contactDate,
+      contactType = contactType,
+      contactOutcome = contactOutcome,
+      contactId = contactId,
+    )
 
   private fun BreachNoticeContactEntity.toModel() = BreachNoticeContact(
     breachNoticeId = breachNoticeId,
     contactDate = contactDate,
     contactType = contactType,
     contactOutcome = contactOutcome,
-    contactId = contactId
+    contactId = contactId,
   )
 }

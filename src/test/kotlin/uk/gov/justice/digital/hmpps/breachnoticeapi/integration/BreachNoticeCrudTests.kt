@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
@@ -56,6 +57,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .uri("/breach-notice/"+breachNotice.first().id)
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .bodyValue(
+        /* body = */
         BreachNotice(
           crn = "X00001B",
           breachConditionTypeCode = "TYPE_CODE",
@@ -72,7 +74,11 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
           nextAppointmentOfficer = "APPT_OFFICER",
           nextAppointmentContact = null,
           completedDate = LocalDateTime.now(),
-          offenderAddress = null,
+          offenderAddress = Address(
+            addressId = 25,
+            type = "ENDO",
+            buildingName = "MOO",
+          ),
           replyAddress = null,
           basicDetailsSaved = true,
         ),
