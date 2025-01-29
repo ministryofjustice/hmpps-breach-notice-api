@@ -55,6 +55,8 @@ class BreachNoticeService(
     breachNoticeEntity.warningTypeSaved = breachNotice.warningTypeSaved
     breachNoticeEntity.warningDetailsSaved = breachNotice.warningDetailsSaved
     breachNoticeEntity.nextAppointmentSaved = breachNotice.nextAppointmentSaved
+    breachNoticeEntity.useDefaultAddress = breachNotice.useDefaultAddress
+    breachNoticeEntity.useDefaultReplyAddress = breachNotice.useDefaultReplyAddress
     return breachNoticeRepository.save(breachNoticeEntity);
   }
 
@@ -83,6 +85,8 @@ class BreachNoticeService(
       warningTypeSaved = warningTypeSaved,
       warningDetailsSaved = warningDetailsSaved,
       nextAppointmentSaved = nextAppointmentSaved,
+      useDefaultAddress = useDefaultAddress,
+      useDefaultReplyAddress = useDefaultReplyAddress,
     )
 
   private fun BreachNoticeEntity.toModel() =
@@ -107,6 +111,8 @@ class BreachNoticeService(
       warningTypeSaved = warningTypeSaved,
       warningDetailsSaved = warningDetailsSaved,
       nextAppointmentSaved = nextAppointmentSaved,
+      useDefaultAddress = useDefaultAddress,
+      useDefaultReplyAddress = useDefaultReplyAddress,
     )
 
 
@@ -132,6 +138,8 @@ class BreachNoticeService(
       warningTypeSaved = it.warningTypeSaved,
       warningDetailsSaved = it.warningDetailsSaved,
       nextAppointmentSaved = it.nextAppointmentSaved,
+      useDefaultAddress =  it.useDefaultAddress,
+      useDefaultReplyAddress =  it.useDefaultReplyAddress
     )
   }
 

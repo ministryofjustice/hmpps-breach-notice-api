@@ -29,4 +29,6 @@ data class BreachNotice(
   val warningTypeSaved: Boolean? = null,
   val warningDetailsSaved: Boolean? = null,
   val nextAppointmentSaved: Boolean? = null,
+  val useDefaultAddress: Boolean? = null,
+  val useDefaultReplyAddress: Boolean? = null,
 )

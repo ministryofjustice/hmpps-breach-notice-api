@@ -57,4 +57,6 @@ data class BreachNoticeEntity(
   var warningTypeSaved: Boolean? = null,
   var warningDetailsSaved: Boolean? = null,
   var nextAppointmentSaved: Boolean? = null,
+  var useDefaultAddress: Boolean? = null,
+  var useDefaultReplyAddress: Boolean? = null,
 )

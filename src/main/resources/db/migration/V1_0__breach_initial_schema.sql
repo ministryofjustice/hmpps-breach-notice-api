@@ -24,7 +24,9 @@ CREATE TABLE public.breach_notice(id uuid not null primary key,
                            basic_details_saved boolean NULL,
                            warning_type_saved boolean NULL,
                            warning_details_saved boolean NULL,
-                           next_appointment_saved boolean NULL);
+                           next_appointment_saved boolean NULL,
+                           use_default_address boolean NULL,
+                           use_default_reply_address boolean NULL);
 
 CREATE TABLE public.address(id uuid not null primary Key,
                      address_id bigint not null,
