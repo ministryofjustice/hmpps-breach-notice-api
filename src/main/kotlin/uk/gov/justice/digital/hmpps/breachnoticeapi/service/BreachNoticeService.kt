@@ -44,6 +44,7 @@ class BreachNoticeService(
   private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) =
     existingEntity?.copy(
       crn = crn,
+      titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,
       responseRequiredDate = responseRequiredDate,
@@ -67,6 +68,7 @@ class BreachNoticeService(
       useDefaultReplyAddress = useDefaultReplyAddress,
     ) ?: BreachNoticeEntity(
       crn = crn,
+      titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,
       responseRequiredDate = responseRequiredDate,
@@ -93,6 +95,7 @@ class BreachNoticeService(
   private fun BreachNoticeEntity.toModel() =
     BreachNotice(
       crn = crn,
+      titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,
       responseRequiredDate = responseRequiredDate,
@@ -121,6 +124,7 @@ class BreachNoticeService(
     BreachNoticeDetails(
         id = it.id,
         crn = it.crn,
+        titleAndFullName = it.titleAndFullName,
         dateOfLetter = it.dateOfLetter,
         referenceNumber = it.referenceNumber,
         responseRequiredByDate = it.responseRequiredDate,
