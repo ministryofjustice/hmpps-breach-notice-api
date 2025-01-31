@@ -35,36 +35,37 @@ class BreachNoticeService(
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNoticeEntity {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-    breachNoticeEntity.titleAndFullName = breachNotice.titleAndFullName
-    breachNoticeEntity.dateOfLetter = breachNotice.dateOfLetter
-    breachNoticeEntity.referenceNumber = breachNotice.referenceNumber
-    breachNoticeEntity.responseRequiredDate = breachNotice.responseRequiredDate
-    breachNoticeEntity.breachNoticeTypeCode = breachNotice.breachNoticeTypeCode
-    breachNoticeEntity.breachConditionTypeCode = breachNotice.breachConditionTypeCode
-    breachNoticeEntity.responsibleOfficer = breachNotice.responsibleOfficer
-    breachNoticeEntity.contactNumber = breachNotice.contactNumber
-    breachNoticeEntity.nextAppointmentType = breachNotice.nextAppointmentType
-    breachNoticeEntity.nextAppointmentDate = breachNotice.nextAppointmentDate
-    breachNoticeEntity.nextAppointmentLocation = breachNotice.nextAppointmentLocation
-    breachNoticeEntity.nextAppointmentOfficer = breachNotice.nextAppointmentOfficer
-    breachNoticeEntity.completedDate = breachNotice.completedDate
-    breachNoticeEntity.offenderAddress = breachNotice.offenderAddress?.toEntity(breachNoticeEntity.offenderAddress)
-    breachNoticeEntity.replyAddress = breachNotice.replyAddress?.toEntity(breachNoticeEntity.replyAddress)
-    breachNoticeEntity.nextAppointmentContact = breachNotice.nextAppointmentContact?.toEntity(breachNoticeEntity.nextAppointmentContact)
-    breachNoticeEntity.basicDetailsSaved = breachNotice.basicDetailsSaved
-    breachNoticeEntity.warningTypeSaved = breachNotice.warningTypeSaved
-    breachNoticeEntity.warningDetailsSaved = breachNotice.warningDetailsSaved
-    breachNoticeEntity.nextAppointmentSaved = breachNotice.nextAppointmentSaved
-    breachNoticeEntity.useDefaultAddress = breachNotice.useDefaultAddress
-    breachNoticeEntity.useDefaultReplyAddress = breachNotice.useDefaultReplyAddress
-    return breachNoticeRepository.save(breachNoticeEntity);
+    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity));
   }
 
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
     breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
 
-  private fun BreachNotice.toEntity() =
-    BreachNoticeEntity(
+  private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) =
+    existingEntity?.copy(
+      crn = crn,
+      dateOfLetter = dateOfLetter,
+      referenceNumber = referenceNumber,
+      responseRequiredDate = responseRequiredDate,
+      breachNoticeTypeCode = breachNoticeTypeCode,
+      breachConditionTypeCode = breachConditionTypeCode,
+      responsibleOfficer = responsibleOfficer,
+      contactNumber = contactNumber,
+      nextAppointmentType = nextAppointmentType,
+      nextAppointmentDate = nextAppointmentDate,
+      nextAppointmentLocation = nextAppointmentLocation,
+      nextAppointmentOfficer = nextAppointmentOfficer,
+      nextAppointmentContact = nextAppointmentContact?.toEntity(existingEntity.nextAppointmentContact),
+      completedDate = completedDate,
+      offenderAddress = offenderAddress?.toEntity(existingEntity.offenderAddress),
+      replyAddress = replyAddress?.toEntity(existingEntity.replyAddress),
+      basicDetailsSaved = basicDetailsSaved,
+      warningTypeSaved = warningTypeSaved,
+      warningDetailsSaved = warningDetailsSaved,
+      nextAppointmentSaved = nextAppointmentSaved,
+      useDefaultAddress = useDefaultAddress,
+      useDefaultReplyAddress = useDefaultReplyAddress,
+    ) ?: BreachNoticeEntity(
       crn = crn,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,
@@ -118,28 +119,28 @@ class BreachNoticeService(
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
     BreachNoticeDetails(
-      id = it.id,
-      crn = it.crn,
-      dateOfLetter = it.dateOfLetter,
-      referenceNumber = it.referenceNumber,
-      responseRequiredByDate = it.responseRequiredDate,
-      breachNoticeTypeCode = it.breachNoticeTypeCode,
-      breachConditionTypeCode = it.breachConditionTypeCode,
-      responsibleOfficer = it.responsibleOfficer,
-      contactNumber = it.contactNumber,
-      nextAppointmentType = it.nextAppointmentType,
-      nextAppointmentDate = it.nextAppointmentDate,
-      nextAppointmentLocation = it.nextAppointmentLocation,
-      nextAppointmentOfficer = it.nextAppointmentOfficer,
-      completedDate = it.completedDate,
-      offenderAddress = it.offenderAddress?.toModel(),
-      replyAddress = it.replyAddress?.toModel(),
-      basicDetailsSaved = it.basicDetailsSaved,
-      warningTypeSaved = it.warningTypeSaved,
-      warningDetailsSaved = it.warningDetailsSaved,
-      nextAppointmentSaved = it.nextAppointmentSaved,
-      useDefaultAddress =  it.useDefaultAddress,
-      useDefaultReplyAddress =  it.useDefaultReplyAddress
+        id = it.id,
+        crn = it.crn,
+        dateOfLetter = it.dateOfLetter,
+        referenceNumber = it.referenceNumber,
+        responseRequiredByDate = it.responseRequiredDate,
+        breachNoticeTypeCode = it.breachNoticeTypeCode,
+        breachConditionTypeCode = it.breachConditionTypeCode,
+        responsibleOfficer = it.responsibleOfficer,
+        contactNumber = it.contactNumber,
+        nextAppointmentType = it.nextAppointmentType,
+        nextAppointmentDate = it.nextAppointmentDate,
+        nextAppointmentLocation = it.nextAppointmentLocation,
+        nextAppointmentOfficer = it.nextAppointmentOfficer,
+        completedDate = it.completedDate,
+        offenderAddress = it.offenderAddress?.toModel(),
+        replyAddress = it.replyAddress?.toModel(),
+        basicDetailsSaved = it.basicDetailsSaved,
+        warningTypeSaved = it.warningTypeSaved,
+        warningDetailsSaved = it.warningDetailsSaved,
+        nextAppointmentSaved = it.nextAppointmentSaved,
+        useDefaultAddress = it.useDefaultAddress,
+        useDefaultReplyAddress = it.useDefaultReplyAddress,
     )
   }
 

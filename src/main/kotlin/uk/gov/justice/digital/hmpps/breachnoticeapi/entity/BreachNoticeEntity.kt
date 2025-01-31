@@ -40,13 +40,13 @@ data class BreachNoticeEntity(
   var nextAppointmentContact: BreachNoticeContactEntity? = null,
   var completedDate: LocalDateTime? = null,
   @CreatedBy
-  val createdByUser: String? = null,
+  var createdByUser: String? = null,
   @CreatedDate
-  val createdDatetime: LocalDateTime? = null,
+  var createdDatetime: LocalDateTime? = null,
   @LastModifiedDate
-  val lastUpdatedDatetime: LocalDateTime? = null,
+  var lastUpdatedDatetime: LocalDateTime? = null,
   @LastModifiedBy
-  val lastUpdatedUser: String? = null,
+  var lastUpdatedUser: String? = null,
   @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
   @JoinColumn(name = "offender_address_id", unique = true)
   var offenderAddress: AddressEntity? = null,
