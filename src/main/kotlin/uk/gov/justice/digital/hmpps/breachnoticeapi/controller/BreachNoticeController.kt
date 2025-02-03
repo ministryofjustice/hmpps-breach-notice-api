@@ -83,6 +83,11 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     responses = [
       ApiResponse(responseCode = "200", description = "Breach Notice updated"),
       ApiResponse(
+        responseCode = "400",
+        description = "cant change the CRN on an update",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
         responseCode = "401",
         description = "Unauthorized to access this endpoint",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
@@ -90,6 +95,11 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
       ApiResponse(
         responseCode = "403",
         description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Breach Notice id was not found",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],

@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
@@ -18,6 +20,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
+
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
@@ -33,8 +36,22 @@ class BreachNoticeService(
       CreateResponse(it, "$frontendUrl/breach-notice/$it")
     }
 
-  fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNoticeEntity {
+  fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): Any? {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
+
+    if(breachNoticeEntity == null) {
+      return ResponseEntity(
+        "The Breach Notice id was not found",
+        HttpStatus.NOT_FOUND,
+      )
+    }
+
+    if(!breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
+        return ResponseEntity(
+          "You can not change the CRN in a breach Report",
+          HttpStatus.BAD_REQUEST,
+        )
+    }
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity));
   }
 
