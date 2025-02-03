@@ -14,8 +14,11 @@ parameters:
 jobs:
   validate:
     executor:
-      name: hmpps/java
-      tag: "21.0"
+      name: hmpps/java_postgres
+      jdk_tag: "21.0"
+      postgres_tag: "17"
+      postgres_username: postgres
+      postgres_password: postgres
     steps:
       - checkout
       - restore_cache:
@@ -23,7 +26,7 @@ jobs:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
       - run:
-          command: ./gradlew check
+          command: SPRING_DATASOURCE_URL='jdbc:postgresql://localhost:5432/postgres' ./gradlew check
       - save_cache:
           paths:
             - ~/.gradle
