@@ -28,6 +28,7 @@ data class BreachNoticeEntity(
   var referenceNumber: String? = null,
   var responseRequiredDate: LocalDate? = null,
   var breachNoticeTypeCode: String? = null,
+  val breachNoticeTypeDescription: String? = null,
   var breachConditionTypeCode: String? = null,
   var responsibleOfficer: String? = null,
   var contactNumber: String? = null,

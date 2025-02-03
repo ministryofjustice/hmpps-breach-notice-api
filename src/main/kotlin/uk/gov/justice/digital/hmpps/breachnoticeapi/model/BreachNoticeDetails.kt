@@ -12,6 +12,7 @@ data class BreachNoticeDetails(
   val referenceNumber: String? = null,
   val responseRequiredByDate: LocalDate? = null,
   val breachNoticeTypeCode: String? = null,
+  val breachNoticeTypeDescription: String? = null,
   val breachConditionTypeCode: String? = null,
   val responsibleOfficer: String? = null,
   val contactNumber: String? = null,
