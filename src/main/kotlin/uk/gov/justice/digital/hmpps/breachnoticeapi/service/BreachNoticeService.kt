@@ -20,7 +20,6 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
