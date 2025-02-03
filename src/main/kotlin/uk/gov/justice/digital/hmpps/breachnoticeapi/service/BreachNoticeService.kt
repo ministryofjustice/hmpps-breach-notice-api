@@ -20,7 +20,6 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
-
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
@@ -39,20 +38,20 @@ class BreachNoticeService(
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): Any? {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
 
-    if(breachNoticeEntity == null) {
+    if (breachNoticeEntity == null) {
       return ResponseEntity(
         "The Breach Notice id was not found",
         HttpStatus.NOT_FOUND,
       )
     }
 
-    if(!breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
-        return ResponseEntity(
-          "You can not change the CRN in a breach Report",
-          HttpStatus.BAD_REQUEST,
-        )
+    if (!breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
+      return ResponseEntity(
+        "You can not change the CRN in a breach Report",
+        HttpStatus.BAD_REQUEST,
+      )
     }
-    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity));
+    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity))
   }
 
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
@@ -136,32 +135,31 @@ class BreachNoticeService(
       useDefaultReplyAddress = useDefaultReplyAddress,
     )
 
-
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
     BreachNoticeDetails(
-        id = it.id,
-        crn = it.crn,
-        titleAndFullName = it.titleAndFullName,
-        dateOfLetter = it.dateOfLetter,
-        referenceNumber = it.referenceNumber,
-        responseRequiredByDate = it.responseRequiredDate,
-        breachNoticeTypeCode = it.breachNoticeTypeCode,
-        breachConditionTypeCode = it.breachConditionTypeCode,
-        responsibleOfficer = it.responsibleOfficer,
-        contactNumber = it.contactNumber,
-        nextAppointmentType = it.nextAppointmentType,
-        nextAppointmentDate = it.nextAppointmentDate,
-        nextAppointmentLocation = it.nextAppointmentLocation,
-        nextAppointmentOfficer = it.nextAppointmentOfficer,
-        completedDate = it.completedDate,
-        offenderAddress = it.offenderAddress?.toModel(),
-        replyAddress = it.replyAddress?.toModel(),
-        basicDetailsSaved = it.basicDetailsSaved,
-        warningTypeSaved = it.warningTypeSaved,
-        warningDetailsSaved = it.warningDetailsSaved,
-        nextAppointmentSaved = it.nextAppointmentSaved,
-        useDefaultAddress = it.useDefaultAddress,
-        useDefaultReplyAddress = it.useDefaultReplyAddress,
+      id = it.id,
+      crn = it.crn,
+      titleAndFullName = it.titleAndFullName,
+      dateOfLetter = it.dateOfLetter,
+      referenceNumber = it.referenceNumber,
+      responseRequiredByDate = it.responseRequiredDate,
+      breachNoticeTypeCode = it.breachNoticeTypeCode,
+      breachConditionTypeCode = it.breachConditionTypeCode,
+      responsibleOfficer = it.responsibleOfficer,
+      contactNumber = it.contactNumber,
+      nextAppointmentType = it.nextAppointmentType,
+      nextAppointmentDate = it.nextAppointmentDate,
+      nextAppointmentLocation = it.nextAppointmentLocation,
+      nextAppointmentOfficer = it.nextAppointmentOfficer,
+      completedDate = it.completedDate,
+      offenderAddress = it.offenderAddress?.toModel(),
+      replyAddress = it.replyAddress?.toModel(),
+      basicDetailsSaved = it.basicDetailsSaved,
+      warningTypeSaved = it.warningTypeSaved,
+      warningDetailsSaved = it.warningDetailsSaved,
+      nextAppointmentSaved = it.nextAppointmentSaved,
+      useDefaultAddress = it.useDefaultAddress,
+      useDefaultReplyAddress = it.useDefaultReplyAddress,
     )
   }
 
@@ -199,7 +197,6 @@ class BreachNoticeService(
       county = county,
       postcode = postcode,
     )
-
 
   private fun BreachNoticeContact.toEntity(existingEntity: BreachNoticeContactEntity? = null) =
     existingEntity?.copy(

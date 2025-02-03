@@ -52,7 +52,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     assertThat(breachNotice.first().crn).isEqualTo("X00001B")
 
     webTestClient.put()
-      .uri("/breach-notice/"+breachNotice.first().id)
+      .uri("/breach-notice/" + breachNotice.first().id)
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .bodyValue(
         /* body = */
@@ -110,7 +110,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     assertThat(breachNotice.first().crn).isEqualTo("X00001B")
 
     webTestClient.put()
-      .uri("/breach-notice/"+breachNotice.first().id)
+      .uri("/breach-notice/" + breachNotice.first().id)
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .bodyValue(
         /* body = */
@@ -194,7 +194,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     assertThat(breachNotice.first().crn).isEqualTo("X00001B")
 
     webTestClient.put()
-      .uri("/breach-notice/"+"testone")
+      .uri("/breach-notice/" + "testone")
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .bodyValue(
         /* body = */

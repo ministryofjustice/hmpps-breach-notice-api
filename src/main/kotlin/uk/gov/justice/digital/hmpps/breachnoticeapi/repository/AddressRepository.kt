@@ -6,5 +6,4 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import java.util.*
 
 @Repository
-interface AddressRepository : JpaRepository<AddressEntity, UUID> {
-}
+interface AddressRepository : JpaRepository<AddressEntity, UUID>

@@ -6,5 +6,4 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEn
 import java.util.*
 
 @Repository
-interface ContactRepository : JpaRepository<BreachNoticeContactEntity, UUID> {
-}
+interface ContactRepository : JpaRepository<BreachNoticeContactEntity, UUID>
