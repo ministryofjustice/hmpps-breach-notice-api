@@ -9,23 +9,7 @@ services:
       - "5432:5432"
     networks:
       - hmpps
-<<<<<<< HEAD
-=======
-#  hmpps-breach-notice-api:
-#    build:
-#      context: .
-#    networks:
-#      - hmpps
-#    ports:
-#      - "8080:8080"
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
-#    environment:
-#      - SERVER_PORT=8080
-#      - HMPPS_AUTH_URL=http://hmpps-auth:8080/auth
-#      - DATABASE_ENDPOINT=breach-db:5432
 
->>>>>>> 6dae659 (initial setup and endpoints)
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
