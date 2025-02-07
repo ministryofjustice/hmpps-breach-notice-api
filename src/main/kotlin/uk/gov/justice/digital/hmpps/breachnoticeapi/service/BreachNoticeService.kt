@@ -59,7 +59,6 @@ class BreachNoticeService(
 
   private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) =
     existingEntity?.copy(
-      crn = crn,
       titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,

@@ -10,8 +10,4 @@ data class BreachNoticeContact(
   val contactType: String? = null,
   val contactOutcome: String? = null,
   val contactId: Long? = null,
-  val createdByUser: String? = null,
-  val createdDatetime: LocalDateTime? = null,
-  val lastUpdatedDatetime: LocalDateTime? = null,
-  val lastUpdatedUser: String? = null,
 )
