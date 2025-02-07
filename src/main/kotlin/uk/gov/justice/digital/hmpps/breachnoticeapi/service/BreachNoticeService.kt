@@ -9,11 +9,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.*
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
@@ -24,6 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
   val addressRepository: AddressRepository,
+  val pdfGenerationService: PdfGenerationService,
   @Value("\${frontend.url}") val frontendUrl: String,
   private val contactRepository: ContactRepository,
 ) {
@@ -236,4 +233,10 @@ class BreachNoticeService(
     contactOutcome = contactOutcome,
     contactId = contactId,
   )
+
+  fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?): ByteArray? {
+    var html = pdfGenerationService.generateHtml(breachNoticeDetails)
+
+    return pdfGenerationService.generatePdf(html)
+  }
 }

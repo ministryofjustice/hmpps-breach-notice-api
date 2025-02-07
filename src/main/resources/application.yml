@@ -58,16 +58,21 @@ management:
       cache:
         time-to-live: 2000ms
 
+breach:
+  template.version: ${template.version:1}
+
 ---
 spring.config.activate.on-profile: dev
 hmpps-auth.url: http://localhost:8090/auth
 database.endpoint: localhost:5432
 frontend.url: http://localhost:3000
+gotenberg.url: http://localhost:8072
 
 ---
 spring.config.activate.on-profile: test
 hmpps-auth.url: http://localhost:8090/auth
 frontend.url: http://localhost:3000
+gotenberg.url: http://localhost:8072
 spring.datasource:
   url: jdbc:tc:postgresql:17:///breachdb
 
