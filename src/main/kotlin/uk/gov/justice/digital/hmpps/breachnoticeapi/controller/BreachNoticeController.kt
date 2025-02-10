@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
@@ -25,11 +24,10 @@ import java.util.*
 
 @RestController
 // Role here is specific to the UI.
-@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
+@PreAuthorize("hasRole('BREACH_NOTICE_MANAGE')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
   @GetMapping("/{uuid}")
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Retrieve a draft breach notice by uuid - breach notice id",
     description = "Calls through the breach notice service to retrieve breach requests",
@@ -51,7 +49,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   fun getBreachNoticeById(@PathVariable uuid: UUID): BreachNoticeDetails? = breachNoticeService.getBreachNoticeById(uuid)
 
   @PostMapping
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Create a Breach Notice",
     description = "Calls through the breach notice service to create a breach notice",
@@ -74,7 +71,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 
   @PutMapping("/{id}")
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Update a Breach Notice",
     description = "Calls through the breach notice service to update a breach notice",

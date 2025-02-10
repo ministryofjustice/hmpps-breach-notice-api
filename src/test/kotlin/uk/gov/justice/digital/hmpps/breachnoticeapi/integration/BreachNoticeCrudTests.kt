@@ -19,7 +19,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should create a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X00000B",
@@ -29,16 +29,16 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isCreated
 
-    var breachNotice: MutableList<BreachNoticeEntity> = breachNoticeRepository.findByCrn("X00000B")
-    assertThat(breachNotice.first().crn).isEqualTo("X00000B")
-    assertThat(breachNotice.first().id).isNotNull()
+    val breachNotice = breachNoticeRepository.findByCrn("X00000B").single()
+    assertThat(breachNotice.crn).isEqualTo("X00000B")
+    assertThat(breachNotice.id).isNotNull()
   }
 
   @Test
   fun `should update a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001B",
@@ -53,7 +53,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         /* body = */
         BreachNotice(
@@ -96,7 +96,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should not allow the crn to be changed on an update of breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001B",
@@ -111,7 +111,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         /* body = */
         BreachNotice(
@@ -150,7 +150,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should fail to create if the crn is too long`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X00000B123456789123456",
@@ -165,7 +165,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should fail to create if the crn is too short`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X",
@@ -180,7 +180,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `update should return server error if invalid format uuid passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001B",
@@ -195,7 +195,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + "testone")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("BREACH_NOTICE_MANAGE")))
       .bodyValue(
         /* body = */
         BreachNotice(
