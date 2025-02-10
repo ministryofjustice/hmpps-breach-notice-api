@@ -14,18 +14,14 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
-import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.AddressRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
-import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
-  val addressRepository: AddressRepository,
   @Value("\${frontend.url}") val frontendUrl: String,
-  private val contactRepository: ContactRepository,
 ) {
 
   fun createBreachNotice(breachNotice: BreachNotice) =
