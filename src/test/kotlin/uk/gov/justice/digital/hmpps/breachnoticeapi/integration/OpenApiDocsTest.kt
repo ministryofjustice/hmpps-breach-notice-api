@@ -69,7 +69,7 @@ class OpenApiDocsTest : IntegrationTestBase() {
     // The security requirements of each path don't appear to be validated like they are at https://editor.swagger.io/
     // We therefore need to grab all the valid security requirements and check that each path only contains those items
     val securityRequirements = result.openAPI.security.flatMap { it.keys }
-    result.openAPI.paths.forEach { pathItem ->
+    result.openAPI.paths.filter { it.value.get != null }.forEach { pathItem ->
       assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
     }
   }
