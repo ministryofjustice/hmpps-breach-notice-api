@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import io.swagger.v3.parser.OpenAPIV3Parser
 import net.minidev.json.JSONArray
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -64,20 +63,19 @@ class OpenApiDocsTest : IntegrationTestBase() {
   }
 
   @Test
-  @Disabled
   fun `the open api json path security requirements are valid`() {
     val result = OpenAPIV3Parser().readLocation("http://localhost:$port/v3/api-docs", null, null)
 
     // The security requirements of each path don't appear to be validated like they are at https://editor.swagger.io/
     // We therefore need to grab all the valid security requirements and check that each path only contains those items
     val securityRequirements = result.openAPI.security.flatMap { it.keys }
-    result.openAPI.paths.forEach { pathItem ->
+    result.openAPI.paths.filter { it.value.get != null }.forEach { pathItem ->
       assertThat(pathItem.value.get.security.flatMap { it.keys }).isSubsetOf(securityRequirements)
     }
   }
 
   @ParameterizedTest
-  @CsvSource(value = ["breach-notice-api-ui-role, BREACH_NOTICE_MANAGE"])
+  @CsvSource(value = ["breach-notice-api-ui-role, ROLE_TEMPLATE_KOTLIN__UI"])
   fun `the security scheme is setup for bearer tokens`(key: String, role: String) {
     webTestClient.get()
       .uri("/v3/api-docs")

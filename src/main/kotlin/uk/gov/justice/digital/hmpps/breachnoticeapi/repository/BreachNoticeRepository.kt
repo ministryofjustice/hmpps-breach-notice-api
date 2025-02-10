@@ -7,5 +7,5 @@ import java.util.*
 
 @Repository
 interface BreachNoticeRepository : JpaRepository<BreachNoticeEntity, UUID> {
-  fun findByCrn(crn: String): MutableList<BreachNoticeEntity>
+  fun findByCrn(crn: String): List<BreachNoticeEntity>
 }

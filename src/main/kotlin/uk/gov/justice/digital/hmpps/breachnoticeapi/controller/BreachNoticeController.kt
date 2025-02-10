@@ -24,7 +24,7 @@ import java.util.*
 
 @RestController
 // Role here is specific to the UI.
-@PreAuthorize("hasRole('BREACH_NOTICE_MANAGE')")
+@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
   @GetMapping("/{uuid}")
