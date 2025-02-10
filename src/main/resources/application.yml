@@ -58,9 +58,6 @@ management:
       cache:
         time-to-live: 2000ms
 
-breach:
-  template.version: ${template.version:1}
-
 ---
 spring.config.activate.on-profile: dev
 hmpps-auth.url: http://localhost:8090/auth

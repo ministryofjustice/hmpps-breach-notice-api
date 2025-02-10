@@ -19,10 +19,8 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
-  val addressRepository: AddressRepository,
   val pdfGenerationService: PdfGenerationService,
   @Value("\${frontend.url}") val frontendUrl: String,
-  private val contactRepository: ContactRepository,
 ) {
 
   fun createBreachNotice(breachNotice: BreachNotice) =
@@ -34,13 +32,6 @@ class BreachNoticeService(
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): Any? {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-
-    if (breachNoticeEntity == null) {
-      return ResponseEntity(
-        "The Breach Notice id was not found",
-        HttpStatus.NOT_FOUND,
-      )
-    }
 
     if (!breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
       return ResponseEntity(
@@ -56,13 +47,12 @@ class BreachNoticeService(
 
   private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) =
     existingEntity?.copy(
-      crn = crn,
       titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
       referenceNumber = referenceNumber,
       responseRequiredDate = responseRequiredDate,
       breachNoticeTypeCode = breachNoticeTypeCode,
-      breachNoticeTypeDescription =  breachNoticeTypeDescription,
+      breachNoticeTypeDescription = breachNoticeTypeDescription,
       breachConditionTypeCode = breachConditionTypeCode,
       breachConditionTypeDescription = breachConditionTypeDescription,
       breachSentenceTypeCode = breachSentenceTypeCode,
@@ -121,7 +111,7 @@ class BreachNoticeService(
       referenceNumber = referenceNumber,
       responseRequiredDate = responseRequiredDate,
       breachNoticeTypeCode = breachNoticeTypeCode,
-      breachNoticeTypeDescription =  breachNoticeTypeDescription,
+      breachNoticeTypeDescription = breachNoticeTypeDescription,
       breachConditionTypeCode = breachConditionTypeCode,
       breachConditionTypeDescription = breachConditionTypeDescription,
       breachSentenceTypeCode = breachSentenceTypeCode,

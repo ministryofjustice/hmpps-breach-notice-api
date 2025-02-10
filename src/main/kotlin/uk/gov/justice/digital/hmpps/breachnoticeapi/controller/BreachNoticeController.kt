@@ -5,9 +5,12 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
-import org.springframework.http.*
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
@@ -29,7 +33,6 @@ import java.util.*
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
   @GetMapping("/{uuid}")
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Retrieve a draft breach notice by uuid - breach notice id",
     description = "Calls through the breach notice service to retrieve breach requests",
@@ -51,7 +54,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   fun getBreachNoticeById(@PathVariable uuid: UUID): BreachNoticeDetails? = breachNoticeService.getBreachNoticeById(uuid)
 
   @PostMapping
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Create a Breach Notice",
     description = "Calls through the breach notice service to create a breach notice",
@@ -74,7 +76,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 
   @PutMapping("/{id}")
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Update a Breach Notice",
     description = "Calls through the breach notice service to update a breach notice",
@@ -106,7 +107,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
   fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) = breachNoticeService.updateBreachNotice(id, breachNotice)
 
   @GetMapping("/{uuid}/pdf")
-  @Tag(name = "Breach Notice")
   @Operation(
     summary = "Retrieve a breach notice pdf by uuid - breach notice id",
     description = "Calls through the breach notice service to retrieve a generate ",
@@ -126,7 +126,7 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     ],
   )
   fun getBreachNoticeAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
-    var breachNotice: BreachNoticeDetails? = breachNoticeService.getBreachNoticeById(uuid)
+    var breachNotice = breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
     var pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice)
     var headers = HttpHeaders()
     headers.contentType = MediaType.APPLICATION_PDF
