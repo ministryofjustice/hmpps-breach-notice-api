@@ -224,9 +224,15 @@ class BreachNoticeService(
     contactId = contactId,
   )
 
-  fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?): ByteArray? {
+  fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
     var html = pdfGenerationService.generateHtml(breachNoticeDetails)
 
-    return pdfGenerationService.generatePdf(html)
+    var pdfBytes =  pdfGenerationService.generatePdf(html)
+
+    if (draft) {
+      pdfBytes = pdfGenerationService.addWatermark(pdfBytes)
+    }
+
+    return pdfBytes
   }
 }

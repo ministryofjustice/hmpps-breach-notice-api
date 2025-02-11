@@ -8,14 +8,6 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class GotenbergConfig (@Value("\${gotenberg.url}") val gotenbergUrl: String,) {
-//  @Bean
-//  fun templateEngine(): SpringTemplateEngine {
-//    val templateEngine = SpringTemplateEngine()
-//    val resolver = StringTemplateResolver()
-//    resolver.setTemplateMode("HTML")
-//    templateEngine.setTemplateResolver(resolver)
-//    return templateEngine
-//  }
 
   @Bean
   fun gotenbergClient(): WebClient = WebClient
