@@ -6,7 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
+import org.springframework.http.ContentDisposition
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
@@ -67,6 +72,7 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
       ),
     ],
   )
+
   @ResponseStatus(HttpStatus.CREATED)
   fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 
@@ -100,4 +106,60 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     ],
   )
   fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) = breachNoticeService.updateBreachNotice(id, breachNotice)
+
+  @GetMapping("/{uuid}/pdf")
+  @Operation(
+    summary = "Retrieve a breach notice pdf by uuid - breach notice id",
+    description = "Calls through the breach notice service to retrieve a generate ",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "breach notice pdf returned"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun getBreachNoticeAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
+    var breachNotice = breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
+    var pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, false)
+    var headers = HttpHeaders()
+    headers.contentType = MediaType.APPLICATION_PDF
+    headers.contentDisposition = ContentDisposition.attachment().filename("Breach_Notice_" + breachNotice?.crn + "_" + breachNotice?.referenceNumber + ".pdf").build()
+    return ResponseEntity.ok().headers(headers).body(pdfBytes)
+  }
+
+  @GetMapping("/{uuid}/pdf/draft")
+  @Operation(
+    summary = "Retrieve a breach notice pdf by uuid - breach notice id",
+    description = "Calls through the breach notice service to retrieve a generate ",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "breach notice pdf returned"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun getBreachNoticeAsDraftPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
+    var breachNotice = breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
+    var pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, true)
+    var headers = HttpHeaders()
+    headers.contentType = MediaType.APPLICATION_PDF
+    headers.contentDisposition = ContentDisposition.attachment().filename("Breach_Notice_" + breachNotice?.crn + "_" + breachNotice?.referenceNumber + ".pdf").build()
+    return ResponseEntity.ok().headers(headers).body(pdfBytes)
+  }
 }
