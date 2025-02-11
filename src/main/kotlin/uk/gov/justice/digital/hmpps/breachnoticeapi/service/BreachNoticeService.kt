@@ -21,6 +21,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
+  val pdfGenerationService: PdfGenerationService,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
@@ -224,4 +225,16 @@ class BreachNoticeService(
     contactOutcome = contactOutcome,
     contactId = contactId,
   )
+
+  fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
+    var html = pdfGenerationService.generateHtml(breachNoticeDetails)
+
+    var pdfBytes = pdfGenerationService.generatePdf(html)
+
+    if (draft) {
+      pdfBytes = pdfGenerationService.addWatermark(pdfBytes)
+    }
+
+    return pdfBytes
+  }
 }
