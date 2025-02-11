@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.random.Random
 
 class GotenbernApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
   companion object {
@@ -48,7 +47,7 @@ class GotenbergMockServer : WireMockServer(WIREMOCK_PORT) {
           aResponse()
             .withHeaders(HttpHeaders(HttpHeader("Content-Type", "application/pdf")))
             .withBody(
-              fileBytes
+              fileBytes,
             ),
         ),
     )

@@ -8,9 +8,9 @@ import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension
+import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension.Companion.gotenberg
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
-import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension.Companion.gotenberg
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 @ExtendWith(GotenbernApiExtension::class)
