@@ -72,7 +72,6 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
       ),
     ],
   )
-
   @ResponseStatus(HttpStatus.CREATED)
   fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
 

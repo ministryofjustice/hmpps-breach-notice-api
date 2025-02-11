@@ -229,7 +229,7 @@ class BreachNoticeService(
   fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
     var html = pdfGenerationService.generateHtml(breachNoticeDetails)
 
-    var pdfBytes =  pdfGenerationService.generatePdf(html)
+    var pdfBytes = pdfGenerationService.generatePdf(html)
 
     if (draft) {
       pdfBytes = pdfGenerationService.addWatermark(pdfBytes)

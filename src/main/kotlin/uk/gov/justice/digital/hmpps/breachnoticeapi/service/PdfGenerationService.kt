@@ -1,5 +1,11 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState
+import org.apache.pdfbox.util.Matrix
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -8,14 +14,8 @@ import org.springframework.util.LinkedMultiValueMap
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.*
-import java.nio.charset.StandardCharsets
-import org.apache.pdfbox.pdmodel.PDDocument
-import org.apache.pdfbox.pdmodel.PDPageContentStream
-import org.apache.pdfbox.pdmodel.common.PDRectangle
-import org.apache.pdfbox.pdmodel.font.PDType1Font
-import org.apache.pdfbox.pdmodel.graphics.state.PDExtendedGraphicsState
-import org.apache.pdfbox.util.Matrix
 import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -32,7 +32,7 @@ class PdfGenerationService(
     return templateEngine.process("NAT_Breach_Template", context)
   }
 
-  fun generatePdf(html : String?) : ByteArray? {
+  fun generatePdf(html: String?): ByteArray? {
     val headers = HttpHeaders()
     headers.contentType = MediaType.MULTIPART_FORM_DATA
 
@@ -44,7 +44,9 @@ class PdfGenerationService(
         HttpHeaders().apply {
           contentType = MediaType.TEXT_HTML
           setContentDispositionFormData("files", "index.html")
-        },))
+        },
+      ),
+    )
     body.add("paperWidth", "8.27")
     body.add("paperHeight", "11.69")
     body.add("marginTop", 1)
@@ -86,7 +88,7 @@ class PdfGenerationService(
 
           contentStream.beginText()
 
-          //contentStream.setTextMatrix(cosA.toFloat(), sinA.toFloat(), -sinA.toFloat(), cosA.toFloat(), centerX, centerY)
+          // contentStream.setTextMatrix(cosA.toFloat(), sinA.toFloat(), -sinA.toFloat(), cosA.toFloat(), centerX, centerY)
           var matrix = Matrix(cosA.toFloat(), sinA.toFloat(), -sinA.toFloat(), cosA.toFloat(), centerX, centerY)
           contentStream.setTextMatrix(matrix)
 

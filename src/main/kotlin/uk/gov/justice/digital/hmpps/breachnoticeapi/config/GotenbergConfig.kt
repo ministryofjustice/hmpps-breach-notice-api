@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
-class GotenbergConfig (@Value("\${gotenberg.url}") val gotenbergUrl: String,) {
+class GotenbergConfig(@Value("\${gotenberg.url}") val gotenbergUrl: String) {
 
   @Bean
   fun gotenbergClient(): WebClient = WebClient
@@ -18,5 +18,5 @@ class GotenbergConfig (@Value("\${gotenberg.url}") val gotenbergUrl: String,) {
         .builder()
         .codecs { configurer -> configurer.defaultCodecs().maxInMemorySize(-1) }
         .build(),
-      ).build()
+    ).build()
 }

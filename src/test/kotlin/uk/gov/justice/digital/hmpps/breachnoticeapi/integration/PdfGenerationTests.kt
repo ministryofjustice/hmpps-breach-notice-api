@@ -5,11 +5,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ContentDisposition
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.UUID
 
 class PdfGenerationTests : IntegrationTestBase() {
@@ -25,7 +22,7 @@ class PdfGenerationTests : IntegrationTestBase() {
       .bodyValue(
         BreachNotice(
           crn = "X00002A",
-          referenceNumber = "BRE-000001-A"
+          referenceNumber = "BRE-000001-A",
         ),
       )
       .exchange()
@@ -65,7 +62,7 @@ class PdfGenerationTests : IntegrationTestBase() {
     assertThat(breachNotice.first().crn).isEqualTo("X00002A")
 
     webTestClient.get()
-      .uri("/breach-notice/"+ UUID.randomUUID() +"/pdf")
+      .uri("/breach-notice/" + UUID.randomUUID() + "/pdf")
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
       .exchange()
       .expectStatus()
