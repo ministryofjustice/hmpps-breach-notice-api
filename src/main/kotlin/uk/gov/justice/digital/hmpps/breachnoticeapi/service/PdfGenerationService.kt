@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.LinkedMultiValueMap
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.*
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 import kotlin.math.cos
@@ -88,7 +88,6 @@ class PdfGenerationService(
 
           contentStream.beginText()
 
-          // contentStream.setTextMatrix(cosA.toFloat(), sinA.toFloat(), -sinA.toFloat(), cosA.toFloat(), centerX, centerY)
           var matrix = Matrix(cosA.toFloat(), sinA.toFloat(), -sinA.toFloat(), cosA.toFloat(), centerX, centerY)
           contentStream.setTextMatrix(matrix)
 
