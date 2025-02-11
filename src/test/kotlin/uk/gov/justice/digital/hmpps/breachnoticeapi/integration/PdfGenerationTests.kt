@@ -16,6 +16,8 @@ class PdfGenerationTests : IntegrationTestBase() {
 
   @Test
   fun `get PDF should return a 200 response`() {
+    stubGeneratePdf()
+
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
