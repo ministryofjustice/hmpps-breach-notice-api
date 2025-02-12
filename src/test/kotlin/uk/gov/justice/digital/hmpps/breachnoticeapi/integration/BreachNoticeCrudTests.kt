@@ -258,8 +258,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   }
 
   @Test
-  fun `error on delete a breach notice when no matching uuid`()
-  {
+  fun `error on delete a breach notice when no matching uuid`() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
@@ -330,5 +329,4 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .expectStatus()
       .is5xxServerError
   }
-
 }
