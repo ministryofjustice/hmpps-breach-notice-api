@@ -33,9 +33,9 @@ class BreachNoticeService(
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-    require (breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
-      "Can't change the CRN on an update."
-    }
+//    require (breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
+//      "Can't change the CRN on an update."
+//    }
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
   }
 
