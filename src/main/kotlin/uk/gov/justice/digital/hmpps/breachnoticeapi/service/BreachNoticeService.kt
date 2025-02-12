@@ -2,17 +2,17 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeRequirementEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.util.*
@@ -31,16 +31,12 @@ class BreachNoticeService(
       CreateResponse(it, "$frontendUrl/breach-notice/$it")
     }
 
-  fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): Any? {
+  fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-
-    if (!breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
-      return ResponseEntity(
-        "You can not change the CRN in a breach Report",
-        HttpStatus.BAD_REQUEST,
-      )
+    require (breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
+      "Can't change the CRN on an update."
     }
-    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity))
+    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
   }
 
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
@@ -74,7 +70,24 @@ class BreachNoticeService(
       nextAppointmentSaved = nextAppointmentSaved,
       useDefaultAddress = useDefaultAddress,
       useDefaultReplyAddress = useDefaultReplyAddress,
-    ) ?: BreachNoticeEntity(
+      breachNoticeContactList = breachNoticeContactList.map {
+        it.toEntity(
+          existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
+            existingContactEnitiy.id == it.id
+          },
+        )
+      },
+      breachNoticeRequirementList = breachNoticeRequirementList.map {
+        it.toEntity(
+          existingEntity.breachNoticeRequirementList.find { existingRequirementEntity ->
+            existingRequirementEntity.id == it.id
+          },
+        )
+      },
+    )?.also { breachNotice ->
+      breachNotice.breachNoticeContactList.forEach { it.breachNotice = breachNotice }
+      breachNotice.breachNoticeRequirementList.forEach { it.breachNotice = breachNotice }
+    } ?: BreachNoticeEntity(
       crn = crn,
       titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
@@ -102,6 +115,8 @@ class BreachNoticeService(
       nextAppointmentSaved = nextAppointmentSaved,
       useDefaultAddress = useDefaultAddress,
       useDefaultReplyAddress = useDefaultReplyAddress,
+      breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
+      breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
     )
 
   private fun BreachNoticeEntity.toModel() =
@@ -133,6 +148,8 @@ class BreachNoticeService(
       nextAppointmentSaved = nextAppointmentSaved,
       useDefaultAddress = useDefaultAddress,
       useDefaultReplyAddress = useDefaultReplyAddress,
+      breachNoticeContactList = breachNoticeContactList.map { it.toModel() },
+      breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
     )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -204,13 +221,11 @@ class BreachNoticeService(
 
   private fun BreachNoticeContact.toEntity(existingEntity: BreachNoticeContactEntity? = null) =
     existingEntity?.copy(
-      breachNoticeId = breachNoticeId,
       contactDate = contactDate,
       contactType = contactType,
       contactOutcome = contactOutcome,
       contactId = contactId,
     ) ?: BreachNoticeContactEntity(
-      breachNoticeId = breachNoticeId,
       contactDate = contactDate,
       contactType = contactType,
       contactOutcome = contactOutcome,
@@ -218,10 +233,30 @@ class BreachNoticeService(
     )
 
   private fun BreachNoticeContactEntity.toModel() = BreachNoticeContact(
-    breachNoticeId = breachNoticeId,
     contactDate = contactDate,
     contactType = contactType,
     contactOutcome = contactOutcome,
     contactId = contactId,
   )
+
+  private fun BreachNoticeRequirementEntity.toModel() = BreachNoticeRequirement(
+    id = id,
+    requirementId = requirementId,
+    requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+    requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+    rejectionReason = rejectionReason,
+  )
+
+  private fun BreachNoticeRequirement.toEntity(existingEntity: BreachNoticeRequirementEntity? = null) =
+    existingEntity?.copy(
+      requirementId = requirementId,
+      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+      rejectionReason = rejectionReason,
+    ) ?: BreachNoticeRequirementEntity(
+      requirementId = requirementId,
+      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+      rejectionReason = rejectionReason,
+    )
 }

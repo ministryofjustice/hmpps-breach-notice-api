@@ -33,4 +33,6 @@ data class BreachNoticeDetails(
   val nextAppointmentSaved: Boolean? = null,
   val useDefaultAddress: Boolean? = null,
   val useDefaultReplyAddress: Boolean? = null,
+  val breachNoticeContactList: List<BreachNoticeContact>? = null,
+  val breachNoticeRequirementList: List<BreachNoticeRequirement>? = null,
 )

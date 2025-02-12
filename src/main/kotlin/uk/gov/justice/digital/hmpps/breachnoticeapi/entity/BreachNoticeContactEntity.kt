@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.entity
 import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -18,17 +20,19 @@ import java.util.*
 data class BreachNoticeContactEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
-  val breachNoticeId: UUID,
+  @JoinColumn(name = "breach_notice_id")
+  @ManyToOne
+  var breachNotice: BreachNoticeEntity? = null,
   val contactDate: LocalDateTime? = null,
   val contactType: String? = null,
   val contactOutcome: String? = null,
   val contactId: Long? = null,
   @CreatedBy
-  val createdByUser: String? = null,
+  var createdByUser: String? = null,
   @CreatedDate
-  val createdDatetime: LocalDateTime? = null,
+  var createdDatetime: LocalDateTime? = null,
   @LastModifiedDate
-  val lastUpdatedDatetime: LocalDateTime? = null,
+  var lastUpdatedDatetime: LocalDateTime? = null,
   @LastModifiedBy
-  val lastUpdatedUser: String? = null,
+  var lastUpdatedUser: String? = null,
 )
