@@ -44,6 +44,16 @@ class BreachNoticeService(
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity))
   }
 
+  fun deleteBreachNotice(id: UUID): Any? {
+    if (breachNoticeRepository.findByIdOrNull(id) == null) {
+      return ResponseEntity(
+        "The Breach Notice id was not found",
+        HttpStatus.NOT_FOUND,
+      )
+    }
+    return breachNoticeRepository.deleteById(id)
+  }
+
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
     breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
 

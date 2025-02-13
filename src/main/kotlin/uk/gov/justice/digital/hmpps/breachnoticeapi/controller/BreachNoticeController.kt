@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -133,4 +134,30 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     headers.contentDisposition = ContentDisposition.attachment().filename("Breach_Notice_" + breachNotice?.crn + "_" + breachNotice?.referenceNumber + ".pdf").build()
     return ResponseEntity.ok().headers(headers).body(pdfBytes)
   }
+
+  @DeleteMapping("/{id}")
+  @Operation(
+    summary = "Delete a Breach Notice",
+    description = "Calls through the breach notice service to delete a breach notice",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Breach Notice deleted"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Breach Notice id was not found",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun deleteBreachNotice(@PathVariable id: UUID) = breachNoticeService.deleteBreachNotice(id)
 }
