@@ -181,6 +181,9 @@ class BreachNoticeService(
       nextAppointmentSaved = it.nextAppointmentSaved,
       useDefaultAddress = it.useDefaultAddress,
       useDefaultReplyAddress = it.useDefaultReplyAddress,
+      breachNoticeContactList = it.breachNoticeContactList.map { it.toModel() },
+      breachNoticeRequirementList = it.breachNoticeRequirementList.map { it.toModel() },
+
     )
   }
 
