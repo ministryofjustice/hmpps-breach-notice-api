@@ -64,7 +64,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       nextAppointmentDate = LocalDateTime.now(),
       nextAppointmentLocation = "NXT_LOCATION",
       nextAppointmentOfficer = "APPT_OFFICER",
-      nextAppointmentContact = null,
+      nextAppointmentId = null,
       completedDate = LocalDateTime.now(),
       offenderAddress = Address(
         addressId = 25,
@@ -143,7 +143,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
           nextAppointmentDate = LocalDateTime.now(),
           nextAppointmentLocation = "NXT_LOCATION",
           nextAppointmentOfficer = "APPT_OFFICER",
-          nextAppointmentContact = null,
+          nextAppointmentId = null,
           completedDate = LocalDateTime.now(),
           offenderAddress = Address(
             addressId = 25,

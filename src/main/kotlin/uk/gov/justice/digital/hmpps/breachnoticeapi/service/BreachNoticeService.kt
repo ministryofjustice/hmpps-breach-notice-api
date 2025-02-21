@@ -70,7 +70,7 @@ class BreachNoticeService(
       nextAppointmentDate = nextAppointmentDate,
       nextAppointmentLocation = nextAppointmentLocation,
       nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentContact = nextAppointmentContact?.toEntity(existingEntity.nextAppointmentContact),
+      nextAppointmentId = nextAppointmentId,
       completedDate = completedDate,
       offenderAddress = offenderAddress?.toEntity(existingEntity.offenderAddress),
       replyAddress = replyAddress?.toEntity(existingEntity.replyAddress),
@@ -98,6 +98,9 @@ class BreachNoticeService(
       breachNotice.breachNoticeContactList.forEach { it.breachNotice = breachNotice }
       breachNotice.breachNoticeRequirementList.forEach { it.breachNotice = breachNotice }
     } ?: BreachNoticeEntity(
+      optionalNumberChecked = optionalNumberChecked,
+      optionalNumber = optionalNumber,
+    ) ?: BreachNoticeEntity(
       crn = crn,
       titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
@@ -115,7 +118,7 @@ class BreachNoticeService(
       nextAppointmentDate = nextAppointmentDate,
       nextAppointmentLocation = nextAppointmentLocation,
       nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentContact = nextAppointmentContact?.toEntity(),
+      nextAppointmentId = nextAppointmentId,
       completedDate = completedDate,
       offenderAddress = offenderAddress?.toEntity(),
       replyAddress = replyAddress?.toEntity(),
@@ -125,6 +128,8 @@ class BreachNoticeService(
       nextAppointmentSaved = nextAppointmentSaved,
       useDefaultAddress = useDefaultAddress,
       useDefaultReplyAddress = useDefaultReplyAddress,
+      optionalNumberChecked = optionalNumberChecked,
+      optionalNumber = optionalNumber,
       breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
       breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
     )
@@ -148,7 +153,7 @@ class BreachNoticeService(
       nextAppointmentDate = nextAppointmentDate,
       nextAppointmentLocation = nextAppointmentLocation,
       nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentContact = nextAppointmentContact?.toModel(),
+      nextAppointmentId = nextAppointmentId,
       completedDate = completedDate,
       offenderAddress = offenderAddress?.toModel(),
       replyAddress = replyAddress?.toModel(),
@@ -160,6 +165,8 @@ class BreachNoticeService(
       useDefaultReplyAddress = useDefaultReplyAddress,
       breachNoticeContactList = breachNoticeContactList.map { it.toModel() },
       breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
+      optionalNumberChecked = optionalNumberChecked,
+      optionalNumber = optionalNumber,
     )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -182,6 +189,7 @@ class BreachNoticeService(
       nextAppointmentDate = it.nextAppointmentDate,
       nextAppointmentLocation = it.nextAppointmentLocation,
       nextAppointmentOfficer = it.nextAppointmentOfficer,
+      nextAppointmentId = it.nextAppointmentId,
       completedDate = it.completedDate,
       offenderAddress = it.offenderAddress?.toModel(),
       replyAddress = it.replyAddress?.toModel(),
@@ -193,7 +201,8 @@ class BreachNoticeService(
       useDefaultReplyAddress = it.useDefaultReplyAddress,
       breachNoticeContactList = it.breachNoticeContactList.map { it.toModel() },
       breachNoticeRequirementList = it.breachNoticeRequirementList.map { it.toModel() },
-
+      optionalNumberChecked = it.optionalNumberChecked,
+      optionalNumber = it.optionalNumber,
     )
   }
 

@@ -40,9 +40,7 @@ data class BreachNoticeEntity(
   var nextAppointmentDate: LocalDateTime? = null,
   var nextAppointmentLocation: String? = null,
   var nextAppointmentOfficer: String? = null,
-  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
-  @JoinColumn(name = "next_appointment_contact_id", unique = true)
-  var nextAppointmentContact: BreachNoticeContactEntity? = null,
+  var nextAppointmentId: Long? = null,
   var completedDate: LocalDateTime? = null,
   @CreatedBy
   var createdByUser: String? = null,
@@ -68,4 +66,6 @@ data class BreachNoticeEntity(
   val breachNoticeContactList: List<BreachNoticeContactEntity> = emptyList(),
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
   val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
+  var optionalNumberChecked: Boolean? = null,
+  var optionalNumber: String? = null,
 )
