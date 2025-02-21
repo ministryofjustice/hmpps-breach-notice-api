@@ -2,6 +2,8 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
@@ -34,9 +36,6 @@ class BreachNoticeService(
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-//    require (breachNoticeEntity.crn.equals(breachNotice.crn, ignoreCase = true)) {
-//      "Can't change the CRN on an update."
-//    }
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
   }
 
@@ -275,7 +274,7 @@ class BreachNoticeService(
     )
 
   fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
-    var html = pdfGenerationService.generateHtml(breachNoticeDetails)
+    val html = pdfGenerationService.generateHtml(breachNoticeDetails)
 
     var pdfBytes = pdfGenerationService.generatePdf(html)
 
@@ -285,5 +284,4 @@ class BreachNoticeService(
 
     return pdfBytes
   }
-
 }
