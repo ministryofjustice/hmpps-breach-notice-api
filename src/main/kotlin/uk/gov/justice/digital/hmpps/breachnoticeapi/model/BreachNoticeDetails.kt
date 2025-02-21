@@ -25,7 +25,7 @@ data class BreachNoticeDetails(
   val nextAppointmentDate: LocalDateTime? = null,
   val nextAppointmentLocation: String? = null,
   val nextAppointmentOfficer: String? = null,
-  val nextAppointmentContact: BreachNoticeContact? = null,
+  val nextAppointmentId: Long? = null,
   val completedDate: LocalDateTime? = null,
   val offenderAddress: Address? = null,
   val replyAddress: Address? = null,
@@ -39,4 +39,6 @@ data class BreachNoticeDetails(
   val breachNoticeContactList: List<BreachNoticeContact> = emptyList(),
   @field:JsonSetter(nulls = Nulls.AS_EMPTY)
   val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
+  val optionalNumberChecked: Boolean? = null,
+  val optionalNumber: String? = null,
 )
