@@ -66,6 +66,6 @@ data class BreachNoticeEntity(
   var useDefaultReplyAddress: Boolean? = null,
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
   val breachNoticeContactList: List<BreachNoticeContactEntity> = emptyList(),
-  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice" )
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
   val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
 )
