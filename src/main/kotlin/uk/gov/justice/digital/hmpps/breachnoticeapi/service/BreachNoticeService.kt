@@ -98,9 +98,6 @@ class BreachNoticeService(
       breachNotice.breachNoticeContactList.forEach { it.breachNotice = breachNotice }
       breachNotice.breachNoticeRequirementList.forEach { it.breachNotice = breachNotice }
     } ?: BreachNoticeEntity(
-      optionalNumberChecked = optionalNumberChecked,
-      optionalNumber = optionalNumber,
-    ) ?: BreachNoticeEntity(
       crn = crn,
       titleAndFullName = titleAndFullName,
       dateOfLetter = dateOfLetter,
