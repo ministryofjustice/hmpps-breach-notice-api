@@ -1,5 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
+import com.fasterxml.jackson.annotation.JsonSetter
+import com.fasterxml.jackson.annotation.Nulls
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -33,4 +35,8 @@ data class BreachNoticeDetails(
   val nextAppointmentSaved: Boolean? = null,
   val useDefaultAddress: Boolean? = null,
   val useDefaultReplyAddress: Boolean? = null,
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  val breachNoticeContactList: List<BreachNoticeContact> = emptyList(),
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
 )

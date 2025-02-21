@@ -5,6 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EntityListeners
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
@@ -63,4 +64,8 @@ data class BreachNoticeEntity(
   var nextAppointmentSaved: Boolean? = null,
   var useDefaultAddress: Boolean? = null,
   var useDefaultReplyAddress: Boolean? = null,
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
+  val breachNoticeContactList: List<BreachNoticeContactEntity> = emptyList(),
+  @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
+  val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
 )

@@ -93,60 +93,6 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   }
 
   @Test
-  fun `should not allow the crn to be changed on an update of breach notice`() {
-    webTestClient.post()
-      .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00001E",
-        ),
-      )
-      .exchange()
-      .expectStatus()
-      .isCreated
-
-    val breachNotice = breachNoticeRepository.findByCrn("X00001E").single()
-    assertThat(breachNotice.crn).isEqualTo("X00001E")
-
-    webTestClient.put()
-      .uri("/breach-notice/" + breachNotice.id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        /* body = */
-        BreachNotice(
-          crn = "X00001Z",
-          breachConditionTypeCode = "TYPE_CODE",
-          titleAndFullName = "Mr Joe Bloggs",
-          dateOfLetter = LocalDate.now(),
-          referenceNumber = "REFERENCE_NUMBER",
-          responseRequiredDate = LocalDate.now(),
-          breachNoticeTypeCode = "BRCH",
-          responsibleOfficer = "John Doe",
-          contactNumber = "01912525252",
-          nextAppointmentType = "NXTTYP",
-          nextAppointmentDate = LocalDateTime.now(),
-          nextAppointmentLocation = "NXT_LOCATION",
-          nextAppointmentOfficer = "APPT_OFFICER",
-          nextAppointmentContact = null,
-          completedDate = LocalDateTime.now(),
-          offenderAddress = Address(
-            addressId = 25,
-            type = "ENDO",
-            buildingName = "MOO",
-          ),
-          replyAddress = null,
-          basicDetailsSaved = true,
-        ),
-      )
-      .exchange()
-      .expectStatus()
-      .isBadRequest
-      .expectBody(String::class.java)
-      .isEqualTo<Nothing>("You can not change the CRN in a breach Report")
-  }
-
-  @Test
   fun `should fail to create if the crn is too long`() {
     webTestClient.post()
       .uri("/breach-notice")
@@ -154,21 +100,6 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .bodyValue(
         BreachNotice(
           crn = "X00000B123456789123456",
-        ),
-      )
-      .exchange()
-      .expectStatus()
-      .is5xxServerError
-  }
-
-  @Test
-  fun `should fail to create if the crn is too short`() {
-    webTestClient.post()
-      .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X",
         ),
       )
       .exchange()

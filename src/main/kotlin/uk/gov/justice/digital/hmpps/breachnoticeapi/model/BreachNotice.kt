@@ -1,13 +1,11 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.Size
+import com.fasterxml.jackson.annotation.JsonSetter
+import com.fasterxml.jackson.annotation.Nulls
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class BreachNotice(
-  @field:NotBlank(message = "CRN must not be blank")
-  @field:Size(min = 7, max = 7, message = "CRN must be 7 characters long")
   val crn: String,
   val titleAndFullName: String? = null,
   val dateOfLetter: LocalDate? = null,
@@ -35,4 +33,8 @@ data class BreachNotice(
   val nextAppointmentSaved: Boolean? = null,
   val useDefaultAddress: Boolean? = null,
   val useDefaultReplyAddress: Boolean? = null,
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  val breachNoticeContactList: List<BreachNoticeContact> = emptyList(),
+  @field:JsonSetter(nulls = Nulls.AS_EMPTY)
+  val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
 )
