@@ -285,5 +285,4 @@ class BreachNoticeService(
 
     return pdfBytes
   }
-
 }
