@@ -21,6 +21,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
+  val pdfGenerationService: PdfGenerationService,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
@@ -37,6 +38,16 @@ class BreachNoticeService(
 //      "Can't change the CRN on an update."
 //    }
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
+  }
+
+  fun deleteBreachNotice(id: UUID): Any? {
+    if (breachNoticeRepository.findByIdOrNull(id) == null) {
+      return ResponseEntity(
+        "The Breach Notice id was not found",
+        HttpStatus.NOT_FOUND,
+      )
+    }
+    return breachNoticeRepository.deleteById(id)
   }
 
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
@@ -262,4 +273,17 @@ class BreachNoticeService(
       requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
       rejectionReason = rejectionReason,
     )
+
+  fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
+    var html = pdfGenerationService.generateHtml(breachNoticeDetails)
+
+    var pdfBytes = pdfGenerationService.generatePdf(html)
+
+    if (draft) {
+      pdfBytes = pdfGenerationService.addWatermark(pdfBytes)
+    }
+
+    return pdfBytes
+  }
+
 }

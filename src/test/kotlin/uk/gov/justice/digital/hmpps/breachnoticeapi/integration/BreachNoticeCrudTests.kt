@@ -158,4 +158,106 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .expectStatus()
       .is5xxServerError
   }
+
+  @Test
+  fun `should delete a breach notice`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .bodyValue(
+        BreachNotice(
+          crn = "X00001D",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X00001D")
+    assertThat(breachNotice.first().crn).isEqualTo("X00001D")
+    assertThat(breachNotice.first().id).isNotNull()
+
+    webTestClient.delete()
+      .uri("/breach-notice/" + breachNotice.first().id)
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    val purgedBreachNotice = breachNoticeRepository.findById(breachNotice.first().id)
+    assertThat(purgedBreachNotice.isEmpty)
+  }
+
+  @Test
+  fun `error on delete a breach notice when no matching uuid`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .bodyValue(
+        BreachNotice(
+          crn = "X00002D",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X00002D")
+    assertThat(breachNotice.first().crn).isEqualTo("X00002D")
+    assertThat(breachNotice.first().id).isNotNull()
+
+    // Non-existent uuid
+    webTestClient.delete()
+      .uri("/breach-notice/" + "00000000-0000-4000-8000-000000000000")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+
+    var refreshedBreachNotice = breachNoticeRepository.findById(breachNotice.first().id)
+    assertThat(refreshedBreachNotice.isPresent)
+
+    // Existing, now-deleted uuid
+    webTestClient.delete()
+      .uri("/breach-notice/" + breachNotice.first().id)
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    refreshedBreachNotice = breachNoticeRepository.findById(breachNotice.first().id)
+    assertThat(refreshedBreachNotice.isEmpty)
+
+    webTestClient.delete()
+      .uri("/breach-notice/" + breachNotice.first().id)
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .exchange()
+      .expectStatus()
+      .isNotFound
+  }
+
+  @Test
+  fun `delete should return server error if invalid format uuid passed in`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .bodyValue(
+        BreachNotice(
+          crn = "X00003D",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X00003D")
+    assertThat(breachNotice.first().crn).isEqualTo("X00003D")
+
+    webTestClient.delete()
+      .uri("/breach-notice/" + "TESTONE")
+      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .exchange()
+      .expectStatus()
+      .is5xxServerError
+  }
 }
