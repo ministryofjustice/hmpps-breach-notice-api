@@ -8,4 +8,6 @@ data class BreachNoticeRequirement(
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
   val rejectionReason: String? = null,
+  val fromDate: String? = null,
+  val toDate: String? = null,
 )
