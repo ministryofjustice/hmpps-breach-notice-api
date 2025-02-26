@@ -173,7 +173,7 @@ class BreachNoticeService(
       titleAndFullName = it.titleAndFullName,
       dateOfLetter = it.dateOfLetter,
       referenceNumber = it.referenceNumber,
-      responseRequiredByDate = it.responseRequiredDate,
+      responseRequiredDate = it.responseRequiredDate,
       breachNoticeTypeCode = it.breachNoticeTypeCode,
       breachNoticeTypeDescription = it.breachNoticeTypeDescription,
       breachConditionTypeCode = it.breachConditionTypeCode,
