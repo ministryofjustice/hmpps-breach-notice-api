@@ -264,6 +264,8 @@ class BreachNoticeService(
     requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
     requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
     rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
   )
 
   private fun BreachNoticeRequirement.toEntity(existingEntity: BreachNoticeRequirementEntity? = null) =
@@ -272,11 +274,15 @@ class BreachNoticeService(
       requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
       requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
       rejectionReason = rejectionReason,
+      fromDate = fromDate,
+      toDate = toDate,
     ) ?: BreachNoticeRequirementEntity(
       requirementId = requirementId,
       requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
       requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
       rejectionReason = rejectionReason,
+      fromDate = fromDate,
+      toDate = toDate,
     )
 
   fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {

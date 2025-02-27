@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
+import java.time.LocalDate
 import java.util.*
 
 data class BreachNoticeRequirement(
@@ -8,4 +9,6 @@ data class BreachNoticeRequirement(
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
   val rejectionReason: String? = null,
+  val fromDate: LocalDate? = null,
+  val toDate: LocalDate? = null,
 )
