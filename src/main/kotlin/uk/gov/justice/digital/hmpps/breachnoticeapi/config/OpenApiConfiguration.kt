@@ -32,7 +32,7 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
     .components(
       Components().addSecuritySchemes(
         "breach-notice-api-ui-role",
-        SecurityScheme().addBearerJwtRequirement("ROLE_TEMPLATE_KOTLIN__UI"),
+        SecurityScheme().addBearerJwtRequirement("ROLE_BREACH_NOTICE"),
       ),
     )
     .addSecurityItem(SecurityRequirement().addList("breach-notice-api-ui-role", listOf("read")))

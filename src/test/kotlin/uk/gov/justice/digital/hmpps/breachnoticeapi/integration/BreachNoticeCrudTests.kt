@@ -18,7 +18,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should create a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00000B",
@@ -37,7 +37,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should update a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001C",
@@ -77,7 +77,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + breachNotice.id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         breachNoticeBody,
       )
@@ -96,7 +96,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should fail to create if the crn is too long`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00000B123456789123456",
@@ -111,7 +111,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `update should return server error if invalid format uuid passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001G",
@@ -126,7 +126,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + "testone")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         /* body = */
         BreachNotice(
@@ -163,7 +163,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should delete a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00001D",
@@ -179,7 +179,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isOk
@@ -192,7 +192,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `error on delete a breach notice when no matching uuid`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00002D",
@@ -209,7 +209,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     // Non-existent uuid
     webTestClient.delete()
       .uri("/breach-notice/" + "00000000-0000-4000-8000-000000000000")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isNotFound
@@ -220,7 +220,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     // Existing, now-deleted uuid
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isOk
@@ -230,7 +230,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isNotFound
@@ -240,7 +240,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `delete should return server error if invalid format uuid passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00003D",
@@ -255,7 +255,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/breach-notice/" + "TESTONE")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .is5xxServerError
