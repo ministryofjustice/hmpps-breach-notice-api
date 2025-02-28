@@ -13,6 +13,7 @@ services:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
+    container_name: hmpps-auth
     ports:
       - "8090:8080"
     healthcheck:
