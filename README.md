@@ -1,11 +1,10 @@
 # hmpps-breach-notice-api
 
 [![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-breach-notice-api)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-breach-notice-api "Link to report")
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-breach-notice-api/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-breach-notice-api)
-[![Docker Repository on Quay](https://img.shields.io/badge/quay.io-repository-2496ED.svg?logo=docker)](https://quay.io/repository/hmpps/hmpps-breach-notice-api)
+[![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-breach-notice-api)
 [![API docs](https://img.shields.io/badge/API_docs_-view-85EA2D.svg?logo=swagger)](https://hmpps-breach-notice-api-dev.hmpps.service.justice.gov.uk/webjars/swagger-ui/index.html?configUrl=/v3/api-docs)
 
-Template github repo used for new Kotlin based projects.
+API back-end for the [HMPPS Breach Notice](https://github.com/ministryofjustice/hmpps-breach-notice-ui) service.
 
 # Instructions
 
@@ -17,17 +16,24 @@ within GitHub.
 This project is community managed by the mojdt `#kotlin-dev` slack channel.
 Please raise any questions or queries there. Contributions welcome!
 
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-breach-notice-api/security/policy).
+Our security policy is located [here](https://github.com/ministryofjustice/hmpps-template-kotlin/security/policy).
+
+Documentation to create new service is located [here](https://tech-docs.hmpps.service.justice.gov.uk/applicationplatform/newservice-GHA/).
 
 ## Creating a Cloud Platform namespace
 
 When deploying to a new namespace, you may wish to use the
 [templates project namespace](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev)
-as the basis for your new namespace. This namespace contains both the kotlin and typescript template projects, which
-is the usual way that projects are setup.
+as the basis for your new namespace. This namespace contains both the kotlin and typescript template projects, 
+which is the usual way that projects are setup.
 
-Copy this folder and update all the existing namespace references. If you only need the kotlin configuration then remove
-all typescript references and remove the elasticache configuration. Submit a PR to the Cloud Platform team in
+Copy this folder and update all the existing namespace references to correspond to the environment to which you're deploying.
+
+If you only need the kotlin configuration then remove all typescript references and remove the elasticache configuration. 
+
+To ensure the correct github teams can approve releases, you will need to make changes to the configuration in `resources/service-account-github` where the appropriate team names will need to be added (based on [lines 98-100](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev/resources/serviceaccount-github.tf#L98) and the reference appended to the teams list below [line 112](https://github.com/ministryofjustice/cloud-platform-environments/blob/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev/resources/serviceaccount-github.tf#L112)). Note: hmpps-sre is in this list to assist with deployment issues.
+
+Submit a PR to the Cloud Platform team in
 #ask-cloud-platform. Further instructions from the Cloud Platform team can be found in
 the [Cloud Platform User Guide](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide)
 

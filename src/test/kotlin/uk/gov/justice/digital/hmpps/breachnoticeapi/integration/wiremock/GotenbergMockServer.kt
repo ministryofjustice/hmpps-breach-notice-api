@@ -13,7 +13,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import java.nio.file.Files
 import java.nio.file.Paths
 
-class GotenbernApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
+class GotenbernApiExtension :
+  BeforeAllCallback,
+  AfterAllCallback,
+  BeforeEachCallback {
   companion object {
     @JvmField
     val gotenberg = GotenbergMockServer()
