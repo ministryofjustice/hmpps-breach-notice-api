@@ -20,7 +20,7 @@ class PdfGenerationTests : IntegrationTestBase() {
 
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00002A",
@@ -36,7 +36,7 @@ class PdfGenerationTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/breach-notice/" + breachNotice[0].id + "/pdf")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isOk
@@ -50,7 +50,7 @@ class PdfGenerationTests : IntegrationTestBase() {
   fun `get PDF should return a 404 response if breach not found`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X00002A",
@@ -65,7 +65,7 @@ class PdfGenerationTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri("/breach-notice/" + UUID.randomUUID() + "/pdf")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .is5xxServerError
