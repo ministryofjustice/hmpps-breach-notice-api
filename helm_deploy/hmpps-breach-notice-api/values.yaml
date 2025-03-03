@@ -2,6 +2,8 @@ generic-service:
   nameOverride: hmpps-breach-notice-api
   productId: "HMPPS501" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
+  serviceAccountName: hmpps-breach-notice
+
   replicaCount: 4
 
   image:
