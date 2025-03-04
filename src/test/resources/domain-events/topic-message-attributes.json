@@ -1,0 +1,17 @@
+{
+  "Type" : "Notification",
+  "MessageId" : "c7c89d27-1afa-5e06-a3b2-fd67c2959621",
+  "TopicArn" : "arn:aws:sns:eu-west-2:754256621582:cloud-platform-Digital-Prison-Services-97e6567cf80881a8a52290ff2c269b08",
+  "Message" : "{\"eventType\":\"probation-case.merge.completed\",\"version\":1,\"occurredAt\":\"2025-03-04T10:30:07.329287Z\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X028317\",\"targetCRN\":\"X028318\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X028318\"}]}}",
+  "Timestamp" : "2025-03-04T10:30:07.401Z",
+  "SignatureVersion" : "1",
+  "Signature" : "Jc6JD2x8gUfhmTWKE9vrFBNWVuB1XURlVcx/JTTFKPoUkCJWQ2KI1dK/WuBhH9IGoVcGSbFgtJ61QC1m6PskfqBYDEA3UIM9W/JVjEPm0dD+wwL5FxDUrd6x9kHUtUJhEYCSjJGUQeXVzWSch+Qx7K7YhlMnV/cwzTdQUIy+LehcJ5BmzA+HDRGRUGwzL6DmVD8nm3zGfkb7k+HAB00Shwv+v3UjwE0ZdR66bmKvtvWzypBll3bC/wliyu4iUhtloA9VfwH0ov4/DBY6MVAx/15zevy4lRe8ru+uvhDr1562CIrnNi8QomZuQRsaz1KJnRXeKJ5TMEQy2tbfoSxb4w==",
+  "SigningCertURL" : "https://sns.eu-west-2.amazonaws.com/SimpleNotificationService-9c6465fa7f48f5cacd23014631ec1136.pem",
+  "UnsubscribeURL" : "https://sns.eu-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:eu-west-2:754256621582:cloud-platform-Digital-Prison-Services-97e6567cf80881a8a52290ff2c269b08:340b799a-084f-4027-a214-510087556d97",
+  "MessageAttributes" : {
+    "traceparent" : {"Type":"String","Value":"00-706f73c43dda53a7e712292e691b6284-16d1c318a9d3e0aa-01"},
+    "eventType" : {"Type":"String","Value":"probation-case.merge.completed"},
+    "id" : {"Type":"String","Value":"ce59ad1c-dee9-5e34-6c60-026236494609"},
+    "timestamp" : {"Type":"Number.java.lang.Long","Value":"1741084207385"}
+  }
+}

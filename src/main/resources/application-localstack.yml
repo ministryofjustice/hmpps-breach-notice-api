@@ -1,0 +1,13 @@
+hmpps.sqs:
+  provider: localstack
+  queues:
+    hmppsbreachnoticequeue:
+      queueName: hmpps-breach-notice-queue
+      dlqName: hmpps-breach-notice-queue-dlq
+      subscribeTopicId: hmppsbreachnoticetopic
+      #subscribeFilter: '{"eventType":[ "probation-case.merge.completed", "probation-case.unmerge.completed", "probation-case.sentence.moved"] }'
+    audit:
+      queueName: audit-queue
+  topics:
+    hmppsbreachnoticetopic:
+      arn: arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic
