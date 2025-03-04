@@ -23,16 +23,15 @@ class PdfGenerationTests : IntegrationTestBase() {
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
-          crn = "X00002A",
+          crn = "X000007",
           referenceNumber = "BRE-000001-A",
         ),
       )
       .exchange()
-      .expectStatus()
-      .isCreated
+      .expectStatus().isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00002A")
-    assertThat(breachNotice.first().crn).isEqualTo("X00002A")
+    val breachNotice = breachNoticeRepository.findByCrn("X000007")
+    assertThat(breachNotice.first().crn).isEqualTo("X000007")
 
     webTestClient.get()
       .uri("/breach-notice/" + breachNotice[0].id + "/pdf")
@@ -51,23 +50,18 @@ class PdfGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00002A",
-        ),
-      )
+      .bodyValue(BreachNotice(crn = "X000007"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00002A")
-    assertThat(breachNotice.first().crn).isEqualTo("X00002A")
+    val breachNotice = breachNoticeRepository.findByCrn("X000007")
+    assertThat(breachNotice.first().crn).isEqualTo("X000007")
 
     webTestClient.get()
       .uri("/breach-notice/" + UUID.randomUUID() + "/pdf")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
-      .expectStatus()
-      .is5xxServerError
+      .expectStatus().isNotFound
   }
 }
