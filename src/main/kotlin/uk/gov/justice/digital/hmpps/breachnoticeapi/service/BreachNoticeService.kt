@@ -130,7 +130,6 @@ class BreachNoticeService(
       optionalNumber = optionalNumber,
       breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
       breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
-      conditionBeingEnforced = conditionBeingEnforced,
     )
 
   private fun BreachNoticeEntity.toModel() =

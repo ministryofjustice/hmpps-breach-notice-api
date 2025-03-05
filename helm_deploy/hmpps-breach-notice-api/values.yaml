@@ -2,10 +2,12 @@ generic-service:
   nameOverride: hmpps-breach-notice-api
   productId: "HMPPS501" # productId for the product that this belongs too, i.e. DPS001, see README.md for details
 
+  serviceAccountName: hmpps-breach-notice
+
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-breach-notice-api
+    repository: ghcr.io/ministryofjustice/hmpps-breach-notice-api
     tag: app_version # override at deployment time
     port: 8080
 
@@ -18,8 +20,9 @@ generic-service:
   env:
     JAVA_OPTS: "-Xmx512m"
     SERVER_PORT: "8080"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
+    GOTENBERG_URL: http://hmpps-breach-notice-api-gotenberg
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -29,13 +32,54 @@ generic-service:
   namespace_secrets:
     hmpps-breach-notice-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      # Example client registration secrets
-      EXAMPLE_API_CLIENT_ID: "TEMPLATE_KOTLIN_API_CLIENT_ID"
-      EXAMPLE_API_CLIENT_SECRET: "TEMPLATE_KOTLIN_API_CLIENT_SECRET"
+    rds-instance-output:
+      DATABASE_ENDPOINT: rds_instance_endpoint
+      DATABASE_USERNAME: database_username
+      DATABASE_PASSWORD: database_password
+      DATABASE_NAME: database_name
 
-  allowlist:
-    groups:
-      - internal
+gotenberg:
+  nameOverride: gotenberg
+  replicaCount: 2
+
+  image:
+    repository: gotenberg/gotenberg
+    tag: 8
+    port: 3000
+
+  ingress:
+    enabled: false
+
+  livenessProbe:
+    httpGet:
+      path: /health
+    periodSeconds: 30
+    initialDelaySeconds: 60
+    timeoutSeconds: 20
+    failureThreshold: 10
+
+  readinessProbe:
+    httpGet:
+      path: /health
+    periodSeconds: 20
+    initialDelaySeconds: 60
+    timeoutSeconds: 30
+    failureThreshold: 15
+
+  podSecurityContext:
+    fsGroup: 1001
+
+  securityContext:
+    runAsUser: 1001
+    runAsNonRoot: true
+    readOnlyRootFilesystem: false
+    allowPrivilegeEscalation: false
+    privileged: false
+
+  env:
+    GOOGLE_CHROME_IGNORE_CERTIFICATE_ERRORS: 1
+    DISABLE_UNOCONV: 1
+    DEFAULT_WAIT_TIMEOUT: 30
 
 generic-prometheus-alerts:
   targetApplication: hmpps-breach-notice-api

@@ -10,11 +10,15 @@ generic-service:
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
     HMPPS_AUTH_URL: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth"
-    # Template kotlin calls out to itself to provide an example of a service call
-    # TODO: This should be replaced by a call to a different service, or removed
-    EXAMPLE_API_URL: "https://breach-notice-api-preprod.hmpps.service.justice.gov.uk"
+    FRONTEND_URL: "https://breach-notice-preprod.hmpps.service.justice.gov.uk"
+
+  allowlist:
+    groups:
+      - internal
+      - unilink_staff
+      - delius-preprod
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 # See https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts
 generic-prometheus-alerts:
-  alertSeverity: tbc
+  alertSeverity: NON_PROD_ALERTS_SEVERITY_LABEL
