@@ -68,4 +68,5 @@ data class BreachNoticeEntity(
   val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
   var optionalNumberChecked: Boolean? = null,
   var optionalNumber: String? = null,
+  val conditionBeingEnforced: String? = null,
 )
