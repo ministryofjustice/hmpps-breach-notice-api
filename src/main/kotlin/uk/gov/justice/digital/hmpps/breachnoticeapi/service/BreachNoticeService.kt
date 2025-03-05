@@ -27,12 +27,11 @@ class BreachNoticeService(
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
-  fun createBreachNotice(breachNotice: BreachNotice) =
-    breachNoticeRepository.save(
-      breachNotice.toEntity(),
-    ).id.let {
-      CreateResponse(it, "$frontendUrl/breach-notice/$it")
-    }
+  fun createBreachNotice(breachNotice: BreachNotice) = breachNoticeRepository.save(
+    breachNotice.toEntity(),
+  ).id.let {
+    CreateResponse(it, "$frontendUrl/breach-notice/$it")
+  }
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
@@ -49,124 +48,121 @@ class BreachNoticeService(
     return breachNoticeRepository.deleteById(id)
   }
 
-  private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity =
-    breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
+  private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity = breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
 
-  private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) =
-    existingEntity?.copy(
-      titleAndFullName = titleAndFullName,
-      dateOfLetter = dateOfLetter,
-      referenceNumber = referenceNumber,
-      responseRequiredDate = responseRequiredDate,
-      breachNoticeTypeCode = breachNoticeTypeCode,
-      breachNoticeTypeDescription = breachNoticeTypeDescription,
-      breachConditionTypeCode = breachConditionTypeCode,
-      breachConditionTypeDescription = breachConditionTypeDescription,
-      breachSentenceTypeCode = breachSentenceTypeCode,
-      breachSentenceTypeDescription = breachSentenceTypeDescription,
-      responsibleOfficer = responsibleOfficer,
-      contactNumber = contactNumber,
-      nextAppointmentType = nextAppointmentType,
-      nextAppointmentDate = nextAppointmentDate,
-      nextAppointmentLocation = nextAppointmentLocation,
-      nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentId = nextAppointmentId,
-      completedDate = completedDate,
-      offenderAddress = offenderAddress?.toEntity(existingEntity.offenderAddress),
-      replyAddress = replyAddress?.toEntity(existingEntity.replyAddress),
-      basicDetailsSaved = basicDetailsSaved,
-      warningTypeSaved = warningTypeSaved,
-      warningDetailsSaved = warningDetailsSaved,
-      nextAppointmentSaved = nextAppointmentSaved,
-      useDefaultAddress = useDefaultAddress,
-      useDefaultReplyAddress = useDefaultReplyAddress,
-      conditionBeingEnforced = conditionBeingEnforced,
-      breachNoticeContactList = breachNoticeContactList.map {
-        it.toEntity(
-          existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
-            existingContactEnitiy.id == it.id
-          },
-        )
-      },
-      breachNoticeRequirementList = breachNoticeRequirementList.map {
-        it.toEntity(
-          existingEntity.breachNoticeRequirementList.find { existingRequirementEntity ->
-            existingRequirementEntity.id == it.id
-          },
-        )
-      },
-    )?.also { breachNotice ->
-      breachNotice.breachNoticeContactList.forEach { it.breachNotice = breachNotice }
-      breachNotice.breachNoticeRequirementList.forEach { it.breachNotice = breachNotice }
-    } ?: BreachNoticeEntity(
-      crn = crn,
-      titleAndFullName = titleAndFullName,
-      dateOfLetter = dateOfLetter,
-      referenceNumber = referenceNumber,
-      responseRequiredDate = responseRequiredDate,
-      breachNoticeTypeCode = breachNoticeTypeCode,
-      breachNoticeTypeDescription = breachNoticeTypeDescription,
-      breachConditionTypeCode = breachConditionTypeCode,
-      breachConditionTypeDescription = breachConditionTypeDescription,
-      breachSentenceTypeCode = breachSentenceTypeCode,
-      breachSentenceTypeDescription = breachSentenceTypeDescription,
-      responsibleOfficer = responsibleOfficer,
-      contactNumber = contactNumber,
-      nextAppointmentType = nextAppointmentType,
-      nextAppointmentDate = nextAppointmentDate,
-      nextAppointmentLocation = nextAppointmentLocation,
-      nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentId = nextAppointmentId,
-      completedDate = completedDate,
-      offenderAddress = offenderAddress?.toEntity(),
-      replyAddress = replyAddress?.toEntity(),
-      basicDetailsSaved = basicDetailsSaved,
-      warningTypeSaved = warningTypeSaved,
-      warningDetailsSaved = warningDetailsSaved,
-      nextAppointmentSaved = nextAppointmentSaved,
-      useDefaultAddress = useDefaultAddress,
-      useDefaultReplyAddress = useDefaultReplyAddress,
-      optionalNumberChecked = optionalNumberChecked,
-      optionalNumber = optionalNumber,
-      breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
-      breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
-    )
+  private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) = existingEntity?.copy(
+    titleAndFullName = titleAndFullName,
+    dateOfLetter = dateOfLetter,
+    referenceNumber = referenceNumber,
+    responseRequiredDate = responseRequiredDate,
+    breachNoticeTypeCode = breachNoticeTypeCode,
+    breachNoticeTypeDescription = breachNoticeTypeDescription,
+    breachConditionTypeCode = breachConditionTypeCode,
+    breachConditionTypeDescription = breachConditionTypeDescription,
+    breachSentenceTypeCode = breachSentenceTypeCode,
+    breachSentenceTypeDescription = breachSentenceTypeDescription,
+    responsibleOfficer = responsibleOfficer,
+    contactNumber = contactNumber,
+    nextAppointmentType = nextAppointmentType,
+    nextAppointmentDate = nextAppointmentDate,
+    nextAppointmentLocation = nextAppointmentLocation,
+    nextAppointmentOfficer = nextAppointmentOfficer,
+    nextAppointmentId = nextAppointmentId,
+    completedDate = completedDate,
+    offenderAddress = offenderAddress?.toEntity(existingEntity.offenderAddress),
+    replyAddress = replyAddress?.toEntity(existingEntity.replyAddress),
+    basicDetailsSaved = basicDetailsSaved,
+    warningTypeSaved = warningTypeSaved,
+    warningDetailsSaved = warningDetailsSaved,
+    nextAppointmentSaved = nextAppointmentSaved,
+    useDefaultAddress = useDefaultAddress,
+    useDefaultReplyAddress = useDefaultReplyAddress,
+    conditionBeingEnforced = conditionBeingEnforced,
+    breachNoticeContactList = breachNoticeContactList.map {
+      it.toEntity(
+        existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
+          existingContactEnitiy.id == it.id
+        },
+      )
+    },
+    breachNoticeRequirementList = breachNoticeRequirementList.map {
+      it.toEntity(
+        existingEntity.breachNoticeRequirementList.find { existingRequirementEntity ->
+          existingRequirementEntity.id == it.id
+        },
+      )
+    },
+  )?.also { breachNotice ->
+    breachNotice.breachNoticeContactList.forEach { it.breachNotice = breachNotice }
+    breachNotice.breachNoticeRequirementList.forEach { it.breachNotice = breachNotice }
+  } ?: BreachNoticeEntity(
+    crn = crn,
+    titleAndFullName = titleAndFullName,
+    dateOfLetter = dateOfLetter,
+    referenceNumber = referenceNumber,
+    responseRequiredDate = responseRequiredDate,
+    breachNoticeTypeCode = breachNoticeTypeCode,
+    breachNoticeTypeDescription = breachNoticeTypeDescription,
+    breachConditionTypeCode = breachConditionTypeCode,
+    breachConditionTypeDescription = breachConditionTypeDescription,
+    breachSentenceTypeCode = breachSentenceTypeCode,
+    breachSentenceTypeDescription = breachSentenceTypeDescription,
+    responsibleOfficer = responsibleOfficer,
+    contactNumber = contactNumber,
+    nextAppointmentType = nextAppointmentType,
+    nextAppointmentDate = nextAppointmentDate,
+    nextAppointmentLocation = nextAppointmentLocation,
+    nextAppointmentOfficer = nextAppointmentOfficer,
+    nextAppointmentId = nextAppointmentId,
+    completedDate = completedDate,
+    offenderAddress = offenderAddress?.toEntity(),
+    replyAddress = replyAddress?.toEntity(),
+    basicDetailsSaved = basicDetailsSaved,
+    warningTypeSaved = warningTypeSaved,
+    warningDetailsSaved = warningDetailsSaved,
+    nextAppointmentSaved = nextAppointmentSaved,
+    useDefaultAddress = useDefaultAddress,
+    useDefaultReplyAddress = useDefaultReplyAddress,
+    optionalNumberChecked = optionalNumberChecked,
+    optionalNumber = optionalNumber,
+    breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
+    breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
+  )
 
-  private fun BreachNoticeEntity.toModel() =
-    BreachNotice(
-      crn = crn,
-      titleAndFullName = titleAndFullName,
-      dateOfLetter = dateOfLetter,
-      referenceNumber = referenceNumber,
-      responseRequiredDate = responseRequiredDate,
-      breachNoticeTypeCode = breachNoticeTypeCode,
-      breachNoticeTypeDescription = breachNoticeTypeDescription,
-      breachConditionTypeCode = breachConditionTypeCode,
-      breachConditionTypeDescription = breachConditionTypeDescription,
-      breachSentenceTypeCode = breachSentenceTypeCode,
-      breachSentenceTypeDescription = breachSentenceTypeDescription,
-      responsibleOfficer = responsibleOfficer,
-      contactNumber = contactNumber,
-      nextAppointmentType = nextAppointmentType,
-      nextAppointmentDate = nextAppointmentDate,
-      nextAppointmentLocation = nextAppointmentLocation,
-      nextAppointmentOfficer = nextAppointmentOfficer,
-      nextAppointmentId = nextAppointmentId,
-      completedDate = completedDate,
-      offenderAddress = offenderAddress?.toModel(),
-      replyAddress = replyAddress?.toModel(),
-      basicDetailsSaved = basicDetailsSaved,
-      warningTypeSaved = warningTypeSaved,
-      warningDetailsSaved = warningDetailsSaved,
-      nextAppointmentSaved = nextAppointmentSaved,
-      useDefaultAddress = useDefaultAddress,
-      useDefaultReplyAddress = useDefaultReplyAddress,
-      breachNoticeContactList = breachNoticeContactList.map { it.toModel() },
-      breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
-      optionalNumberChecked = optionalNumberChecked,
-      optionalNumber = optionalNumber,
-      conditionBeingEnforced = conditionBeingEnforced,
-    )
+  private fun BreachNoticeEntity.toModel() = BreachNotice(
+    crn = crn,
+    titleAndFullName = titleAndFullName,
+    dateOfLetter = dateOfLetter,
+    referenceNumber = referenceNumber,
+    responseRequiredDate = responseRequiredDate,
+    breachNoticeTypeCode = breachNoticeTypeCode,
+    breachNoticeTypeDescription = breachNoticeTypeDescription,
+    breachConditionTypeCode = breachConditionTypeCode,
+    breachConditionTypeDescription = breachConditionTypeDescription,
+    breachSentenceTypeCode = breachSentenceTypeCode,
+    breachSentenceTypeDescription = breachSentenceTypeDescription,
+    responsibleOfficer = responsibleOfficer,
+    contactNumber = contactNumber,
+    nextAppointmentType = nextAppointmentType,
+    nextAppointmentDate = nextAppointmentDate,
+    nextAppointmentLocation = nextAppointmentLocation,
+    nextAppointmentOfficer = nextAppointmentOfficer,
+    nextAppointmentId = nextAppointmentId,
+    completedDate = completedDate,
+    offenderAddress = offenderAddress?.toModel(),
+    replyAddress = replyAddress?.toModel(),
+    basicDetailsSaved = basicDetailsSaved,
+    warningTypeSaved = warningTypeSaved,
+    warningDetailsSaved = warningDetailsSaved,
+    nextAppointmentSaved = nextAppointmentSaved,
+    useDefaultAddress = useDefaultAddress,
+    useDefaultReplyAddress = useDefaultReplyAddress,
+    breachNoticeContactList = breachNoticeContactList.map { it.toModel() },
+    breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
+    optionalNumberChecked = optionalNumberChecked,
+    optionalNumber = optionalNumber,
+    conditionBeingEnforced = conditionBeingEnforced,
+  )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
     BreachNoticeDetails(
@@ -218,41 +214,39 @@ class BreachNoticeService(
     postcode = postcode,
   )
 
-  private fun Address.toEntity(existingEntity: AddressEntity? = null) =
-    existingEntity?.copy(
-      addressId = addressId,
-      type = type,
-      buildingName = buildingName,
-      addressNumber = addressNumber,
-      streetName = streetName,
-      district = district,
-      townCity = townCity,
-      county = county,
-      postcode = postcode,
-    ) ?: AddressEntity(
-      addressId = addressId,
-      type = type,
-      buildingName = buildingName,
-      addressNumber = addressNumber,
-      streetName = streetName,
-      district = district,
-      townCity = townCity,
-      county = county,
-      postcode = postcode,
-    )
+  private fun Address.toEntity(existingEntity: AddressEntity? = null) = existingEntity?.copy(
+    addressId = addressId,
+    type = type,
+    buildingName = buildingName,
+    addressNumber = addressNumber,
+    streetName = streetName,
+    district = district,
+    townCity = townCity,
+    county = county,
+    postcode = postcode,
+  ) ?: AddressEntity(
+    addressId = addressId,
+    type = type,
+    buildingName = buildingName,
+    addressNumber = addressNumber,
+    streetName = streetName,
+    district = district,
+    townCity = townCity,
+    county = county,
+    postcode = postcode,
+  )
 
-  private fun BreachNoticeContact.toEntity(existingEntity: BreachNoticeContactEntity? = null) =
-    existingEntity?.copy(
-      contactDate = contactDate,
-      contactType = contactType,
-      contactOutcome = contactOutcome,
-      contactId = contactId,
-    ) ?: BreachNoticeContactEntity(
-      contactDate = contactDate,
-      contactType = contactType,
-      contactOutcome = contactOutcome,
-      contactId = contactId,
-    )
+  private fun BreachNoticeContact.toEntity(existingEntity: BreachNoticeContactEntity? = null) = existingEntity?.copy(
+    contactDate = contactDate,
+    contactType = contactType,
+    contactOutcome = contactOutcome,
+    contactId = contactId,
+  ) ?: BreachNoticeContactEntity(
+    contactDate = contactDate,
+    contactType = contactType,
+    contactOutcome = contactOutcome,
+    contactId = contactId,
+  )
 
   private fun BreachNoticeContactEntity.toModel() = BreachNoticeContact(
     contactDate = contactDate,
@@ -271,22 +265,21 @@ class BreachNoticeService(
     toDate = toDate,
   )
 
-  private fun BreachNoticeRequirement.toEntity(existingEntity: BreachNoticeRequirementEntity? = null) =
-    existingEntity?.copy(
-      requirementId = requirementId,
-      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
-      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
-      rejectionReason = rejectionReason,
-      fromDate = fromDate,
-      toDate = toDate,
-    ) ?: BreachNoticeRequirementEntity(
-      requirementId = requirementId,
-      requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
-      requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
-      rejectionReason = rejectionReason,
-      fromDate = fromDate,
-      toDate = toDate,
-    )
+  private fun BreachNoticeRequirement.toEntity(existingEntity: BreachNoticeRequirementEntity? = null) = existingEntity?.copy(
+    requirementId = requirementId,
+    requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+    requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+    rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
+  ) ?: BreachNoticeRequirementEntity(
+    requirementId = requirementId,
+    requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
+    requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
+    rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
+  )
 
   fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
     val html = pdfGenerationService.generateHtml(breachNoticeDetails)
