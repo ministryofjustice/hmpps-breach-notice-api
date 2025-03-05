@@ -1,0 +1,1 @@
+ALTER TABLE public.breach_notice ADD condition_being_enforced varchar(200) NULL;

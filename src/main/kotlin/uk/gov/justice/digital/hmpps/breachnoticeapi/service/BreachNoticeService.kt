@@ -80,6 +80,7 @@ class BreachNoticeService(
       nextAppointmentSaved = nextAppointmentSaved,
       useDefaultAddress = useDefaultAddress,
       useDefaultReplyAddress = useDefaultReplyAddress,
+      conditionBeingEnforced = conditionBeingEnforced,
       breachNoticeContactList = breachNoticeContactList.map {
         it.toEntity(
           existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
@@ -129,6 +130,7 @@ class BreachNoticeService(
       optionalNumber = optionalNumber,
       breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
       breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
+      conditionBeingEnforced = conditionBeingEnforced,
     )
 
   private fun BreachNoticeEntity.toModel() =
@@ -164,6 +166,7 @@ class BreachNoticeService(
       breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
       optionalNumberChecked = optionalNumberChecked,
       optionalNumber = optionalNumber,
+      conditionBeingEnforced = conditionBeingEnforced,
     )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -200,6 +203,7 @@ class BreachNoticeService(
       breachNoticeRequirementList = it.breachNoticeRequirementList.map { it.toModel() },
       optionalNumberChecked = it.optionalNumberChecked,
       optionalNumber = it.optionalNumber,
+      conditionBeingEnforced = it.conditionBeingEnforced,
     )
   }
 

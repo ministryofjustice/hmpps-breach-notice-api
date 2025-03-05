@@ -41,4 +41,5 @@ data class BreachNoticeDetails(
   val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
   val optionalNumberChecked: Boolean? = null,
   val optionalNumber: String? = null,
+  val conditionBeingEnforced: String? = null,
 )
