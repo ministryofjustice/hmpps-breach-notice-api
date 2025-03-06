@@ -106,7 +106,7 @@
 			</td>
 			<td width="283" style="border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0"><a name="LETTERDATE"></a>
 				<font face="Arial, serif"><font size="2" style="font-size: 11pt">Date:
-          <span th:text="${breachNotice.dateOfLetter}">{dateOfLetter}</span></font></font></p>
+          <span th:text="${#temporals.format(breachNotice.dateOfLetter, 'dd/MM/yyyy')}">{dateOfLetter}</span></font></font></p>
 			</td>
 		</tr>
 	</tbody>
@@ -156,26 +156,32 @@
 	<tr></tr>
 	<tr valign="top">
 		<td width="148" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0; margin-bottom: 0cm">
-      <div th:each="req: ${breachNotice.breachNoticeRequirementList}">
-      <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${req.requirementTypeMainCategoryDescription}">(Requirement Details)</span><span th:if="${req.requirementTypeSubCategoryDescription != null}" th:text="${' ' + req.requirementTypeSubCategoryDescription}">(Requirement Sub Category Details)</span><b></b></font></font></p>
-    </div>
+      <table>
+      <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
+        <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${req.requirementTypeMainCategoryDescription}">(Requirement Details)</span><span th:if="${req.requirementTypeSubCategoryDescription != null}" th:text="${' ' + req.requirementTypeSubCategoryDescription}">(Requirement Sub Category Details)</span><b></b></font></font></p>
+      </tr>
+    </table>
 		</td>
 		<td width="64" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0">
 			<font face="Arial, serif"><font size="2" style="font-size: 11pt">On
 			or between Date(s)</font></font></p>
 		</td>
 		<td width="143" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0; margin-bottom: 0cm">
-      <div th:each="req: ${breachNotice.breachNoticeRequirementList}">
-        <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${req.fromDate}">(From Date)</span><span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + req.toDate}">(To Date)</span><b></b></font></font></p>
-      </div>
+      <table>
+      <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
+        <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy')}">(From Date)</span><span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy')}">(To Date)</span><b></b></font></font></p>
+      </tr>
+    </table>
 		</td>
     <td width="51" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0">
       <font face="Arial, serif"><font size="2" style="font-size: 11pt">Reason</font></font></p>
     </td>
 		<td width="199" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0; margin-bottom: 0cm">
-      <div th:each="req: ${breachNotice.breachNoticeRequirementList}">
+      <table>
+      <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
         <p><font face="Arial, serif"><font size="2" style="font-size: 11pt"><b><span th:text="${req.rejectionReason}">(Reason)</span></b></font></font></p>
-      </div>
+      </tr>
+    </table>
 		</td>
 	</tr>
 	<tr></tr>
@@ -190,11 +196,6 @@
 	<tr>
 		<td colspan="5" width="660" height="20" valign="top" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0; margin-bottom: 0cm">
 			<br/>
-
-      <p th:each="contact: ${breachNotice.breachNoticeContactList}">
-        <span th:text="${#temporals.format(contact.contactDate, 'dd/MM/yyyy HH:mm') + ' - ' + contact.contactType + ' - ' + contact.contactOutcome}">(Contact Details)</span>
-    </p>
-      <br/>
 
 			<p lang="en-US" class="western" align="center" style="orphans: 0; widows: 0; margin-bottom: 0cm">
 			<font face="Arial, serif"><font size="2" style="font-size: 11pt"><b>THIS
