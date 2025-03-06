@@ -14,7 +14,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-class HmppsAuthApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
+class HmppsAuthApiExtension :
+  BeforeAllCallback,
+  AfterAllCallback,
+  BeforeEachCallback {
   companion object {
     @JvmField
     val hmppsAuth = HmppsAuthMockServer()
@@ -35,7 +38,7 @@ class HmppsAuthApiExtension : BeforeAllCallback, AfterAllCallback, BeforeEachCal
 
 class HmppsAuthMockServer : WireMockServer(WIREMOCK_PORT) {
   companion object {
-    private const val WIREMOCK_PORT = 8090
+    private const val WIREMOCK_PORT = 9090
   }
 
   fun stubGrantToken() {

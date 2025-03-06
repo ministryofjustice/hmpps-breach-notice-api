@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,9 +29,9 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.util.*
 
+@Validated
 @RestController
-// Role here is specific to the UI.
-@PreAuthorize("hasRole('ROLE_TEMPLATE_KOTLIN__UI')")
+@PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
   @GetMapping("/{uuid}")

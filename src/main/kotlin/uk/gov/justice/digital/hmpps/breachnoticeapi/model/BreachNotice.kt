@@ -2,10 +2,12 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
+import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class BreachNotice(
+  @field:Pattern(regexp = "^[A-Z][0-9]{6}")
   val crn: String,
   val titleAndFullName: String? = null,
   val dateOfLetter: LocalDate? = null,
@@ -39,4 +41,5 @@ data class BreachNotice(
   val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
   val optionalNumberChecked: Boolean? = null,
   val optionalNumber: String? = null,
+  val conditionBeingEnforced: String? = null,
 )

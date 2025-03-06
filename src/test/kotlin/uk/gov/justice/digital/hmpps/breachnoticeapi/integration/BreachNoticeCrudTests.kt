@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
@@ -18,18 +19,14 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should create a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00000B",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000001"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00000B").single()
-    assertThat(breachNotice.crn).isEqualTo("X00000B")
+    val breachNotice = breachNoticeRepository.findByCrn("X000001").single()
+    assertThat(breachNotice.crn).isEqualTo("X000001")
     assertThat(breachNotice.id).isNotNull()
   }
 
@@ -37,21 +34,17 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should update a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00001C",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000002"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00001C").single()
-    assertThat(breachNotice.crn).isEqualTo("X00001C")
+    val breachNotice = breachNoticeRepository.findByCrn("X000002").single()
+    assertThat(breachNotice.crn).isEqualTo("X000002")
 
     val breachNoticeBody = BreachNotice(
-      crn = "X00001C",
+      crn = "X000002",
       breachConditionTypeCode = "TYPE_CODE",
       titleAndFullName = "Mr Joe Bloggs",
       dateOfLetter = LocalDate.now(),
@@ -77,16 +70,14 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.put()
       .uri("/breach-notice/" + breachNotice.id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        breachNoticeBody,
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(breachNoticeBody)
       .exchange()
       .expectStatus()
       .isOk
 
-    val updatedBreachNotice = breachNoticeRepository.findByCrn("X00001C").single()
-    assertThat(updatedBreachNotice.crn).isEqualTo("X00001C")
+    val updatedBreachNotice = breachNoticeRepository.findByCrn("X000002").single()
+    assertThat(updatedBreachNotice.crn).isEqualTo("X000002")
     assertThat(updatedBreachNotice.nextAppointmentLocation).isEqualTo("NXT_LOCATION")
     assertThat(updatedBreachNotice.responsibleOfficer).isEqualTo("John Doe")
     assertThat(updatedBreachNotice.basicDetailsSaved).isEqualTo(true)
@@ -96,39 +87,30 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `should fail to create if the crn is too long`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00000B123456789123456",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000001123456789123456"))
       .exchange()
-      .expectStatus()
-      .is5xxServerError
+      .expectStatus().isBadRequest
+      .expectBody().jsonPath("$.userMessage").isEqualTo("""Field: crn - must match "^[A-Z][0-9]{6}"""")
   }
 
   @Test
-  fun `update should return server error if invalid format uuid passed in`() {
+  fun `update should return bad request if invalid format uuid passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00001G",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000003"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00001G")
-    assertThat(breachNotice.first().crn).isEqualTo("X00001G")
+    val breachNotice = breachNoticeRepository.findByCrn("X000003")
+    assertThat(breachNotice.first().crn).isEqualTo("X000003")
 
     webTestClient.put()
       .uri("/breach-notice/" + "testone")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
-        /* body = */
         BreachNotice(
           crn = "X00001Z",
           breachConditionTypeCode = "TYPE_CODE",
@@ -155,31 +137,27 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
         ),
       )
       .exchange()
-      .expectStatus()
-      .is5xxServerError
+      .expectStatus().isBadRequest
+      .expectBody().jsonPath("$.userMessage").value(containsString("Invalid UUID string: testone"))
   }
 
   @Test
   fun `should delete a breach notice`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00001D",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000004"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00001D")
-    assertThat(breachNotice.first().crn).isEqualTo("X00001D")
+    val breachNotice = breachNoticeRepository.findByCrn("X000004")
+    assertThat(breachNotice.first().crn).isEqualTo("X000004")
     assertThat(breachNotice.first().id).isNotNull()
 
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isOk
@@ -192,24 +170,20 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
   fun `error on delete a breach notice when no matching uuid`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00002D",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000005"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00002D")
-    assertThat(breachNotice.first().crn).isEqualTo("X00002D")
+    val breachNotice = breachNoticeRepository.findByCrn("X000005")
+    assertThat(breachNotice.first().crn).isEqualTo("X000005")
     assertThat(breachNotice.first().id).isNotNull()
 
     // Non-existent uuid
     webTestClient.delete()
       .uri("/breach-notice/" + "00000000-0000-4000-8000-000000000000")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isNotFound
@@ -220,7 +194,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     // Existing, now-deleted uuid
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isOk
@@ -230,34 +204,30 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
 
     webTestClient.delete()
       .uri("/breach-notice/" + breachNotice.first().id)
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus()
       .isNotFound
   }
 
   @Test
-  fun `delete should return server error if invalid format uuid passed in`() {
+  fun `delete should return bad request if invalid format uuid passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
-      .bodyValue(
-        BreachNotice(
-          crn = "X00003D",
-        ),
-      )
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000006"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X00003D")
-    assertThat(breachNotice.first().crn).isEqualTo("X00003D")
+    val breachNotice = breachNoticeRepository.findByCrn("X000006")
+    assertThat(breachNotice.first().crn).isEqualTo("X000006")
 
     webTestClient.delete()
       .uri("/breach-notice/" + "TESTONE")
-      .headers(setAuthorisation(roles = listOf("ROLE_TEMPLATE_KOTLIN__UI")))
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
-      .expectStatus()
-      .is5xxServerError
+      .expectStatus().isBadRequest
+      .expectBody().jsonPath("$.userMessage").value(containsString("Invalid UUID string: TESTONE"))
   }
 }
