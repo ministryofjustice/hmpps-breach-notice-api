@@ -70,4 +70,5 @@ data class BreachNoticeEntity(
   var optionalNumber: String? = null,
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
+  val conditionBeingEnforced: String? = null,
 )

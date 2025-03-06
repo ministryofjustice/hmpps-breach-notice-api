@@ -47,7 +47,7 @@ class DomainEventsListener(
           message.targetCrn?.let { it1 -> breachNoticeService.updateBreachNoticeCrn(it, it1) }
         }
 
-        updateReviewEvent(ReviewEventType.UNMERGE, breachNotices, message.occurredAt)
+        updateReviewEvent(ReviewEventType.MERGE, breachNotices, message.occurredAt)
       }
 
       "probation-case.unmerge.completed" -> {

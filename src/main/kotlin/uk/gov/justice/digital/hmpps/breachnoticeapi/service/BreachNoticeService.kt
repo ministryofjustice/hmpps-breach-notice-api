@@ -81,6 +81,7 @@ class BreachNoticeService(
     useDefaultReplyAddress = useDefaultReplyAddress,
     reviewRequiredDate =  reviewRequiredDate,
     reviewEvent = reviewEvent,
+    conditionBeingEnforced = conditionBeingEnforced,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
@@ -168,6 +169,7 @@ class BreachNoticeService(
     optionalNumber = optionalNumber,
     reviewRequiredDate =  reviewRequiredDate,
     reviewEvent = reviewEvent,
+    conditionBeingEnforced = conditionBeingEnforced,
   )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -177,7 +179,7 @@ class BreachNoticeService(
       titleAndFullName = it.titleAndFullName,
       dateOfLetter = it.dateOfLetter,
       referenceNumber = it.referenceNumber,
-      responseRequiredByDate = it.responseRequiredDate,
+      responseRequiredDate = it.responseRequiredDate,
       breachNoticeTypeCode = it.breachNoticeTypeCode,
       breachNoticeTypeDescription = it.breachNoticeTypeDescription,
       breachConditionTypeCode = it.breachConditionTypeCode,
@@ -206,6 +208,7 @@ class BreachNoticeService(
       optionalNumber = it.optionalNumber,
       reviewRequiredDate =  it.reviewRequiredDate,
       reviewEvent = it.reviewEvent,
+      conditionBeingEnforced = it.conditionBeingEnforced,
     )
   }
 
@@ -268,6 +271,8 @@ class BreachNoticeService(
     requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
     requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
     rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
   )
 
   private fun BreachNoticeRequirement.toEntity(existingEntity: BreachNoticeRequirementEntity? = null) = existingEntity?.copy(
@@ -275,11 +280,15 @@ class BreachNoticeService(
     requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
     requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
     rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
   ) ?: BreachNoticeRequirementEntity(
     requirementId = requirementId,
     requirementTypeMainCategoryDescription = requirementTypeMainCategoryDescription,
     requirementTypeSubCategoryDescription = requirementTypeSubCategoryDescription,
     rejectionReason = rejectionReason,
+    fromDate = fromDate,
+    toDate = toDate,
   )
 
   fun getBreachNoticeAsPdf(id: UUID, breachNoticeDetails: BreachNoticeDetails?, draft: Boolean): ByteArray? {
