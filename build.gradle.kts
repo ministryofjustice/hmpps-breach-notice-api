@@ -26,6 +26,7 @@ dependencies {
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.25") {
     exclude(group = "io.swagger.core.v3")
   }
+  testImplementation("org.testcontainers:localstack:1.20.5")
 }
 
 kotlin {

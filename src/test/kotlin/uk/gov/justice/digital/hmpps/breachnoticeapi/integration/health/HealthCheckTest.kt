@@ -1,8 +1,14 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration.health
 
 import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.IntegrationTestBase
 
+@SpringBootTest(
+  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+  properties =
+    ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"]
+)
 class HealthCheckTest : IntegrationTestBase() {
 
   @Test

@@ -5,21 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.awspring.cloud.sqs.annotation.SqsListener
-import org.springframework.dao.CannotAcquireLockException
-import org.springframework.jdbc.CannotGetJdbcConnectionException
-import org.springframework.orm.ObjectOptimisticLockingFailureException
 import org.springframework.stereotype.Service
-import org.springframework.transaction.CannotCreateTransactionException
-import org.springframework.transaction.UnexpectedRollbackException
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.client.RestClientException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.NDeliusIntegrationService
 import java.time.LocalDateTime
-
-// import uk.gov.justice.digital.hmpps.hmppstier.config.retry
 
 @Service
 class DomainEventsListener(
@@ -33,7 +25,6 @@ class DomainEventsListener(
   fun listen(msg: String) {
     val (message, attributes) = objectMapper.readValue<SQSMessage>(msg)
     val domainEventMessage = objectMapper.readValue<DomainEventsMessage>(message)
-//    retry(3, RETRYABLE_EXCEPTIONS) { handleMessage(domainEventMessage) }
     handleMessage(domainEventMessage)
   }
 
@@ -68,17 +59,6 @@ class DomainEventsListener(
 
   private fun updateReviewEvent(eventType: ReviewEventType, breachNotices: Collection<BreachNoticeEntity>, occurredAt: LocalDateTime) {
     breachNotices.forEach { breachNotice -> breachNoticeService.updateReviewEvent(eventType, breachNotice, occurredAt) }
-  }
-
-  companion object {
-    val RETRYABLE_EXCEPTIONS = listOf(
-      RestClientException::class,
-      CannotAcquireLockException::class,
-      ObjectOptimisticLockingFailureException::class,
-      CannotCreateTransactionException::class,
-      CannotGetJdbcConnectionException::class,
-      UnexpectedRollbackException::class,
-    )
   }
 }
 
