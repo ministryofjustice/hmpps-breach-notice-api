@@ -169,7 +169,7 @@
 		<td width="143" style="background: transparent; border: 1px solid #000000; padding: 0cm 0.19cm"><p lang="en-US" class="western" style="orphans: 0; widows: 0; margin-bottom: 0cm">
       <table>
       <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
-        <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${req.fromDate}">(From Date)</span><span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + req.toDate}">(To Date)</span><b></b></font></font></p>
+        <font face="Arial, serif"><font size="2" style="font-size: 11pt"><span th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy')}">(From Date)</span><span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy')}">(To Date)</span><b></b></font></font></p>
       </tr>
     </table>
 		</td>
