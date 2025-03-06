@@ -79,7 +79,7 @@ class BreachNoticeService(
     nextAppointmentSaved = nextAppointmentSaved,
     useDefaultAddress = useDefaultAddress,
     useDefaultReplyAddress = useDefaultReplyAddress,
-    reviewRequiredDate =  reviewRequiredDate,
+    reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     conditionBeingEnforced = conditionBeingEnforced,
     breachNoticeContactList = breachNoticeContactList.map {
@@ -129,7 +129,7 @@ class BreachNoticeService(
     useDefaultReplyAddress = useDefaultReplyAddress,
     optionalNumberChecked = optionalNumberChecked,
     optionalNumber = optionalNumber,
-    reviewRequiredDate =  reviewRequiredDate,
+    reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
     breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
@@ -167,7 +167,7 @@ class BreachNoticeService(
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
     optionalNumberChecked = optionalNumberChecked,
     optionalNumber = optionalNumber,
-    reviewRequiredDate =  reviewRequiredDate,
+    reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     conditionBeingEnforced = conditionBeingEnforced,
   )
@@ -206,7 +206,7 @@ class BreachNoticeService(
       breachNoticeRequirementList = it.breachNoticeRequirementList.map { it.toModel() },
       optionalNumberChecked = it.optionalNumberChecked,
       optionalNumber = it.optionalNumber,
-      reviewRequiredDate =  it.reviewRequiredDate,
+      reviewRequiredDate = it.reviewRequiredDate,
       reviewEvent = it.reviewEvent,
       conditionBeingEnforced = it.conditionBeingEnforced,
     )
@@ -303,9 +303,7 @@ class BreachNoticeService(
     return pdfBytes
   }
 
-  fun getActiveBreachNoticesForCrn(crn: String?): Collection<BreachNoticeEntity> {
-      return breachNoticeRepository.findByCrnAndCompletedDateIsNull(crn)
-  }
+  fun getActiveBreachNoticesForCrn(crn: String?): Collection<BreachNoticeEntity> = breachNoticeRepository.findByCrnAndCompletedDateIsNull(crn)
 
   fun updateBreachNoticeCrn(breachNotice: BreachNoticeEntity, crn: String) {
     breachNotice.crn = crn

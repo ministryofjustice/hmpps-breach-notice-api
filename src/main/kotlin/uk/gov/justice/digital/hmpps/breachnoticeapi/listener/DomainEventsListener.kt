@@ -19,7 +19,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.NDeliusIntegrationService
 import java.time.LocalDateTime
 
-//import uk.gov.justice.digital.hmpps.hmppstier.config.retry
+// import uk.gov.justice.digital.hmpps.hmppstier.config.retry
 
 @Service
 class DomainEventsListener(
@@ -39,10 +39,9 @@ class DomainEventsListener(
 
   private fun handleMessage(message: DomainEventsMessage) {
     when (message.eventType) {
-
       "probation-case.merge.completed" -> {
-        //Update CRNs where appropriate
-        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.sourceCrn);
+        // Update CRNs where appropriate
+        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.sourceCrn)
         breachNotices.forEach {
           message.targetCrn?.let { it1 -> breachNoticeService.updateBreachNoticeCrn(it, it1) }
         }
@@ -51,19 +50,19 @@ class DomainEventsListener(
       }
 
       "probation-case.unmerge.completed" -> {
-        //Update CRNs where appropriate
-        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.unmergedCrn);
+        // Update CRNs where appropriate
+        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.unmergedCrn)
         breachNotices.forEach {
           nDeliusIntegrationService.getCrnForBreachNoticeUuid(it.id.toString())?.crn?.let { it1 ->
-            breachNoticeService.updateBreachNoticeCrn(it,
-              it1
+            breachNoticeService.updateBreachNoticeCrn(
+              it,
+              it1,
             )
           }
         }
 
         updateReviewEvent(ReviewEventType.UNMERGE, breachNotices, message.occurredAt)
       }
-
     }
   }
 
@@ -78,7 +77,7 @@ class DomainEventsListener(
       ObjectOptimisticLockingFailureException::class,
       CannotCreateTransactionException::class,
       CannotGetJdbcConnectionException::class,
-      UnexpectedRollbackException::class
+      UnexpectedRollbackException::class,
     )
   }
 }
@@ -95,7 +94,6 @@ data class DomainEventsMessage(
   val targetCrn = additionalInformation?.get("targetCRN") as String?
   val unmergedCrn = additionalInformation?.get("unmergedCRN") as String?
   val reactivatedCrn = additionalInformation?.get("reactivatedCRN") as String?
-
 }
 
 data class PersonReference(
