@@ -82,4 +82,5 @@ gotenberg:
     DEFAULT_WAIT_TIMEOUT: 30
 
 generic-prometheus-alerts:
-  targetApplication: breach-notice-notifications
+  targetApplication: hmpps-breach-notice-api
+  alertSeverity: breach-notice-notifications
