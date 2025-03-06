@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.IntegrationTestB
 @SpringBootTest(
   webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
   properties =
-    ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"]
+  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
 )
 class HealthCheckTest : IntegrationTestBase() {
 
