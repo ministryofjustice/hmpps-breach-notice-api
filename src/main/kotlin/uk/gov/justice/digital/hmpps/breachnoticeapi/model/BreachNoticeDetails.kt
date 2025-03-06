@@ -41,4 +41,6 @@ data class BreachNoticeDetails(
   val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
   val optionalNumberChecked: Boolean? = null,
   val optionalNumber: String? = null,
+  var reviewRequiredDate: LocalDateTime? = null,
+  var reviewEvent: String? = null,
 )

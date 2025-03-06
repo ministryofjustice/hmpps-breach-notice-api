@@ -1,0 +1,18 @@
+version: "3"
+services:
+  wiremock-ndelius-integration:
+    image: wiremock/wiremock:latest
+    container_name: ndelius-integration-wiremock
+    volumes:
+      - ./wiremock/extensions:/var/wiremock/extensions
+      - ./wiremock/__files:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings
+    entrypoint: [ "/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose" ]
+    ports:
+      - "9101:8080"
+    networks:
+      - hmpps
+    command: --verbose
+
+networks:
+  hmpps:

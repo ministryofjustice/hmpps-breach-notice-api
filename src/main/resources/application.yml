@@ -63,12 +63,14 @@ hmpps-auth.url: http://localhost:9090/auth
 database.endpoint: localhost:5432
 frontend.url: http://localhost:3000
 gotenberg.url: http://localhost:8072
+ndelius-integration-api.url: http://localhost:9101
 
 ---
 spring.config.activate.on-profile: test
 hmpps-auth.url: http://localhost:9090/auth
 frontend.url: http://localhost:3000
 gotenberg.url: http://localhost:8072
+ndelius-integration-api.url: http://localhost:9101
 spring.datasource:
   url: jdbc:tc:postgresql:17:///breachdb
 

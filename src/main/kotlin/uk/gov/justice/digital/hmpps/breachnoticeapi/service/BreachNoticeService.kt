@@ -9,6 +9,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeRequirementEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
@@ -17,6 +18,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -77,6 +79,8 @@ class BreachNoticeService(
     nextAppointmentSaved = nextAppointmentSaved,
     useDefaultAddress = useDefaultAddress,
     useDefaultReplyAddress = useDefaultReplyAddress,
+    reviewRequiredDate =  reviewRequiredDate,
+    reviewEvent = reviewEvent,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
@@ -124,6 +128,8 @@ class BreachNoticeService(
     useDefaultReplyAddress = useDefaultReplyAddress,
     optionalNumberChecked = optionalNumberChecked,
     optionalNumber = optionalNumber,
+    reviewRequiredDate =  reviewRequiredDate,
+    reviewEvent = reviewEvent,
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
     breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
   )
@@ -160,6 +166,8 @@ class BreachNoticeService(
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toModel() },
     optionalNumberChecked = optionalNumberChecked,
     optionalNumber = optionalNumber,
+    reviewRequiredDate =  reviewRequiredDate,
+    reviewEvent = reviewEvent,
   )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -196,6 +204,8 @@ class BreachNoticeService(
       breachNoticeRequirementList = it.breachNoticeRequirementList.map { it.toModel() },
       optionalNumberChecked = it.optionalNumberChecked,
       optionalNumber = it.optionalNumber,
+      reviewRequiredDate =  it.reviewRequiredDate,
+      reviewEvent = it.reviewEvent,
     )
   }
 
@@ -282,5 +292,20 @@ class BreachNoticeService(
     }
 
     return pdfBytes
+  }
+
+  fun getActiveBreachNoticesForCrn(crn: String?): Collection<BreachNoticeEntity> {
+      return breachNoticeRepository.findByCrnAndCompletedDateIsNull(crn)
+  }
+
+  fun updateBreachNoticeCrn(breachNotice: BreachNoticeEntity, crn: String) {
+    breachNotice.crn = crn
+    breachNoticeRepository.save(breachNotice)
+  }
+
+  fun updateReviewEvent(eventType: ReviewEventType, breachNotice: BreachNoticeEntity, occurredAt: LocalDateTime) {
+    breachNotice.reviewEvent = eventType.name
+    breachNotice.reviewRequiredDate = occurredAt
+    breachNoticeRepository.save(breachNotice)
   }
 }
