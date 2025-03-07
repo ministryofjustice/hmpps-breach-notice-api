@@ -1,0 +1,1 @@
+ALTER TABLE public.address RENAME COLUMN type to status;
