@@ -1,0 +1,17 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "urlPattern": "/forms/chromium/convert/html",
+        "method": "POST"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "test.pdf",
+        "headers": {
+          "Content-Type": "application/pdf"
+        }
+      }
+    }
+  ]
+}

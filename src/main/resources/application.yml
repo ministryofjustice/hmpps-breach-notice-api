@@ -74,12 +74,17 @@ ndelius-integration-api.url: http://localhost:9101
 
 ---
 spring.config.activate.on-profile: test
-hmpps-auth.url: http://localhost:9090/auth
+hmpps-auth.url: http://localhost:9101/auth
+#hmpps-auth.url: http://localhost:9090/auth
 frontend.url: http://localhost:3000
-gotenberg.url: http://localhost:8072
+#gotenberg.url: http://localhost:8072
+gotenberg.url: http://localhost:9101
 ndelius-integration-api.url: http://localhost:9101
 spring.datasource:
   url: jdbc:tc:postgresql:17:///breachdb
+
+---
+spring.config.activate.on-profile: [test, dev]
 hmpps.sqs:
   provider: localstack
   queues:

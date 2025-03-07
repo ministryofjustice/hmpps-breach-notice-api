@@ -28,7 +28,7 @@ services:
     networks:
       - hmpps
   localstack:
-    image: localstack/localstack:3
+    image: localstack/localstack:4
     networks:
       - hmpps
     container_name: localstack-external
@@ -39,6 +39,18 @@ services:
       - DEFAULT_REGION=eu-west-2
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+  wiremock-integration:
+    image: wiremock/wiremock:latest
+    container_name: wiremock-integration
+    volumes:
+      - ./wiremock/extensions:/var/wiremock/extensions
+      - ./wiremock/__files:/home/wiremock/__files
+      - ./wiremock/mappings:/home/wiremock/mappings
+    entrypoint: [ "/docker-entrypoint.sh", "--disable-gzip", "--verbose" ]
+    ports:
+      - "9101:8080"
+    networks:
+      - hmpps
 
 networks:
   hmpps:

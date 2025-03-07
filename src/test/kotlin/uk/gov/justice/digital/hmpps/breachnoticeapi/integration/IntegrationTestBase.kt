@@ -1,24 +1,15 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
 import org.springframework.http.HttpHeaders
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
-import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension
-import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension.Companion.gotenberg
-import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension
-import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
-import uk.gov.justice.hmpps.sqs.HmppsSqsProperties
 import uk.gov.justice.hmpps.sqs.MissingQueueException
-import uk.gov.justice.hmpps.sqs.MissingTopicException
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
-@ExtendWith(GotenbernApiExtension::class)
-@ExtendWith(HmppsAuthApiExtension::class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 abstract class IntegrationTestBase {
@@ -35,19 +26,9 @@ abstract class IntegrationTestBase {
   private val inboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachnoticetopic") ?: throw MissingQueueException("HmppsTopic inboundtopic not found") }
   protected val inboundSnsClient by lazy { inboundTopic.snsClient }
 
-  fun HmppsSqsProperties.inboundTopicConfig() = topics["hmppsbreachnoticetopic"] ?: throw MissingTopicException("hmppsbreachnoticetopic has not been loaded from configuration properties")
-
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),
     scopes: List<String> = listOf("read"),
   ): (HttpHeaders) -> Unit = jwtAuthHelper.setAuthorisationHeader(username = username, scope = scopes, roles = roles)
-
-  protected fun stubPingWithResponse(status: Int) {
-    hmppsAuth.stubHealthPing(status)
-  }
-
-  protected fun stubGeneratePdf() {
-    gotenberg.stubGeneratePdf()
-  }
 }

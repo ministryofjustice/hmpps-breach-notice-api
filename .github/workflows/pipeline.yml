@@ -61,12 +61,21 @@ jobs:
             build/reports/tests
     services:
       localstack:
-        image: localstack/localstack:3
+        image: localstack/localstack:4
         env:
           SERVICES: sqs,sns
           DEFAULT_REGION: eu-west-2
         ports:
           - 4566:4566
+      wiremock-integration:
+        image: wiremock/wiremock:latest
+        volumes:
+          - ./wiremock/extensions:/var/wiremock/extensions
+          - ./wiremock/__files:/home/wiremock/__files
+          - ./wiremock/mappings:/home/wiremock/mappings
+        #entrypoint: [ "/docker-entrypoint.sh", "--disable-gzip", "--verbose" ]
+        ports:
+          - "9101:8080"
       postgres:
         image: postgres:17
         env:

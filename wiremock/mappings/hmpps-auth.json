@@ -2,16 +2,16 @@
   "mappings": [
     {
       "request": {
-        "urlPattern": "/case/(.*?)",
+        "urlPattern": "/auth/health/ping",
         "method": "GET"
       },
       "response": {
         "status": 200,
         "jsonBody": {
-          "crn": "X000103"
+          "status": "UP"
         },
         "headers": {
-          "Content-Type": "application/json;charset=UTF-8"
+          "Content-Type": "application/json"
         }
       }
     }

@@ -34,7 +34,7 @@ class DomainEventsListener(
         // Update CRNs where appropriate
         val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.sourceCrn)
         breachNotices.forEach {
-          message.targetCrn?.let { it1 -> breachNoticeService.updateBreachNoticeCrn(it, it1) }
+          breachNoticeService.updateBreachNoticeCrn(it, requireNotNull(message.targetCrn))
         }
 
         updateReviewEvent(ReviewEventType.MERGE, breachNotices, message.occurredAt)
@@ -44,10 +44,10 @@ class DomainEventsListener(
         // Update CRNs where appropriate
         val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.unmergedCrn)
         breachNotices.forEach {
-          nDeliusIntegrationService.getCrnForBreachNoticeUuid(it.id.toString())?.crn?.let { it1 ->
+          nDeliusIntegrationService.getCrnForBreachNoticeUuid(it.id.toString())?.crn?.let { crn ->
             breachNoticeService.updateBreachNoticeCrn(
               it,
-              it1,
+              crn,
             )
           }
         }
