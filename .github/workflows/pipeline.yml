@@ -50,7 +50,7 @@ jobs:
           cache-dependency-path: |
             *.gradle*
             **/gradle-wrapper.properties
-      - run: ./docker compose up -d wiremock-integration
+      - run: docker compose up -d wiremock-integration
       - run: ./gradlew check
       - name: upload the artifacts
         if: always()
