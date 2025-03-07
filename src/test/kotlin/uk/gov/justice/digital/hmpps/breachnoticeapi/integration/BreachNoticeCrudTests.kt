@@ -4,18 +4,17 @@ import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-//@SpringBootTest(
+// @SpringBootTest(
 //  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
 //  properties =
 //  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
-//)
+// )
 class BreachNoticeCrudTests : IntegrationTestBase() {
 
   @Autowired
