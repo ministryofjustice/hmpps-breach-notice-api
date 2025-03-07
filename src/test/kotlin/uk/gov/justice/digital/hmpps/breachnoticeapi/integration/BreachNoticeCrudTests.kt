@@ -11,11 +11,11 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepos
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties =
-  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
-)
+//@SpringBootTest(
+//  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+//  properties =
+//  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
+//)
 class BreachNoticeCrudTests : IntegrationTestBase() {
 
   @Autowired

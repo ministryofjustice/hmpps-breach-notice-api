@@ -73,4 +73,6 @@ gotenberg.url: http://localhost:8072
 ndelius-integration-api.url: http://localhost:9101
 spring.datasource:
   url: jdbc:tc:postgresql:17:///breachdb
-
+spring:
+  profiles:
+    include: localstack

@@ -60,6 +60,11 @@ jobs:
             build/test-results
             build/reports/tests
     services:
+      localstack:
+        image: localstack/localstack:3
+        env:
+          SERVICES: sqs,sns
+          DEFAULT_REGION: eu-west-2
       postgres:
         image: postgres:17
         env:
