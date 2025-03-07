@@ -80,7 +80,6 @@ hmpps.sqs:
       queueName: hmpps-breach-notice-queue
       dlqName: hmpps-breach-notice-queue-dlq
       subscribeTopicId: hmppsbreachnoticetopic
-      #subscribeFilter: '{"eventType":[ "probation-case.merge.completed", "probation-case.unmerge.completed", "probation-case.sentence.moved"] }'
     audit:
       queueName: audit-queue
   topics:

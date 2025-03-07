@@ -11,6 +11,9 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.Gotenbe
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.GotenbernApiExtension.Companion.gotenberg
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension
 import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAuthApiExtension.Companion.hmppsAuth
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.HmppsSqsProperties
+import uk.gov.justice.hmpps.sqs.MissingQueueException
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 @ExtendWith(GotenbernApiExtension::class)
@@ -24,6 +27,14 @@ abstract class IntegrationTestBase {
 
   @Autowired
   protected lateinit var jwtAuthHelper: JwtAuthorisationHelper
+
+  @Autowired
+  protected lateinit var hmppsQueueService: HmppsQueueService
+
+  private val inboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachnoticetopic") ?: throw MissingQueueException("HmppsTopic inboundtopic not found") }
+  protected val inboundSnsClient by lazy { inboundTopic.snsClient }
+
+  fun HmppsSqsProperties.inboundTopicConfig() = topics["hmppsbreachnoticetopic"] ?: throw MissingTopicException("hmppsbreachnoticetopic has not been loaded from configuration properties")
 
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",

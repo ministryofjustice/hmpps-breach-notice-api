@@ -3,18 +3,12 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import java.io.File
 
-@SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties =
-  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
-)
 class ResourceSecurityTest : IntegrationTestBase() {
   @Autowired
   private lateinit var context: ApplicationContext
@@ -25,6 +19,7 @@ class ResourceSecurityTest : IntegrationTestBase() {
     "GET /v3/api-docs",
     "GET /v3/api-docs/swagger-config",
     " /error",
+    "PUT /queue-admin/retry-all-dlqs",
   )
 
   @Test

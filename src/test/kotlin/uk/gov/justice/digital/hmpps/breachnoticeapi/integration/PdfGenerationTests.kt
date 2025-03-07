@@ -3,18 +3,12 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.ContentDisposition
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.util.UUID
 
-@SpringBootTest(
-  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-  properties =
-  ["spring.autoconfigure.exclude=uk.gov.justice.hmpps.sqs.HmppsSqsConfiguration"],
-)
 class PdfGenerationTests : IntegrationTestBase() {
 
   @Autowired
