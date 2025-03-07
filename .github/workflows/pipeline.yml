@@ -50,6 +50,7 @@ jobs:
           cache-dependency-path: |
             *.gradle*
             **/gradle-wrapper.properties
+      - run: ./docker compose up -d wiremock-integration
       - run: ./gradlew check
       - name: upload the artifacts
         if: always()
@@ -67,15 +68,6 @@ jobs:
           DEFAULT_REGION: eu-west-2
         ports:
           - 4566:4566
-      wiremock-integration:
-        image: wiremock/wiremock:latest
-        volumes:
-          - ./wiremock/extensions:/var/wiremock/extensions
-          - ./wiremock/__files:/home/wiremock/__files
-          - ./wiremock/mappings:/home/wiremock/mappings
-        #entrypoint: [ "/docker-entrypoint.sh", "--disable-gzip", "--verbose" ]
-        ports:
-          - "9101:8080"
       postgres:
         image: postgres:17
         env:
