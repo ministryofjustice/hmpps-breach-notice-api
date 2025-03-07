@@ -14,6 +14,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.integration.wiremock.HmppsAu
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
 import uk.gov.justice.hmpps.sqs.HmppsSqsProperties
 import uk.gov.justice.hmpps.sqs.MissingQueueException
+import uk.gov.justice.hmpps.sqs.MissingTopicException
 import uk.gov.justice.hmpps.test.kotlin.auth.JwtAuthorisationHelper
 
 @ExtendWith(GotenbernApiExtension::class)
