@@ -204,7 +204,7 @@ class BreachNoticeService(
 
   private fun AddressEntity.toModel() = Address(
     addressId = addressId,
-    type = type,
+    status = status,
     buildingName = buildingName,
     addressNumber = addressNumber,
     streetName = streetName,
@@ -216,7 +216,7 @@ class BreachNoticeService(
 
   private fun Address.toEntity(existingEntity: AddressEntity? = null) = existingEntity?.copy(
     addressId = addressId,
-    type = type,
+    status = status,
     buildingName = buildingName,
     addressNumber = addressNumber,
     streetName = streetName,
@@ -226,7 +226,7 @@ class BreachNoticeService(
     postcode = postcode,
   ) ?: AddressEntity(
     addressId = addressId,
-    type = type,
+    status = status,
     buildingName = buildingName,
     addressNumber = addressNumber,
     streetName = streetName,

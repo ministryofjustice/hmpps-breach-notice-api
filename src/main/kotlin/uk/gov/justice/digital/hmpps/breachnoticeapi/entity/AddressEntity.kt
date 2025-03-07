@@ -19,7 +19,7 @@ data class AddressEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
   val addressId: Long,
-  val type: String? = null,
+  val status: String? = null,
   val buildingName: String? = null,
   val addressNumber: String? = null,
   val streetName: String? = null,

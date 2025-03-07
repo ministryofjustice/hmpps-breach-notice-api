@@ -61,7 +61,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       completedDate = LocalDateTime.now(),
       offenderAddress = Address(
         addressId = 25,
-        type = "ENDO",
+        status = "ENDO",
         buildingName = "MOO",
       ),
       replyAddress = null,
@@ -129,7 +129,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
           completedDate = LocalDateTime.now(),
           offenderAddress = Address(
             addressId = 25,
-            type = "ENDO",
+            status = "ENDO",
             buildingName = "MOO",
           ),
           replyAddress = null,
