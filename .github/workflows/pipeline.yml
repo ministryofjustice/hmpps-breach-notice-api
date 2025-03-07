@@ -65,6 +65,8 @@ jobs:
         env:
           SERVICES: sqs,sns
           DEFAULT_REGION: eu-west-2
+        ports:
+          - 4566:4566
       postgres:
         image: postgres:17
         env:

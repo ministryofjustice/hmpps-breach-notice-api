@@ -24,6 +24,13 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: ${hmpps-auth.url}/.well-known/jwks.json
+#      client:
+#        registration:
+#          default:
+#            provider: hmpps-auth
+#            authorization-grant-type: client_credentials
+#            client-id: ${hmpps-auth.client-id}
+#            client-secret: ${hmpps-auth.client-secret}
 
 server:
   port: 8080

@@ -52,6 +52,8 @@ class DomainEventTest : IntegrationTestBase() {
         assertThat(breachNoticeUpdated).isNotNull
         assertThat(breachNoticeUpdated.crn).isEqualTo("X000102")
         assertThat(breachNoticeUpdated.id).isNotNull()
+        assertThat(breachNoticeUpdated.reviewRequiredDate).isNotNull()
+        assertThat(breachNoticeUpdated.reviewEvent).isEqualTo("MERGE")
       }
     }
   }
