@@ -1,8 +1,11 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
+import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
@@ -17,6 +20,9 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -291,5 +297,59 @@ class BreachNoticeService(
     }
 
     return pdfBytes
+  }
+
+  fun getSARDetails(prn: String?, crn: String?, fromDateString: String?, toDateString: String?): ResponseEntity<String> {
+    val sarParameterDatePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    if (crn.isNullOrBlank() || !"^[A-Z][0-9]{6}".toRegex().matches(crn)) {
+      return ResponseEntity<String>(
+        "Supplied subject identifier is not recognised by this service",
+        HttpStatusCode.valueOf(209),
+      )
+    } else {
+      try {
+        if (!fromDateString.isNullOrBlank()) {
+          sarParameterDatePattern.parse(fromDateString)
+        }
+        if (!toDateString.isNullOrBlank()) {
+          sarParameterDatePattern.parse(toDateString)
+        }
+      } catch (ex: DateTimeParseException) {
+        return ResponseEntity<String>(
+          "Supplied date format is not recognised by this service",
+          HttpStatusCode.valueOf(209),
+        )
+      }
+    }
+
+    // If no from/to date supplied, use NDelius max values
+    val fromDate = fromDateString?.let { LocalDate.parse(fromDateString, sarParameterDatePattern) } ?: LocalDate.of(1900, 1, 1)
+    val toDate = toDateString?.let { LocalDate.parse(toDateString, sarParameterDatePattern) } ?: LocalDate.of(2099, 12, 31)
+    val crnData = breachNoticeRepository.findByCrnAndDateOfLetterBetweenOrderByDateOfLetterDesc(crn, fromDate, toDate)
+
+    if (crnData.isEmpty()) {
+      return ResponseEntity(
+        "Request successfully processed - no content found",
+        HttpStatus.NO_CONTENT,
+      )
+    }
+
+    // Clear Identifiable user information from the breach notice
+    for (bn in crnData) {
+      bn.titleAndFullName = null
+      bn.optionalNumber = null
+      bn.contactNumber = null
+      bn.responsibleOfficer = null
+      bn.nextAppointmentOfficer = null
+    }
+
+    val mapper = JsonMapper.builder().addModule(JavaTimeModule()).build()
+    val jsonString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(crnData)
+
+    return ResponseEntity(
+      jsonString,
+      HttpStatus.OK,
+    )
   }
 }
