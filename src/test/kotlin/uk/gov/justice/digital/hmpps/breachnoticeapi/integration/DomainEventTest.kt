@@ -110,23 +110,25 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000121")
       assertThat(breachNotice.id).isNotNull()
 
-      val message: String = "{\n" +
-        "  \"eventType\":\"probation-case.unmerge.completed\",\n" +
-        "  \"version\":1,\n" +
-        "  \"occurredAt\":\"2025-03-03T12:20:13.6147Z\",\n" +
-        "  \"description\":\"An unmerge has been completed on the probation case\",\n" +
-        "  \"additionalInformation\":{\n" +
-        "    \"reactivatedCRN\":\"X000103\",\n" +
-        "    \"unmergedCRN\":\"X000121\"},\n" +
-        "  \"personReference\":{\n" +
-        "    \"identifiers\":[\n" +
-        "      {\n" +
-        "        \"type\":\"CRN\",\n" +
-        "        \"value\":\"X000121\"\n" +
-        "      }\n" +
-        "    ]\n" +
-        "  }\n" +
-        "}"
+      // language=json
+      val message = """{
+        "eventType":"probation-case.unmerge.completed",
+        "version":1,
+        "occurredAt":"2025-03-03T12:20:13.6147Z",
+        "description":"An unmerge has been completed on the probation case",
+        "additionalInformation":{
+          "reactivatedCRN":"X000103",
+          "unmergedCRN":"X000121"
+        },
+        "personReference":{
+          "identifiers":[
+            {
+              "type":"CRN",
+              "value":"X000121"
+            }
+          ]
+        }
+      }""".trimIndent()
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
