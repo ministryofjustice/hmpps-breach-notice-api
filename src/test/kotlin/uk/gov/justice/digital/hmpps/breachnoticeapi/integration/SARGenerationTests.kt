@@ -97,12 +97,10 @@ class SARGenerationTests : IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isEqualTo(209)
-      .expectBody(String::class.java)
-      .isEqualTo("Supplied subject identifier is not recognised by this service")
   }
 
   @Test
-  fun `should return 209 response when no parameters are passed in`() {
+  fun `should return 400 response with message when no parameters are passed in`() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
@@ -116,9 +114,10 @@ class SARGenerationTests : IntegrationTestBase() {
       .headers(setAuthorisation(roles = listOf("ROLE_SAR_DATA_ACCESS")))
       .exchange()
       .expectStatus()
-      .isEqualTo(209)
-      .expectBody(String::class.java)
-      .isEqualTo("Supplied subject identifier is not recognised by this service")
+      .isBadRequest
+      .expectBody()
+      .jsonPath("$.userMessage")
+      .isEqualTo("One of prn or crn must be supplied.")
   }
 
   @Test
@@ -131,18 +130,18 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isCreated
 
+    // Ideally an incorrectly formed CRN would throw a 209, however that cant be implemented at the moment
+    // So throws a 204 no content instead as no records would match a malformed crn
     webTestClient.get()
       .uri { builder -> builder.path("/subject-access-request").queryParam("crn", "MyNewCrn").build() }
       .headers(setAuthorisation(roles = listOf("ROLE_SAR_DATA_ACCESS")))
       .exchange()
       .expectStatus()
-      .isEqualTo(209)
-      .expectBody(String::class.java)
-      .isEqualTo("Supplied subject identifier is not recognised by this service")
+      .isNoContent
   }
 
   @Test
-  fun `should return 209 response when date format is incorrect`() {
+  fun `should return 400 bad request when date format is incorrect`() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
@@ -160,9 +159,7 @@ class SARGenerationTests : IntegrationTestBase() {
       .headers(setAuthorisation(roles = listOf("ROLE_SAR_DATA_ACCESS")))
       .exchange()
       .expectStatus()
-      .isEqualTo(209)
-      .expectBody(String::class.java)
-      .isEqualTo("Supplied date format is not recognised by this service")
+      .isBadRequest
   }
 
   @Test
@@ -232,51 +229,51 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.length()").isEqualTo(1)
-      .jsonPath("$.[0].crn").value(containsString("X000009"))
-      .jsonPath("$.[0].dateOfLetter").isEqualTo(listOf(2010, 1, 1))
-      .jsonPath("$.[0].referenceNumber").value(containsString("REFERENCE_NUMBER"))
-      .jsonPath("$.[0].breachNoticeTypeCode").value(containsString("BRCH"))
-      .jsonPath("$.[0].breachNoticeTypeDescription").value(containsString("BREACH DESCRIPTION"))
-      .jsonPath("$.[0].breachConditionTypeCode").value(containsString("TYPE_CODE"))
-      .jsonPath("$.[0].breachConditionTypeDescription").value(containsString("CONDITION DESCRIPTION"))
-      .jsonPath("$.[0].breachSentenceTypeCode").value(containsString("BR_SNTC"))
-      .jsonPath("$.[0].breachSentenceTypeDescription").value(containsString("SENTENCE DESCRIPTION"))
-      .jsonPath("$.[0].responseRequiredDate").isEqualTo(listOf(2012, 1, 1))
-      .jsonPath("$.[0].nextAppointmentType").value(containsString("NXTTYP"))
-      .jsonPath("$.[0].nextAppointmentDate").isEqualTo(listOf(2010, 12, 31, 10, 0))
-      .jsonPath("$.[0].nextAppointmentLocation").value(containsString("NXT_LOCATION"))
-      .jsonPath("$.[0].nextAppointmentId").isEqualTo(1234)
-      .jsonPath("$.[0].completedDate").isEqualTo(listOf(2011, 1, 1, 15, 0))
-      .jsonPath("$.[0].offenderAddress.addressId").isEqualTo(25)
-      .jsonPath("$.[0].offenderAddress.buildingName").value(containsString("MOO"))
-      .jsonPath("$.[0].offenderAddress.addressNumber").value(containsString("1"))
-      .jsonPath("$.[0].offenderAddress.streetName").value(containsString("strasse"))
-      .jsonPath("$.[0].offenderAddress.district").value(containsString("westminster"))
-      .jsonPath("$.[0].offenderAddress.townCity").value(containsString("London"))
-      .jsonPath("$.[0].offenderAddress.county").value(containsString("Metropolitan"))
-      .jsonPath("$.[0].offenderAddress.postcode").value(containsString("AB123CD"))
-      .jsonPath("$.[0].replyAddress.addressId").isEqualTo(1)
-      .jsonPath("$.[0].replyAddress.buildingName").value(containsString("ADDR"))
-      .jsonPath("$.[0].replyAddress.addressNumber").value(containsString("2"))
-      .jsonPath("$.[0].replyAddress.streetName").value(containsString("A Street 1"))
-      .jsonPath("$.[0].replyAddress.district").value(containsString("The fun district"))
-      .jsonPath("$.[0].replyAddress.townCity").value(containsString("NoddyLand"))
-      .jsonPath("$.[0].replyAddress.county").value(containsString("Suffolk"))
-      .jsonPath("$.[0].replyAddress.postcode").value(containsString("ZY987XW"))
-      .jsonPath("$.[0].basicDetailsSaved").isEqualTo(true)
-      .jsonPath("$.[0].warningTypeSaved").isEqualTo(true)
-      .jsonPath("$.[0].warningDetailsSaved").isEqualTo(false)
-      .jsonPath("$.[0].nextAppointmentSaved").isEqualTo(false)
-      .jsonPath("$.[0].useDefaultAddress").isEqualTo(true)
-      .jsonPath("$.[0].useDefaultReplyAddress").isEqualTo(true)
-      .jsonPath("$.[0].optionalNumberChecked").isEqualTo(false)
+      .jsonPath("$.content.length()").isEqualTo(1)
+      .jsonPath("$.content.[0].crn").value(containsString("X000009"))
+      .jsonPath("$.content.[0].dateOfLetter").value(containsString("2010-01-01"))
+      .jsonPath("$.content.[0].referenceNumber").value(containsString("REFERENCE_NUMBER"))
+      .jsonPath("$.content.[0].breachNoticeTypeCode").value(containsString("BRCH"))
+      .jsonPath("$.content.[0].breachNoticeTypeDescription").value(containsString("BREACH DESCRIPTION"))
+      .jsonPath("$.content.[0].breachConditionTypeCode").value(containsString("TYPE_CODE"))
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("CONDITION DESCRIPTION"))
+      .jsonPath("$.content.[0].breachSentenceTypeCode").value(containsString("BR_SNTC"))
+      .jsonPath("$.content.[0].breachSentenceTypeDescription").value(containsString("SENTENCE DESCRIPTION"))
+      .jsonPath("$.content.[0].responseRequiredDate").value(containsString("2012-01-01"))
+      .jsonPath("$.content.[0].nextAppointmentType").value(containsString("NXTTYP"))
+      .jsonPath("$.content.[0].nextAppointmentDate").value(containsString("2010-12-31T10:00:00"))
+      .jsonPath("$.content.[0].nextAppointmentLocation").value(containsString("NXT_LOCATION"))
+      .jsonPath("$.content.[0].nextAppointmentId").isEqualTo(1234)
+      .jsonPath("$.content.[0].completedDate").value(containsString("2011-01-01T15:00:00"))
+      .jsonPath("$.content.[0].offenderAddress.addressId").isEqualTo(25)
+      .jsonPath("$.content.[0].offenderAddress.buildingName").value(containsString("MOO"))
+      .jsonPath("$.content.[0].offenderAddress.addressNumber").value(containsString("1"))
+      .jsonPath("$.content.[0].offenderAddress.streetName").value(containsString("strasse"))
+      .jsonPath("$.content.[0].offenderAddress.district").value(containsString("westminster"))
+      .jsonPath("$.content.[0].offenderAddress.townCity").value(containsString("London"))
+      .jsonPath("$.content.[0].offenderAddress.county").value(containsString("Metropolitan"))
+      .jsonPath("$.content.[0].offenderAddress.postcode").value(containsString("AB123CD"))
+      .jsonPath("$.content.[0].replyAddress.addressId").isEqualTo(1)
+      .jsonPath("$.content.[0].replyAddress.buildingName").value(containsString("ADDR"))
+      .jsonPath("$.content.[0].replyAddress.addressNumber").value(containsString("2"))
+      .jsonPath("$.content.[0].replyAddress.streetName").value(containsString("A Street 1"))
+      .jsonPath("$.content.[0].replyAddress.district").value(containsString("The fun district"))
+      .jsonPath("$.content.[0].replyAddress.townCity").value(containsString("NoddyLand"))
+      .jsonPath("$.content.[0].replyAddress.county").value(containsString("Suffolk"))
+      .jsonPath("$.content.[0].replyAddress.postcode").value(containsString("ZY987XW"))
+      .jsonPath("$.content.[0].basicDetailsSaved").isEqualTo(true)
+      .jsonPath("$.content.[0].warningTypeSaved").isEqualTo(true)
+      .jsonPath("$.content.[0].warningDetailsSaved").isEqualTo(false)
+      .jsonPath("$.content.[0].nextAppointmentSaved").isEqualTo(false)
+      .jsonPath("$.content.[0].useDefaultAddress").isEqualTo(true)
+      .jsonPath("$.content.[0].useDefaultReplyAddress").isEqualTo(true)
+      .jsonPath("$.content.[0].optionalNumberChecked").isEqualTo(false)
       // Cleared information
-      .jsonPath("$.[0].titleAndFullName").isEmpty()
-      .jsonPath("$.[0].responsibleOfficer").isEmpty()
-      .jsonPath("$.[0].contactNumber").isEmpty()
-      .jsonPath("$.[0].nextAppointmentOfficer").isEmpty()
-      .jsonPath("$.[0].optionalNumber").isEmpty()
+      .jsonPath("$.content.[0].titleAndFullName").isEmpty()
+      .jsonPath("$.content.[0].responsibleOfficer").isEmpty()
+      .jsonPath("$.content.[0].contactNumber").isEmpty()
+      .jsonPath("$.content.[0].nextAppointmentOfficer").isEmpty()
+      .jsonPath("$.content.[0].optionalNumber").isEmpty()
   }
 
   @Test
@@ -330,20 +327,20 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.length()").isEqualTo(3)
-      .jsonPath("$.[0].crn").value(containsString("X000010"))
-      .jsonPath("$.[0].breachConditionTypeDescription").value(containsString("third_app"))
-      .jsonPath("$.[1].crn").value(containsString("X000010"))
-      .jsonPath("$.[1].breachConditionTypeDescription").value(containsString("first_app"))
-      .jsonPath("$.[2].crn").value(containsString("X000010"))
-      .jsonPath("$.[2].breachConditionTypeDescription").value(containsString("second_app"))
+      .jsonPath("$.content.length()").isEqualTo(3)
+      .jsonPath("$.content.[0].crn").value(containsString("X000010"))
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("third_app"))
+      .jsonPath("$.content.[1].crn").value(containsString("X000010"))
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.[2].crn").value(containsString("X000010"))
+      .jsonPath("$.content.[2].breachConditionTypeDescription").value(containsString("second_app"))
   }
 
   @Test
   fun `should return filtered results based on fromDate & toDate parameters`() {
     val sarParameterDatePattern = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val twoDaysFromNow = LocalDateTime.now().plusDays(2).format(sarParameterDatePattern)
-    val twoDaysAgo = LocalDateTime.now().minusDays(2).format(sarParameterDatePattern)
+    val twoDaysFromNow = LocalDate.now().plusDays(2).format(sarParameterDatePattern)
+    val twoDaysAgo = LocalDate.now().minusDays(2).format(sarParameterDatePattern)
 
     webTestClient.post()
       .uri("/breach-notice")
@@ -398,11 +395,11 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.length()").isEqualTo(2)
-      .jsonPath("$.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.[0].breachConditionTypeDescription").value(containsString("first_app"))
-      .jsonPath("$.[1].crn").value(containsString("X000011"))
-      .jsonPath("$.[1].breachConditionTypeDescription").value(containsString("second_app"))
+      .jsonPath("$.content.length()").isEqualTo(2)
+      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.[1].crn").value(containsString("X000011"))
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("second_app"))
 
     // Test using only fromDate filters results
     webTestClient.get()
@@ -415,11 +412,11 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.length()").isEqualTo(2)
-      .jsonPath("$.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.[0].breachConditionTypeDescription").value(containsString("third_app"))
-      .jsonPath("$.[1].crn").value(containsString("X000011"))
-      .jsonPath("$.[1].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.length()").isEqualTo(2)
+      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("third_app"))
+      .jsonPath("$.content.[1].crn").value(containsString("X000011"))
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("first_app"))
 
     // Test using both toDate and fromDate filters results
     webTestClient.get()
@@ -433,8 +430,8 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.length()").isEqualTo(1)
-      .jsonPath("$.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.[0].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.length()").isEqualTo(1)
+      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("first_app"))
   }
 }

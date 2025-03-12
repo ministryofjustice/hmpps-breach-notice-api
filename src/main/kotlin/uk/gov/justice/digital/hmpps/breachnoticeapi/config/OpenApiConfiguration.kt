@@ -33,13 +33,9 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
       Components().addSecuritySchemes(
         "breach-notice-api-ui-role",
         SecurityScheme().addBearerJwtRequirement("ROLE_BREACH_NOTICE"),
-      ).addSecuritySchemes(
-        "breach-notice-api-sar-role",
-        SecurityScheme().addBearerJwtRequirement("ROLE_SAR_DATA_ACCESS"),
       ),
     )
     .addSecurityItem(SecurityRequirement().addList("breach-notice-api-ui-role", listOf("read")))
-    .addSecurityItem(SecurityRequirement().addList("breach-notice-api-sar-role", listOf("read")))
 }
 
 private fun SecurityScheme.addBearerJwtRequirement(role: String): SecurityScheme = type(SecurityScheme.Type.HTTP)

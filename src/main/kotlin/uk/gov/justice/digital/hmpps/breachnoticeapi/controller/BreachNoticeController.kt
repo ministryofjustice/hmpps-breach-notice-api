@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
@@ -162,33 +161,4 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
     ],
   )
   fun deleteBreachNotice(@PathVariable id: UUID) = breachNoticeService.deleteBreachNotice(id)
-
-  @GetMapping("/subject-access-request")
-  @PreAuthorize("hasRole('ROLE_SAR_DATA_ACCESS')")
-  @Operation(
-    summary = "API call to retrieve SAR data from a product",
-    description = "Calls through the breach notice service to retrieve a any SAR related information ",
-    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
-    responses = [
-      ApiResponse(responseCode = "200", description = "Request successfully processed - content found"),
-      ApiResponse(responseCode = "204", description = "Request successfully processed - no content found"),
-      ApiResponse(responseCode = "209", description = "Subject Identifier is not recognised by this service"),
-      ApiResponse(
-        responseCode = "400",
-        description = "The request was not formed correctly",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  fun getSAR(
-    @RequestParam prn: String?,
-    @RequestParam crn: String?,
-    @RequestParam fromDate: String?,
-    @RequestParam toDate: String?,
-  ) = breachNoticeService.getSARDetails(prn, crn, fromDate, toDate)
 }

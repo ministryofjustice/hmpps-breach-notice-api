@@ -14,4 +14,13 @@ interface BreachNoticeRepository : JpaRepository<BreachNoticeEntity, UUID> {
     dateOfLetter: LocalDate,
     dateOfLetter2: LocalDate,
   ): List<BreachNoticeEntity>
+  fun findByCrnAndDateOfLetterAfterOrderByDateOfLetterDesc(
+    crn: String,
+    dateOfLetter: LocalDate,
+  ): List<BreachNoticeEntity>
+  fun findByCrnAndDateOfLetterBeforeOrderByDateOfLetterDesc(
+    crn: String,
+    dateOfLetter: LocalDate,
+  ): List<BreachNoticeEntity>
+  fun findByCrnOrderByDateOfLetterDesc(crn: String): List<BreachNoticeEntity>
 }
