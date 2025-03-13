@@ -26,6 +26,12 @@ abstract class IntegrationTestBase {
   private val inboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachnoticetopic") ?: throw MissingQueueException("HmppsTopic inboundtopic not found") }
   protected val inboundSnsClient by lazy { inboundTopic.snsClient }
 
+  private val outboundTopic by lazy { hmppsQueueService.findByTopicId("hmppsbreachnoticepublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachnoticepublishtopic not found") }
+  protected val outboundSnsClient by lazy { outboundTopic.snsClient }
+
+  private val outboundQueue by lazy { hmppsQueueService.findByQueueId("hmppsbreachnoticepublishqueue") ?: throw MissingQueueException("HmppsQueue outboundqueue not found") }
+  protected val outboundQueueClient by lazy { outboundQueue.sqsClient }
+
   internal fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),

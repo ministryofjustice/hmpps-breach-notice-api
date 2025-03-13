@@ -67,6 +67,8 @@ data class DomainEventsMessage(
   val description: String,
   val personReference: PersonReference,
   val occurredAt: LocalDateTime,
+  val version: Long?,
+  val detailUrl: String?,
   val additionalInformation: Map<String, Any>? = mapOf(),
 ) {
   val crn = personReference.identifiers.firstOrNull { it.type == "CRN" }?.value

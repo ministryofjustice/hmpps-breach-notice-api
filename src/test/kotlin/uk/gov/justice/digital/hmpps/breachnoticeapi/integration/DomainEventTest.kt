@@ -128,7 +128,8 @@ class DomainEventTest : IntegrationTestBase() {
             }
           ]
         }
-      }""".trimIndent()
+      }
+      """.trimIndent()
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(

@@ -92,8 +92,14 @@ hmpps.sqs:
       queueName: hmpps-breach-notice-queue
       dlqName: hmpps-breach-notice-queue-dlq
       subscribeTopicId: hmppsbreachnoticetopic
+    hmppsbreachnoticepublishqueue:
+      queueName: hmpps-breach-notice-publish-queue
+      dlqName: hmpps-breach-notice-publish-queue-dlq
+      subscribeTopicId: hmppsbreachnoticepublishtopic
     audit:
       queueName: audit-queue
   topics:
     hmppsbreachnoticetopic:
       arn: arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic
+    hmppsbreachnoticepublishtopic:
+      arn: arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticepublishtopic

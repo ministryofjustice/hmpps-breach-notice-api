@@ -26,6 +26,7 @@ import kotlin.jvm.optionals.getOrNull
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
   val pdfGenerationService: PdfGenerationService,
+  val sqsService: SnsService,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
@@ -37,7 +38,14 @@ class BreachNoticeService(
 
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
+    val originalCompletionDate = breachNoticeEntity.completedDate
+    val retVal = breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
+
+    if (originalCompletionDate == null && breachNotice.completedDate != null) {
+      sqsService.sendPublishDomainEvent(breachNoticeEntity)
+    }
+
+    return retVal
   }
 
   fun deleteBreachNotice(id: UUID): Any? {
