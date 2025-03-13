@@ -26,6 +26,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
+import uk.gov.justice.digital.hmpps.breachnoticeapi.service.SnsService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.util.*
 
@@ -33,7 +34,10 @@ import java.util.*
 @RestController
 @PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
-class BreachNoticeController(private val breachNoticeService: BreachNoticeService) {
+class BreachNoticeController(
+  private val breachNoticeService: BreachNoticeService,
+  val sqsService: SnsService,
+) {
   @GetMapping("/{uuid}")
   @Operation(
     summary = "Retrieve a draft breach notice by uuid - breach notice id",
@@ -106,7 +110,14 @@ class BreachNoticeController(private val breachNoticeService: BreachNoticeServic
       ),
     ],
   )
-  fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) = breachNoticeService.updateBreachNotice(id, breachNotice)
+  fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) {
+    val original = breachNoticeService.getBreachNoticeById(id)
+    breachNoticeService.updateBreachNotice(id, breachNotice)
+
+    if (original != null && original.completedDate == null && breachNotice.completedDate != null) {
+      sqsService.sendPublishDomainEvent(breachNotice, id)
+    }
+  }
 
   @GetMapping("/{uuid}/pdf")
   @Operation(

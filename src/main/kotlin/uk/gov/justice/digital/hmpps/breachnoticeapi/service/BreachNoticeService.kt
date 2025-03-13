@@ -5,6 +5,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
@@ -36,16 +37,10 @@ class BreachNoticeService(
     CreateResponse(it, "$frontendUrl/breach-notice/$it")
   }
 
+  @Transactional
   fun updateBreachNotice(id: UUID, breachNotice: BreachNotice): BreachNotice {
     val breachNoticeEntity: BreachNoticeEntity = findBreachNoticeEntity(id)
-    val originalCompletionDate = breachNoticeEntity.completedDate
-    val retVal = breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
-
-    if (originalCompletionDate == null && breachNotice.completedDate != null) {
-      sqsService.sendPublishDomainEvent(breachNoticeEntity)
-    }
-
-    return retVal
+    return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
   }
 
   fun deleteBreachNotice(id: UUID): Any? {

@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import software.amazon.awssdk.services.sns.model.MessageAttributeValue
 import software.amazon.awssdk.services.sns.model.PublishRequest
-import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.listener.DomainEventsMessage
 import uk.gov.justice.digital.hmpps.breachnoticeapi.listener.Identifiers
 import uk.gov.justice.digital.hmpps.breachnoticeapi.listener.PersonReference
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
 import uk.gov.justice.hmpps.sqs.MissingQueueException
 import java.time.LocalDateTime
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -22,7 +23,7 @@ class SnsService(
   val objectMapper: ObjectMapper,
   @Value("\${hmpps.sqs.topics.hmppsbreachnoticepublishtopic.arn}") val outboundTopicArn: String,
 ) {
-  fun sendPublishDomainEvent(breachNotice: BreachNoticeEntity) {
+  fun sendPublishDomainEvent(breachNotice: BreachNotice, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachnoticepublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachnoticepublishtopic not found")
     val messageObject = DomainEventsMessage(
       description = "A breach notice has been completed for a person on probation",
@@ -30,7 +31,10 @@ class SnsService(
       occurredAt = LocalDateTime.now(),
       eventType = "probation-case.breach-notice.created",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = breachNotice.crn))),
-      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/pdf/" + breachNotice.id,
+      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/pdf/" + id,
+      additionalInformation = mapOf(
+        "breachNoticeId" to id,
+      ),
     )
     val publishResponse = outboundTopic.snsClient.publish(
       PublishRequest.builder().topicArn(outboundTopicArn).message(objectMapper.writeValueAsString(messageObject)).messageAttributes(
