@@ -35,7 +35,8 @@ generic-service:
       HMPPS-AUTH_CLIENT-ID: CLIENT_CREDS_CLIENT_ID
       HMPPS-AUTH-SECRET: CLIENT_CREDS_CLIENT_SECRET
     hmpps-domain-events:
-      HMPPS_SQS_TOPICS_HMPPSBREACHNOTICEPUBLISHTOPIC: topic_arn
+      HMPPS_SQS_TOPICS_HMPPSBREACHNOTICEPUBLISHTOPIC_ARN: topic_arn
+      HMPPS_SQS_TOPICS_HMPPSBREACHNOTICETOPIC_ARN: topic_arn
     rds-instance-output:
       DATABASE_ENDPOINT: rds_instance_endpoint
       DATABASE_USERNAME: database_username
