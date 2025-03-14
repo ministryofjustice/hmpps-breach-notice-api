@@ -1,0 +1,17 @@
+{
+  "eventType":"probation-case.unmerge.completed",
+  "version":1,
+  "occurredAt":"2025-03-03T12:20:13.6147Z",
+  "description":"An unmerge has been completed on the probation case",
+  "additionalInformation":{
+    "reactivatedCRN":"X028317",
+    "unmergedCRN":"X028318"},
+  "personReference":{
+    "identifiers":[
+      {
+        "type":"CRN",
+        "value":"X028318"
+      }
+    ]
+  }
+}

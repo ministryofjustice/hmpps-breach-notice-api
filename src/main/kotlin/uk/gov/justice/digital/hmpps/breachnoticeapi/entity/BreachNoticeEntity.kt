@@ -23,7 +23,7 @@ import java.util.*
 data class BreachNoticeEntity(
   @Id
   val id: UUID = UUID.randomUUID(),
-  val crn: String,
+  var crn: String,
   var titleAndFullName: String? = null,
   var dateOfLetter: LocalDate? = null,
   var referenceNumber: String? = null,
@@ -68,5 +68,7 @@ data class BreachNoticeEntity(
   val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
   var optionalNumberChecked: Boolean? = null,
   var optionalNumber: String? = null,
+  var reviewRequiredDate: LocalDateTime? = null,
+  var reviewEvent: String? = null,
   val conditionBeingEnforced: String? = null,
 )

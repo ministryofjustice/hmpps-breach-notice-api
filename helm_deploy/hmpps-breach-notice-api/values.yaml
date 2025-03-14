@@ -32,6 +32,10 @@ generic-service:
   namespace_secrets:
     hmpps-breach-notice-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+      HMPPS-AUTH_CLIENT-ID: CLIENT_CREDS_CLIENT_ID
+      HMPPS-AUTH-SECRET: CLIENT_CREDS_CLIENT_SECRET
+    hmpps-domain-events:
+      HMPPS_SQS_TOPICS_HMPPSBREACHNOTICEPUBLISHTOPIC: topic_arn
     rds-instance-output:
       DATABASE_ENDPOINT: rds_instance_endpoint
       DATABASE_USERNAME: database_username

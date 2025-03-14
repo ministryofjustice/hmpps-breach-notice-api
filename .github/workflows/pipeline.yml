@@ -50,6 +50,7 @@ jobs:
           cache-dependency-path: |
             *.gradle*
             **/gradle-wrapper.properties
+      - run: docker compose up -d wiremock-integration
       - run: ./gradlew check
       - name: upload the artifacts
         if: always()
@@ -60,6 +61,13 @@ jobs:
             build/test-results
             build/reports/tests
     services:
+      localstack:
+        image: localstack/localstack:4
+        env:
+          SERVICES: sqs,sns
+          DEFAULT_REGION: eu-west-2
+        ports:
+          - 4566:4566
       postgres:
         image: postgres:17
         env:

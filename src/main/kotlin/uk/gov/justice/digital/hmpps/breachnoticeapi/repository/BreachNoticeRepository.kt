@@ -9,6 +9,7 @@ import java.util.*
 @Repository
 interface BreachNoticeRepository : JpaRepository<BreachNoticeEntity, UUID> {
   fun findByCrn(crn: String): List<BreachNoticeEntity>
+  fun findByCrnAndCompletedDateIsNull(crn: String?): List<BreachNoticeEntity>
   fun findByCrnAndDateOfLetterBetweenOrderByDateOfLetterDesc(
     crn: String,
     dateOfLetter: LocalDate,

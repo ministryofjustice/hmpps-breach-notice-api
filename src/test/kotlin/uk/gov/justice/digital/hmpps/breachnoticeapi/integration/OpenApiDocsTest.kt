@@ -104,8 +104,9 @@ class OpenApiDocsTest : IntegrationTestBase() {
   fun `all endpoints have a security scheme defined`() {
     // There are 4 SQS endpoints without security scheme, to be excluded from this test; all these endpoint has single tag "hmpps-queue-resource"
     val queueAdminTag = "hmpps-queue-resource"
+    val queueAdminEndpointCount = 4
     val subjectAccessTag = "Subject Access Request"
-    val excludedEndpointCount = 1
+    val excludedEndpointCount = 5
 
     webTestClient.get()
       .uri("/v3/api-docs")
