@@ -36,7 +36,10 @@ generic-service:
       HMPPS-AUTH-SECRET: CLIENT_CREDS_CLIENT_SECRET
     hmpps-domain-events:
       HMPPS_SQS_TOPICS_HMPPSBREACHNOTICEPUBLISHTOPIC_ARN: topic_arn
-      HMPPS_SQS_TOPICS_HMPPSBREACHNOTICETOPIC_ARN: topic_arn
+    sqs-queue:
+      HMPPS_SQS_QUEUES_HMPPSBREACHNOTICEQUEUE_QUEUE_NAME: sqs_queue_name
+    sqs-dlq:
+      HMPPS_SQS_QUEUES_HMPPSBREACHNOTICEQUEUE_DLQ_NAME: sqs_queue_name
     rds-instance-output:
       DATABASE_ENDPOINT: rds_instance_endpoint
       DATABASE_USERNAME: database_username
