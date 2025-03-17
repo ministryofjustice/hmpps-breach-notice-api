@@ -8,6 +8,7 @@ generic-service:
   env:
     HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     FRONTEND_URL: "https://breach-notice.hmpps.service.justice.gov.uk"
+    NDELIUS-INTEGRATION-API_URL: "https://breach-notice-and-delius.hmpps.service.justice.gov.uk"
 
   allowlist:
     groups:
