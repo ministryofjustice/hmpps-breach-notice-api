@@ -54,6 +54,21 @@ class DomainEventsListener(
 
         updateReviewEvent(ReviewEventType.UNMERGE, breachNotices, message.occurredAt)
       }
+
+      "probation-case.sentence.moved" -> {
+        // Update CRNs where appropriate
+        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.sourceCrn)
+        breachNotices.forEach {
+          nDeliusIntegrationService.getCrnForBreachNoticeUuid(it.id.toString())?.crn?.let { crn ->
+            breachNoticeService.updateBreachNoticeCrn(
+              it,
+              crn,
+            )
+          }
+        }
+
+        updateReviewEvent(ReviewEventType.EVENT_MOVE, breachNotices, message.occurredAt)
+      }
     }
   }
 
