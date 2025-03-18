@@ -62,9 +62,15 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       offenderAddress = Address(
         addressId = 25,
         status = "ENDO",
+        officeDescription = null,
         buildingName = "MOO",
       ),
-      replyAddress = null,
+      replyAddress = Address(
+        addressId = 25,
+        status = "ENDO",
+        officeDescription = "anOfficeDescription",
+        buildingName = "MOO",
+      ),
       basicDetailsSaved = true,
     )
 
@@ -81,6 +87,8 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     assertThat(updatedBreachNotice.nextAppointmentLocation).isEqualTo("NXT_LOCATION")
     assertThat(updatedBreachNotice.responsibleOfficer).isEqualTo("John Doe")
     assertThat(updatedBreachNotice.basicDetailsSaved).isEqualTo(true)
+    assertThat(updatedBreachNotice.replyAddress?.officeDescription).isEqualTo("anOfficeDescription")
+    assertThat(updatedBreachNotice.offenderAddress?.officeDescription).isEqualTo(null)
   }
 
   @Test
