@@ -1,0 +1,1 @@
+ALTER TABLE public.address ADD office_description varchar(50) NULL;

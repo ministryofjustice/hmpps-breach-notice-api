@@ -31,7 +31,6 @@ services:
     image: localstack/localstack:4
     networks:
       - hmpps
-    container_name: localstack-external
     ports:
       - "4566:4566"
     environment:
@@ -41,7 +40,6 @@ services:
       - "${LOCALSTACK_VOLUME_DIR:-/tmp/volume}:/var/lib/localstack"
   wiremock-integration:
     image: wiremock/wiremock:latest
-    container_name: wiremock-integration
     volumes:
       - ./wiremock:/home/wiremock
     entrypoint: [ "/docker-entrypoint.sh", "--disable-gzip", "--verbose" ]

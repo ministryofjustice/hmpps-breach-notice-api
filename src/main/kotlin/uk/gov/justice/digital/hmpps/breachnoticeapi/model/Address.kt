@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Address(
   val addressId: Long,
   val status: String? = null,
+  val officeDescription: String? = null,
   val buildingName: String? = null,
   @JsonProperty("buildingNumber")
   val addressNumber: String? = null,
