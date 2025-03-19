@@ -323,7 +323,6 @@ class BreachNoticeService(
   }
 
   fun deleteAllByCrn(crn: String) {
-    val notices = breachNoticeRepository.findByCrn(crn);
-    breachNoticeRepository.deleteAll(notices);
+    breachNoticeRepository.deleteByCrn(crn);
   }
 }
