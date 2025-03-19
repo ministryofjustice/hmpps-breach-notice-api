@@ -51,6 +51,7 @@
 				</p>
 				<p lang="en-US" class="western" style="orphans: 0; widows: 0"><font face="Arial, serif"><font size="2" style="font-size: 11pt">
           <div th:if="${breachNotice.offenderAddress != null}">
+            <p style="margin: 0;"><span th:if="${breachNotice.offenderAddress.officeDescription != null}" th:text="${breachNotice.offenderAddress.officeDescription}">{offenderAddress.officeDescription}</span></p>
             <p style="margin: 0;"><span th:if="${breachNotice.offenderAddress.buildingName != null}" th:text="${breachNotice.offenderAddress.buildingName}">{offenderAddress.buildingName}</span></p>
             <p style="margin: 0;"><span th:if="${breachNotice.offenderAddress.addressNumber != null}" th:text="${breachNotice.offenderAddress.addressNumber}">{offenderAddress.addressNumber}</span><span th:if="${breachNotice.offenderAddress.addressNumber != null}"> </span><span th:if="${breachNotice.offenderAddress.streetName != null}" th:text="${breachNotice.offenderAddress.streetName}">{offenderAddress.streetName}</span></p>
             <p style="margin: 0;"><span th:if="${breachNotice.offenderAddress.district != null}" th:text="${breachNotice.offenderAddress.district}">{offenderAddress.district}</span></p>
@@ -65,6 +66,7 @@
 				<p lang="en-US" class="western" align="right" style="orphans: 0; widows: 0">
 				<font face="Arial, serif"><font size="2" style="font-size: 11pt">
           <div th:if="${breachNotice.replyAddress != null}">
+            <p style="margin: 0;"><span th:if="${breachNotice.replyAddress.officeDescription != null}" th:text="${breachNotice.replyAddress.officeDescription}">{replyAddress.officeDescription}</span></p>
           <p style="margin: 0;"><span th:if="${breachNotice.replyAddress.buildingName != null}" th:text="${breachNotice.replyAddress.buildingName}">{replyAddress.buildingName}</span></p>
           <p style="margin: 0;"><span th:if="${breachNotice.replyAddress.addressNumber != null}" th:text="${breachNotice.replyAddress.addressNumber}">{replyAddress.addressNumber}</span><span th:if="${breachNotice.replyAddress.addressNumber != null}"> </span><span th:if="${breachNotice.replyAddress.streetName != null}" th:text="${breachNotice.replyAddress.streetName}">{replyAddress.streetName}</span></p>
             <p style="margin: 0;"><span th:if="${breachNotice.replyAddress.district != null}" th:text="${breachNotice.replyAddress.district}">{replyAddress.district}</span></p>
