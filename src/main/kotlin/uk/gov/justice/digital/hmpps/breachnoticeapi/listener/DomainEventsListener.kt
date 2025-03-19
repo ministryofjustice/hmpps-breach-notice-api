@@ -69,6 +69,13 @@ class DomainEventsListener(
 
         updateReviewEvent(ReviewEventType.EVENT_MOVE, breachNotices, message.occurredAt)
       }
+
+      "probation-case.deleted.gdpr" -> {
+        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.crn)
+        breachNotices.forEach {
+          breachNoticeService.deleteBreachNotice(it.id)
+        }
+      }
     }
   }
 
