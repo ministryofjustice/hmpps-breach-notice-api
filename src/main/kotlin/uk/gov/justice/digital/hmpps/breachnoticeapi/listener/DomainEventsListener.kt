@@ -71,10 +71,7 @@ class DomainEventsListener(
       }
 
       "probation-case.deleted.gdpr" -> {
-        val breachNotices = breachNoticeService.getActiveBreachNoticesForCrn(message.crn)
-        breachNotices.forEach {
-          breachNoticeService.deleteBreachNotice(it.id)
-        }
+        message.crn?.let { breachNoticeService.deleteAllByCrn(it) };
       }
     }
   }
