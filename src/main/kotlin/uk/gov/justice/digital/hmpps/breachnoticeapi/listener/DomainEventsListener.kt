@@ -71,7 +71,7 @@ class DomainEventsListener(
       }
 
       "probation-case.deleted.gdpr" -> {
-        message.crn?.let { breachNoticeService.deleteAllByCrn(it) };
+        message.crn?.let { breachNoticeService.deleteAllByCrn(it) }
       }
     }
   }

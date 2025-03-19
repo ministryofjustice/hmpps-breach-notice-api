@@ -323,6 +323,6 @@ class BreachNoticeService(
   }
 
   fun deleteAllByCrn(crn: String) {
-    breachNoticeRepository.deleteByCrn(crn);
+    breachNoticeRepository.deleteByCrn(crn)
   }
 }
