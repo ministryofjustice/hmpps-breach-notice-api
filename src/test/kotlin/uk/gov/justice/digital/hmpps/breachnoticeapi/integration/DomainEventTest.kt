@@ -203,5 +203,78 @@ class DomainEventTest : IntegrationTestBase() {
         assertThat(breachNoticeUpdated.reviewEvent).isNull()
       }
     }
+
+    @Test
+    fun `move event should update CRN for active breach notice`() {
+      webTestClient.post()
+        .uri("/breach-notice")
+        .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+        .bodyValue(BreachNotice(crn = "X000141"))
+        .exchange()
+        .expectStatus()
+        .isCreated
+
+      val breachNotice = breachNoticeRepository.findByCrn("X000141").single()
+      assertThat(breachNotice.crn).isEqualTo("X000141")
+      assertThat(breachNotice.id).isNotNull()
+
+      val message: String = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-03-04T10:30:07.329287Z\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000141\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+
+      val responseFuture = inboundSnsClient.publish(
+        PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
+          mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue("probation-case.sentence.moved").build()),
+        ).build(),
+      )
+      val response = responseFuture.get(10, TimeUnit.SECONDS)
+
+      assertThat(response.messageId()).isNotNull()
+
+      Awaitility.await().atMost(10, TimeUnit.SECONDS).untilAsserted {
+        val breachNoticeUpdated: BreachNoticeEntity = breachNoticeRepository.findById(breachNotice.id).orElse(null)
+        assertThat(breachNoticeUpdated).isNotNull
+        assertThat(breachNoticeUpdated.crn).isEqualTo("X000103")
+        assertThat(breachNoticeUpdated.id).isNotNull()
+        assertThat(breachNoticeUpdated.reviewRequiredDate).isNotNull()
+        assertThat(breachNoticeUpdated.reviewEvent).isEqualTo("EVENT_MOVE")
+      }
+    }
+
+    @Test
+    fun `move event should not update CRN for completed breach notice`() {
+      webTestClient.post()
+        .uri("/breach-notice")
+        .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+        .bodyValue(BreachNotice(crn = "X000151"))
+        .exchange()
+        .expectStatus()
+        .isCreated
+
+      val breachNotice = breachNoticeRepository.findByCrn("X000151").single()
+      assertThat(breachNotice.crn).isEqualTo("X000151")
+      assertThat(breachNotice.id).isNotNull()
+
+      breachNotice.completedDate = LocalDateTime.now()
+      breachNoticeRepository.save(breachNotice)
+
+      val message: String = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-03-04T10:30:07.329287Z\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000151\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+
+      val responseFuture = inboundSnsClient.publish(
+        PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
+          mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue("probation-case.sentence.moved").build()),
+        ).build(),
+      )
+      val response = responseFuture.get(10, TimeUnit.SECONDS)
+
+      assertThat(response.messageId()).isNotNull()
+
+      Awaitility.await().atMost(10, TimeUnit.SECONDS).untilAsserted {
+        val breachNoticeUpdated: BreachNoticeEntity = breachNoticeRepository.findById(breachNotice.id).orElse(null)
+        assertThat(breachNoticeUpdated).isNotNull
+        assertThat(breachNoticeUpdated.crn).isEqualTo("X000151")
+        assertThat(breachNoticeUpdated.id).isNotNull()
+        assertThat(breachNoticeUpdated.reviewRequiredDate).isNull()
+        assertThat(breachNoticeUpdated.reviewEvent).isNull()
+      }
+    }
   }
 }

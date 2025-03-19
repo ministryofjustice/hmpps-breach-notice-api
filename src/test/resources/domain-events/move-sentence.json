@@ -1,0 +1,1 @@
+{"eventType":"probation-case.sentence.moved","version":1,"occurredAt":"2025-03-04T10:30:07.329287Z","description":"A sentence has been moved to a new CRN in NDelius","additionalInformation":{"sourceEventNumber": 2, "targetEventNumber": 5, "sentenceTypeCode": "NP", "sourceCRN": "X028317", "targetCRN": "X028318"},"personReference":{"identifiers":[{"type":"CRN","value":"X028318"}]}}
