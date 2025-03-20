@@ -74,6 +74,5 @@ class SnsService(
 
     publishResponse.get(5, TimeUnit.SECONDS).messageId()
       ?: throw MessagingException("Unable to publish deletion message")
-
   }
 }
