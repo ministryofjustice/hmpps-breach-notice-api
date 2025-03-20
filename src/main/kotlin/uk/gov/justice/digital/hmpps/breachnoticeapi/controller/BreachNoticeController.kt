@@ -171,5 +171,9 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun deleteBreachNotice(@PathVariable id: UUID) = breachNoticeService.deleteBreachNotice(id)
+  fun deleteBreachNotice(@PathVariable id: UUID) {
+    var breachNotice = breachNoticeService.getBreachNoticeById(id) ?: throw NotFoundException("Breach notice", "id", id)
+    breachNoticeService.deleteBreachNotice(id)
+    sqsService.sendDeletedDomainEvent(breachNotice, id)
+  }
 }
