@@ -276,5 +276,36 @@ class DomainEventTest : IntegrationTestBase() {
         assertThat(breachNoticeUpdated.reviewEvent).isNull()
       }
     }
+
+    @Test
+    fun `gdpr event should remove all breach notices`() {
+      webTestClient.post()
+        .uri("/breach-notice")
+        .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+        .bodyValue(BreachNotice(crn = "X000161"))
+        .exchange()
+        .expectStatus()
+        .isCreated
+
+      val breachNotice = breachNoticeRepository.findByCrn("X000161").single()
+      assertThat(breachNotice.crn).isEqualTo("X000161")
+      assertThat(breachNotice.id).isNotNull()
+
+      val message: String = "{\"eventType\":\"probation-case.deleted.gdpr\",\"version\":1,\"occurredAt\":\"2025-03-04T10:30:07.329287Z\",\"description\":\"A merge has been completed on the probation case\",\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+
+      val responseFuture = inboundSnsClient.publish(
+        PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
+          mapOf("eventType" to MessageAttributeValue.builder().dataType("String").stringValue("probation-case.deleted.gdpr").build()),
+        ).build(),
+      )
+      val response = responseFuture.get(10, TimeUnit.SECONDS)
+
+      assertThat(response.messageId()).isNotNull()
+
+      Awaitility.await().atMost(10, TimeUnit.SECONDS).untilAsserted {
+        val breachNoticeRefresh = breachNoticeRepository.findByCrn("X000141")
+        assertThat(breachNoticeRefresh).isEmpty()
+      }
+    }
   }
 }

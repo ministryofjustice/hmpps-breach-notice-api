@@ -24,4 +24,5 @@ interface BreachNoticeRepository : JpaRepository<BreachNoticeEntity, UUID> {
     dateOfLetter: LocalDate,
   ): List<BreachNoticeEntity>
   fun findByCrnOrderByDateOfLetterDesc(crn: String): List<BreachNoticeEntity>
+  fun deleteByCrn(crn: String)
 }

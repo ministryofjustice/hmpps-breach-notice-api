@@ -321,4 +321,8 @@ class BreachNoticeService(
     breachNotice.reviewRequiredDate = occurredAt
     breachNoticeRepository.save(breachNotice)
   }
+
+  fun deleteAllByCrn(crn: String) {
+    breachNoticeRepository.deleteByCrn(crn)
+  }
 }

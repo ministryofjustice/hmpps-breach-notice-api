@@ -69,6 +69,10 @@ class DomainEventsListener(
 
         updateReviewEvent(ReviewEventType.EVENT_MOVE, breachNotices, message.occurredAt)
       }
+
+      "probation-case.deleted.gdpr" -> {
+        message.crn?.let { breachNoticeService.deleteAllByCrn(it) }
+      }
     }
   }
 
