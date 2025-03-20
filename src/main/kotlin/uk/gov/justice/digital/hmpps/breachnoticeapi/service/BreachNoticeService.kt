@@ -43,6 +43,7 @@ class BreachNoticeService(
     return breachNoticeRepository.save(breachNotice.toEntity(breachNoticeEntity)).toModel()
   }
 
+  @Transactional
   fun deleteBreachNotice(id: UUID): Any? {
     if (breachNoticeRepository.findByIdOrNull(id) == null) {
       return ResponseEntity(
