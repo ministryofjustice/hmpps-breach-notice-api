@@ -32,7 +32,7 @@ class SnsService(
       occurredAt = LocalDateTime.now(),
       eventType = "probation-case.breach-notice.created",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = breachNotice.crn))),
-      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/breach-notice/pdf/" + id,
+      detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/breach-notice/" + id + "/pdf",
       additionalInformation = mapOf(
         "breachNoticeId" to id,
       ),
