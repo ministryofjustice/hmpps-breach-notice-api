@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.listener
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -90,10 +91,19 @@ data class DomainEventsMessage(
   val detailUrl: String?,
   val additionalInformation: Map<String, Any>? = mapOf(),
 ) {
+  @JsonIgnore
   val crn = personReference.identifiers.firstOrNull { it.type == "CRN" }?.value
+
+  @JsonIgnore
   val sourceCrn = additionalInformation?.get("sourceCRN") as String?
+
+  @JsonIgnore
   val targetCrn = additionalInformation?.get("targetCRN") as String?
+
+  @JsonIgnore
   val unmergedCrn = additionalInformation?.get("unmergedCRN") as String?
+
+  @JsonIgnore
   val reactivatedCrn = additionalInformation?.get("reactivatedCRN") as String?
 }
 
