@@ -83,6 +83,8 @@ class BreachNoticeService(
     nextAppointmentSaved = nextAppointmentSaved,
     useDefaultAddress = useDefaultAddress,
     useDefaultReplyAddress = useDefaultReplyAddress,
+    optionalNumber = optionalNumber,
+    optionalNumberChecked = optionalNumberChecked,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     conditionBeingEnforced = conditionBeingEnforced,
