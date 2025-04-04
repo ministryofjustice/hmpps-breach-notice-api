@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import uk.gov.justice.hmpps.kotlin.sar.HmppsProbationSubjectAccessRequestService
 import uk.gov.justice.hmpps.kotlin.sar.HmppsSubjectAccessRequestContent
 import java.time.LocalDate
