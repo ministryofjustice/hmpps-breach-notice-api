@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 @Service
 class SubjectAccessRequestService(
-  val breachNoticeRepository: BreachNoticeRepository,
+  val breachNoticeService: BreachNoticeService,
 ) : HmppsProbationSubjectAccessRequestService {
 
   override fun getProbationContentFor(
@@ -16,37 +16,10 @@ class SubjectAccessRequestService(
     fromDate: LocalDate?,
     toDate: LocalDate?,
   ): HmppsSubjectAccessRequestContent? {
-    val sarData = if (fromDate != null && toDate != null) {
-      breachNoticeRepository.findByCrnAndDateOfLetterBetweenOrderByDateOfLetterDesc(
-        crn,
-        fromDate,
-        toDate,
-      )
-    } else if (fromDate != null) {
-      breachNoticeRepository.findByCrnAndDateOfLetterAfterOrderByDateOfLetterDesc(
-        crn,
-        fromDate,
-      )
-    } else if (toDate != null) {
-      breachNoticeRepository.findByCrnAndDateOfLetterBeforeOrderByDateOfLetterDesc(
-        crn,
-        toDate,
-      )
-    } else {
-      breachNoticeRepository.findByCrnOrderByDateOfLetterDesc(crn)
-    }
+    val sarData = breachNoticeService.getAllForSARByCRN(crn, fromDate, toDate)
 
     if (sarData.isEmpty()) {
       return null
-    }
-
-    // Clear Identifiable user information from the breach notice
-    for (bn in sarData) {
-      bn.titleAndFullName = null
-      bn.optionalNumber = null
-      bn.contactNumber = null
-      bn.responsibleOfficer = null
-      bn.nextAppointmentOfficer = null
     }
 
     return HmppsSubjectAccessRequestContent(sarData)
