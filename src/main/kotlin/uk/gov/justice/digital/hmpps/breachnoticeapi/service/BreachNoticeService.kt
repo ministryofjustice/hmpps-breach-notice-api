@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -327,5 +328,37 @@ class BreachNoticeService(
 
   fun deleteAllByCrn(crn: String) {
     breachNoticeRepository.deleteByCrn(crn)
+  }
+
+  fun getAllForSARByCRN(crn: String, fromDate: LocalDate?, toDate: LocalDate?): Collection<BreachNotice> {
+    val sarData = if (fromDate != null && toDate != null) {
+      breachNoticeRepository.findByCrnAndDateOfLetterBetweenOrderByDateOfLetterDesc(
+        crn,
+        fromDate,
+        toDate,
+      )
+    } else if (fromDate != null) {
+      breachNoticeRepository.findByCrnAndDateOfLetterAfterOrderByDateOfLetterDesc(
+        crn,
+        fromDate,
+      )
+    } else if (toDate != null) {
+      breachNoticeRepository.findByCrnAndDateOfLetterBeforeOrderByDateOfLetterDesc(
+        crn,
+        toDate,
+      )
+    } else {
+      breachNoticeRepository.findByCrnOrderByDateOfLetterDesc(crn)
+    }
+
+    // Clear Identifiable user information from the breach notice for SAR
+    sarData.forEach { breachNoticeEntity ->
+      breachNoticeEntity.titleAndFullName = null
+      breachNoticeEntity.optionalNumber = null
+      breachNoticeEntity.contactNumber = null
+      breachNoticeEntity.responsibleOfficer = null
+      breachNoticeEntity.nextAppointmentOfficer = null
+    }
+    return sarData.map { it.toModel() }
   }
 }
