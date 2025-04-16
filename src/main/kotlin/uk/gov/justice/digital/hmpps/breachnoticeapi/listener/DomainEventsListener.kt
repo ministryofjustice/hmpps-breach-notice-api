@@ -12,7 +12,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.NDeliusIntegrationService
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 @Service
 class DomainEventsListener(
@@ -77,7 +77,7 @@ class DomainEventsListener(
     }
   }
 
-  private fun updateReviewEvent(eventType: ReviewEventType, breachNotices: Collection<BreachNoticeEntity>, occurredAt: LocalDateTime) {
+  private fun updateReviewEvent(eventType: ReviewEventType, breachNotices: Collection<BreachNoticeEntity>, occurredAt: ZonedDateTime) {
     breachNotices.forEach { breachNotice -> breachNoticeService.updateReviewEvent(eventType, breachNotice, occurredAt) }
   }
 }
@@ -86,7 +86,7 @@ data class DomainEventsMessage(
   val eventType: String,
   val description: String,
   val personReference: PersonReference,
-  val occurredAt: LocalDateTime,
+  val occurredAt: ZonedDateTime,
   val version: Long?,
   val detailUrl: String?,
   val additionalInformation: Map<String, Any>? = mapOf(),

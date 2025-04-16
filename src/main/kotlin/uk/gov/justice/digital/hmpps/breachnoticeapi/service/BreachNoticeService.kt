@@ -20,7 +20,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequiremen
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -320,9 +320,9 @@ class BreachNoticeService(
     breachNoticeRepository.save(breachNotice)
   }
 
-  fun updateReviewEvent(eventType: ReviewEventType, breachNotice: BreachNoticeEntity, occurredAt: LocalDateTime) {
+  fun updateReviewEvent(eventType: ReviewEventType, breachNotice: BreachNoticeEntity, occurredAt: ZonedDateTime) {
     breachNotice.reviewEvent = eventType.name
-    breachNotice.reviewRequiredDate = occurredAt
+    breachNotice.reviewRequiredDate = occurredAt.toLocalDateTime()
     breachNoticeRepository.save(breachNotice)
   }
 

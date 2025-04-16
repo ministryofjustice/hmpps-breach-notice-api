@@ -1,7 +1,7 @@
 {
   "eventType":"probation-case.unmerge.completed",
   "version":1,
-  "occurredAt":"2025-03-03T12:20:13.6147Z",
+  "occurredAt":"2025-04-15T09:49:55.560241+01:00",
   "description":"An unmerge has been completed on the probation case",
   "additionalInformation":{
     "reactivatedCRN":"X028317",
