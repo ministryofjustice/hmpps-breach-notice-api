@@ -58,7 +58,7 @@ class SARGenerationTests : IntegrationTestBase() {
 
     webTestClient.get()
       .uri { builder -> builder.path("/subject-access-request").queryParam("crn", "X000003").build() }
-      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .headers(setAuthorisation(roles = listOf("ROLE_SOMETHING_ELSE")))
       .exchange()
       .expectStatus()
       .isForbidden
