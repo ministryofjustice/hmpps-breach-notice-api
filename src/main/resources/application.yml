@@ -66,6 +66,8 @@ management:
       cache:
         time-to-live: 2000ms
 
+hmpps.sar.additionalAccessRole: BREACH_NOTICE
+
 ---
 spring.config.activate.on-profile: dev
 hmpps-auth.url: http://localhost:9090/auth
