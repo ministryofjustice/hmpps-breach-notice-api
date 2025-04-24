@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.messaging.MessagingException
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import software.amazon.awssdk.services.sns.model.MessageAttributeValue
@@ -35,7 +36,9 @@ class SnsService(
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/breach-notice/" + id + "/pdf",
       additionalInformation = mapOf(
         "breachNoticeId" to id,
+        "username" to SecurityContextHolder.getContext().authentication.name,
       ),
+
     )
     val publishResponse = outboundTopic.snsClient.publish(
       PublishRequest.builder().topicArn(outboundTopicArn).message(objectMapper.writeValueAsString(messageObject)).messageAttributes(
@@ -60,6 +63,7 @@ class SnsService(
         .toUriString() + "/breach-notice/report-deleted/" + id,
       additionalInformation = mapOf(
         "breachNoticeId" to id,
+        "username" to SecurityContextHolder.getContext().authentication.name,
       ),
     )
     val publishResponse = outboundTopic.snsClient.publish(
