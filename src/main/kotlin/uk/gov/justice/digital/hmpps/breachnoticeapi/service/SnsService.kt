@@ -15,8 +15,8 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
 import uk.gov.justice.hmpps.sqs.MissingQueueException
-import java.time.LocalDateTime
-import java.util.*
+import java.time.ZonedDateTime
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -30,7 +30,7 @@ class SnsService(
     val messageObject = DomainEventsMessage(
       description = "A breach notice has been completed for a person on probation",
       version = 1,
-      occurredAt = LocalDateTime.now(),
+      occurredAt = ZonedDateTime.now(),
       eventType = "probation-case.breach-notice.created",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = breachNotice.crn))),
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/breach-notice/" + id + "/pdf",
@@ -56,7 +56,7 @@ class SnsService(
     val messageObject = DomainEventsMessage(
       description = "A breach notice has been deleted for a person on probation",
       version = 1,
-      occurredAt = LocalDateTime.now(),
+      occurredAt = ZonedDateTime.now(),
       eventType = "probation-case.breach-notice.deleted",
       personReference = PersonReference(listOf(Identifiers(type = "crn", value = breachNotice.crn))),
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build()

@@ -6,7 +6,7 @@ generic-service:
     host: breach-notice-api.hmpps.service.justice.gov.uk
 
   env:
-    HMPPS_AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
+    HMPPS-AUTH_URL: "https://sign-in.hmpps.service.justice.gov.uk/auth"
     FRONTEND_URL: "https://breach-notice.hmpps.service.justice.gov.uk"
     NDELIUS-INTEGRATION-API_URL: "https://breach-notice-and-delius.hmpps.service.justice.gov.uk"
 

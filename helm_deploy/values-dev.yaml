@@ -9,7 +9,7 @@ generic-service:
 
   env:
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: "applicationinsights.dev.json"
-    HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
+    HMPPS-AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
     FRONTEND_URL: "https://breach-notice-dev.hmpps.service.justice.gov.uk"
     NDELIUS-INTEGRATION-API_URL: "https://breach-notice-and-delius-dev.hmpps.service.justice.gov.uk"
 
