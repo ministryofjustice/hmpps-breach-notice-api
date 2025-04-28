@@ -2,20 +2,25 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
+import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SARGenerationTests : IntegrationTestBase() {
 
+  @Autowired
+  private lateinit var breachNoticeRepository: BreachNoticeRepository
+
   @Test
   fun `should return 200 response on valid request`() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000001", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000001"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -33,7 +38,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000002", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000002"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -51,7 +56,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000003", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000003"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -69,7 +74,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000004", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000004"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -86,7 +91,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000005", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000005"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -104,7 +109,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000006", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000006"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -125,7 +130,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000007", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000007"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -145,7 +150,7 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000008", dateOfLetter = LocalDate.now()))
+      .bodyValue(BreachNotice(crn = "X000008"))
       .exchange()
       .expectStatus()
       .isCreated
@@ -166,6 +171,16 @@ class SARGenerationTests : IntegrationTestBase() {
   fun `should return correct information fields and clear personal details`() {
     webTestClient.post()
       .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000009"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X000009").single()
+
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice.id)
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
@@ -220,7 +235,7 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
     webTestClient.get()
       .uri { builder -> builder.path("/subject-access-request").queryParam("crn", "X000009").build() }
@@ -281,6 +296,32 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000010"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000010"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000010"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X000010")
+
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[0].id)
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X000010",
@@ -290,10 +331,10 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
-    webTestClient.post()
-      .uri("/breach-notice")
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[1].id)
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
@@ -304,10 +345,10 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
-    webTestClient.post()
-      .uri("/breach-notice")
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[2].id)
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
@@ -318,7 +359,7 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
     webTestClient.get()
       .uri { builder -> builder.path("/subject-access-request").queryParam("crn", "X000010").build() }
@@ -345,6 +386,32 @@ class SARGenerationTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000011"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000011"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000011"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X000011")
+
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[0].id)
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
           crn = "X000011",
@@ -354,10 +421,10 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
-    webTestClient.post()
-      .uri("/breach-notice")
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[1].id)
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
@@ -368,10 +435,10 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
-    webTestClient.post()
-      .uri("/breach-notice")
+    webTestClient.put()
+      .uri("/breach-notice/" + breachNotice[2].id)
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
         BreachNotice(
@@ -382,7 +449,7 @@ class SARGenerationTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus()
-      .isCreated
+      .isOk
 
     // Test using only toDate filters results
     webTestClient.get()

@@ -238,4 +238,63 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .expectStatus().isBadRequest
       .expectBody().jsonPath("$.userMessage").value(containsString("Invalid UUID string: TESTONE"))
   }
+
+  @Test
+  fun `should ignore all other fields on create breach notice`() {
+    val breachNoticeBody = BreachNotice(
+      crn = "X000007",
+      breachConditionTypeCode = "TYPE_CODE",
+      titleAndFullName = "Mr Joe Bloggs",
+      dateOfLetter = LocalDate.now(),
+      referenceNumber = "REFERENCE_NUMBER",
+      responseRequiredDate = LocalDate.now(),
+      breachNoticeTypeCode = "BRCH",
+      responsibleOfficer = "John Doe",
+      contactNumber = "01912525252",
+      nextAppointmentType = "NXTTYP",
+      nextAppointmentDate = LocalDateTime.now(),
+      nextAppointmentLocation = "NXT_LOCATION",
+      nextAppointmentOfficer = "APPT_OFFICER",
+      nextAppointmentId = null,
+      completedDate = LocalDateTime.now(),
+      offenderAddress = Address(
+        addressId = 25,
+        status = "ENDO",
+        officeDescription = null,
+        buildingName = "MOO",
+      ),
+      replyAddress = Address(
+        addressId = 25,
+        status = "ENDO",
+        officeDescription = "anOfficeDescription",
+        buildingName = "MOO",
+      ),
+    )
+
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(breachNoticeBody)
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X000007").first()
+    assertThat(breachNotice.crn).isEqualTo("X000007")
+    assertThat(breachNotice.breachNoticeTypeDescription == null)
+    assertThat(breachNotice.titleAndFullName == null)
+    assertThat(breachNotice.dateOfLetter == null)
+    assertThat(breachNotice.referenceNumber == null)
+    assertThat(breachNotice.responseRequiredDate == null)
+    assertThat(breachNotice.breachNoticeTypeCode == null)
+    assertThat(breachNotice.responsibleOfficer == null)
+    assertThat(breachNotice.contactNumber == null)
+    assertThat(breachNotice.nextAppointmentType == null)
+    assertThat(breachNotice.nextAppointmentDate == null)
+    assertThat(breachNotice.nextAppointmentLocation == null)
+    assertThat(breachNotice.nextAppointmentOfficer == null)
+    assertThat(breachNotice.completedDate == null)
+    assertThat(breachNotice.offenderAddress == null)
+    assertThat(breachNotice.replyAddress == null)
+  }
 }
