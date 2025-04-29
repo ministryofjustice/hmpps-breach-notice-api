@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.SnsService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
@@ -61,8 +62,8 @@ class BreachNoticeController(
 
   @PostMapping
   @Operation(
-    summary = "Create a Breach Notice",
-    description = "Calls through the breach notice service to create a breach notice",
+    summary = "Initialises a Breach Notice",
+    description = "Calls through the breach notice service to initialise a breach notice",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
       ApiResponse(responseCode = "201", description = "Breach Notice created"),
@@ -79,7 +80,7 @@ class BreachNoticeController(
     ],
   )
   @ResponseStatus(HttpStatus.CREATED)
-  fun createBreachNotice(@Valid @RequestBody breachNotice: BreachNotice) = breachNoticeService.createBreachNotice(breachNotice)
+  fun initialiseBreachNotice(@Valid @RequestBody initialiseBreachNotice: InitialiseBreachNotice) = breachNoticeService.createBreachNotice(initialiseBreachNotice)
 
   @PutMapping("/{id}")
   @Operation(

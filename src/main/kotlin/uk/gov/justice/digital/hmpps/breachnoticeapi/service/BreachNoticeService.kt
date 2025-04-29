@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.ZonedDateTime
@@ -28,12 +29,11 @@ import kotlin.jvm.optionals.getOrNull
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
   val pdfGenerationService: PdfGenerationService,
-  val sqsService: SnsService,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
 
-  fun createBreachNotice(breachNotice: BreachNotice) = breachNoticeRepository.save(
-    breachNotice.toEntity(),
+  fun createBreachNotice(initialiseBreachNotice: InitialiseBreachNotice) = breachNoticeRepository.save(
+    BreachNoticeEntity(crn = initialiseBreachNotice.crn),
   ).id.let {
     CreateResponse(it, "$frontendUrl/breach-notice/$it")
   }
