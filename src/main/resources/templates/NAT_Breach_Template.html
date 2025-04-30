@@ -124,10 +124,10 @@
             <td style="width:111.15pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
-                            <span>
+                            <p>
                             <span th:text="${req.requirementTypeMainCategoryDescription}">(Requirement Details)</span>
                             <span th:if="${req.requirementTypeSubCategoryDescription != null}" th:text="${' ' + req.requirementTypeSubCategoryDescription}">(Requirement Sub Category Details)</span>
-                            </span>
+                            </p>
                     </tr>
                 </table>
             </td>
@@ -139,10 +139,10 @@
             <td style="width:106.75pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
-                            <span>
+                            <p>
                             <span th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy')}">(From Date)</span>
                             <span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy')}">(To Date)</span>
-                            </span>
+                            </p>
                     </tr>
                 </table>
             </td>
@@ -154,7 +154,9 @@
             <td style="width:149.35pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
-                        <b><span th:text="${req.rejectionReason}">(Reason)</span></b>
+                        <p>
+                          <b><span th:text="${req.rejectionReason}">(Reason)</span></b>
+                        </p>
                     </tr>
                 </table>
             </td>
