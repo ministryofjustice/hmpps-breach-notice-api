@@ -89,6 +89,7 @@ class BreachNoticeService(
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
     conditionBeingEnforced = conditionBeingEnforced,
+    selectNextAppointment = selectNextAppointment,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
@@ -137,6 +138,7 @@ class BreachNoticeService(
     optionalNumberChecked = optionalNumberChecked,
     optionalNumber = optionalNumber,
     reviewRequiredDate = reviewRequiredDate,
+    selectNextAppointment = selectNextAppointment,
     reviewEvent = reviewEvent,
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
     breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
@@ -176,6 +178,7 @@ class BreachNoticeService(
     optionalNumber = optionalNumber,
     reviewRequiredDate = reviewRequiredDate,
     reviewEvent = reviewEvent,
+    selectNextAppointment = selectNextAppointment,
     conditionBeingEnforced = conditionBeingEnforced,
   )
 
@@ -214,6 +217,7 @@ class BreachNoticeService(
       optionalNumberChecked = it.optionalNumberChecked,
       optionalNumber = it.optionalNumber,
       reviewRequiredDate = it.reviewRequiredDate,
+      selectNextAppointment = it.selectNextAppointment,
       reviewEvent = it.reviewEvent,
       conditionBeingEnforced = it.conditionBeingEnforced,
     )
