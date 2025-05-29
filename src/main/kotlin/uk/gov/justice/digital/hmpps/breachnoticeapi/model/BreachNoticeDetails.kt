@@ -44,4 +44,5 @@ data class BreachNoticeDetails(
   var reviewRequiredDate: LocalDateTime? = null,
   var reviewEvent: String? = null,
   val conditionBeingEnforced: String? = null,
+  val selectNextAppointment: Boolean? = null,
 )

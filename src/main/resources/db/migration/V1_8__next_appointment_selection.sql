@@ -1,0 +1,1 @@
+ALTER TABLE public.breach_notice ADD select_next_appointment boolean NULL;
