@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.*
 
 @Entity
@@ -41,7 +42,7 @@ data class BreachNoticeEntity(
   var nextAppointmentLocation: String? = null,
   var nextAppointmentOfficer: String? = null,
   var nextAppointmentId: Long? = null,
-  var completedDate: LocalDateTime? = null,
+  var completedDate: ZonedDateTime? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

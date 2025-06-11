@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.sns.model.PublishRequest
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
 class DomainEventTest : IntegrationTestBase() {
@@ -37,7 +37,7 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000101")
       assertThat(breachNotice.id).isNotNull()
 
-      val message: String = "{\"eventType\":\"probation-case.merge.completed\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000101\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+      val message = "{\"eventType\":\"probation-case.merge.completed\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000101\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
@@ -72,10 +72,10 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000111")
       assertThat(breachNotice.id).isNotNull()
 
-      breachNotice.completedDate = LocalDateTime.now()
+      breachNotice.completedDate = ZonedDateTime.now()
       breachNoticeRepository.save(breachNotice)
 
-      val message: String = "{\"eventType\":\"probation-case.merge.completed\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000111\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+      val message = "{\"eventType\":\"probation-case.merge.completed\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000111\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
@@ -164,7 +164,7 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000131")
       assertThat(breachNotice.id).isNotNull()
 
-      breachNotice.completedDate = LocalDateTime.now()
+      breachNotice.completedDate = ZonedDateTime.now()
       breachNoticeRepository.save(breachNotice)
 
       val message: String = "{\n" +
@@ -218,7 +218,7 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000141")
       assertThat(breachNotice.id).isNotNull()
 
-      val message: String = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000141\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+      val message = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000141\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
@@ -253,10 +253,10 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000151")
       assertThat(breachNotice.id).isNotNull()
 
-      breachNotice.completedDate = LocalDateTime.now()
+      breachNotice.completedDate = ZonedDateTime.now()
       breachNoticeRepository.save(breachNotice)
 
-      val message: String = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000151\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+      val message = "{\"eventType\":\"probation-case.sentence.moved\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"additionalInformation\":{\"sourceCRN\":\"X000151\",\"targetCRN\":\"X000102\"},\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(
@@ -291,7 +291,7 @@ class DomainEventTest : IntegrationTestBase() {
       assertThat(breachNotice.crn).isEqualTo("X000161")
       assertThat(breachNotice.id).isNotNull()
 
-      val message: String = "{\"eventType\":\"probation-case.deleted.gdpr\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
+      val message = "{\"eventType\":\"probation-case.deleted.gdpr\",\"version\":1,\"occurredAt\":\"2025-04-15T09:49:55.560241+01:00\",\"description\":\"A merge has been completed on the probation case\",\"personReference\":{\"identifiers\":[{\"type\":\"CRN\",\"value\":\"X000102\"}]}}\n"
 
       val responseFuture = inboundSnsClient.publish(
         PublishRequest.builder().topicArn("arn:aws:sns:eu-west-2:000000000000:hmppsbreachnoticetopic").message(message).messageAttributes(

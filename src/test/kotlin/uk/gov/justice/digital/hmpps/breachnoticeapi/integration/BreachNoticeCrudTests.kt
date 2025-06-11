@@ -9,6 +9,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 class BreachNoticeCrudTests : IntegrationTestBase() {
 
@@ -58,7 +59,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       nextAppointmentLocation = "NXT_LOCATION",
       nextAppointmentOfficer = "APPT_OFFICER",
       nextAppointmentId = null,
-      completedDate = LocalDateTime.now(),
+      completedDate = ZonedDateTime.now(),
       offenderAddress = Address(
         addressId = 25,
         status = "ENDO",
@@ -134,7 +135,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
           nextAppointmentLocation = "NXT_LOCATION",
           nextAppointmentOfficer = "APPT_OFFICER",
           nextAppointmentId = null,
-          completedDate = LocalDateTime.now(),
+          completedDate = ZonedDateTime.now(),
           offenderAddress = Address(
             addressId = 25,
             status = "ENDO",
@@ -256,7 +257,7 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       nextAppointmentLocation = "NXT_LOCATION",
       nextAppointmentOfficer = "APPT_OFFICER",
       nextAppointmentId = null,
-      completedDate = LocalDateTime.now(),
+      completedDate = ZonedDateTime.now(),
       offenderAddress = Address(
         addressId = 25,
         status = "ENDO",
