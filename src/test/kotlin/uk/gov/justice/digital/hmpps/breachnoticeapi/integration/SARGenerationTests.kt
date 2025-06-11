@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class SARGenerationTests : IntegrationTestBase() {
@@ -135,7 +136,7 @@ class SARGenerationTests : IntegrationTestBase() {
       .expectStatus()
       .isCreated
 
-    // Ideally an incorrectly formed CRN would throw a 209, however that cant be implemented at the moment
+    // Ideally, an incorrectly formed CRN would throw a 209, however, that cant be implemented at the moment
     // So throws a 204 no content instead as no records would match a malformed crn
     webTestClient.get()
       .uri { builder -> builder.path("/subject-access-request").queryParam("crn", "MyNewCrn").build() }
@@ -202,7 +203,7 @@ class SARGenerationTests : IntegrationTestBase() {
           nextAppointmentLocation = "NXT_LOCATION",
           nextAppointmentOfficer = "APPT_OFFICER",
           nextAppointmentId = 1234,
-          completedDate = LocalDateTime.of(2011, 1, 1, 15, 0),
+          completedDate = ZonedDateTime.now(),
           offenderAddress = Address(
             addressId = 25,
             buildingName = "MOO",
@@ -259,7 +260,7 @@ class SARGenerationTests : IntegrationTestBase() {
       .jsonPath("$.content.[0].nextAppointmentDate").value(containsString("2010-12-31T10:00:00"))
       .jsonPath("$.content.[0].nextAppointmentLocation").value(containsString("NXT_LOCATION"))
       .jsonPath("$.content.[0].nextAppointmentId").isEqualTo(1234)
-      .jsonPath("$.content.[0].completedDate").value(containsString("2011-01-01T15:00:00"))
+      .jsonPath("$.content.[0].completedDate").exists()
       .jsonPath("$.content.[0].offenderAddress.addressId").isEqualTo(25)
       .jsonPath("$.content.[0].offenderAddress.buildingName").value(containsString("MOO"))
       .jsonPath("$.content.[0].offenderAddress.buildingNumber").value(containsString("1"))

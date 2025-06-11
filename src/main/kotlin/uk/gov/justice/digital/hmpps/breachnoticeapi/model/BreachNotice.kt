@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.Nulls
 import jakarta.validation.constraints.Pattern
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 data class BreachNotice(
   @field:Pattern(regexp = "^[A-Z][0-9]{6}")
@@ -26,7 +27,7 @@ data class BreachNotice(
   val nextAppointmentLocation: String? = null,
   val nextAppointmentOfficer: String? = null,
   val nextAppointmentId: Long? = null,
-  val completedDate: LocalDateTime? = null,
+  val completedDate: ZonedDateTime? = null,
   val offenderAddress: Address? = null,
   val replyAddress: Address? = null,
   val basicDetailsSaved: Boolean? = null,

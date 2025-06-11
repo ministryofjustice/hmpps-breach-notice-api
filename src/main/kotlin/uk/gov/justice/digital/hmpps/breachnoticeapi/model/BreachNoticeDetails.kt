@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.util.*
 
 data class BreachNoticeDetails(
@@ -26,7 +27,7 @@ data class BreachNoticeDetails(
   val nextAppointmentLocation: String? = null,
   val nextAppointmentOfficer: String? = null,
   val nextAppointmentId: Long? = null,
-  val completedDate: LocalDateTime? = null,
+  val completedDate: ZonedDateTime? = null,
   val offenderAddress: Address? = null,
   val replyAddress: Address? = null,
   val basicDetailsSaved: Boolean? = null,

@@ -1,0 +1,1 @@
+ALTER TABLE public.breach_notice ALTER column completed_date type timestamp with time zone;
