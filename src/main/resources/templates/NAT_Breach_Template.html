@@ -115,8 +115,7 @@
                     <strong><span>DETAILS OF FAILURE TO COMPLY </span></strong><span>– :</span>
                 </p>
                 <p>
-                    <span>Under the terms of your <span th:text="${breachNotice.breachSentenceTypeDescription}">{sentenceType}</span>, you failed to comply with the following requirement and or condition:</span><span
-                >&#xa0; </span>
+                    <span>Under the terms of your <span th:text="${breachNotice.breachSentenceTypeDescription}">{sentenceType}</span>, you failed to comply with the following requirement and or condition:</span><span></span>
                 </p>
             </td>
         </tr>
@@ -160,6 +159,18 @@
                     </tr>
                 </table>
             </td>
+        </tr>
+        <tr style="height:26pt">
+          <td colspan="5"
+              style="width:496.3pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+            <p>
+              <strong><span>Further Reason Details </span></strong><span>– :</span>
+            </p>
+            <p style=" text-align:left; font-size:11pt">
+              <span th:text="${breachNotice.furtherReasonDetails}"></span>
+            </p>
+            <br/>
+          </td>
         </tr>
         <tr style="height:26pt">
             <td colspan="5"

@@ -90,6 +90,7 @@ class BreachNoticeService(
     reviewEvent = reviewEvent,
     conditionBeingEnforced = conditionBeingEnforced,
     selectNextAppointment = selectNextAppointment,
+    furtherReasonDetails = furtherReasonDetails,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
@@ -139,6 +140,7 @@ class BreachNoticeService(
     optionalNumber = optionalNumber,
     reviewRequiredDate = reviewRequiredDate,
     selectNextAppointment = selectNextAppointment,
+    furtherReasonDetails = furtherReasonDetails,
     reviewEvent = reviewEvent,
     breachNoticeRequirementList = breachNoticeRequirementList.map { it.toEntity() },
     breachNoticeContactList = breachNoticeContactList.map { it.toEntity() },
@@ -180,6 +182,7 @@ class BreachNoticeService(
     reviewEvent = reviewEvent,
     selectNextAppointment = selectNextAppointment,
     conditionBeingEnforced = conditionBeingEnforced,
+    furtherReasonDetails = furtherReasonDetails,
   )
 
   fun getBreachNoticeById(uuid: UUID) = breachNoticeRepository.findById(uuid).getOrNull()?.let {
@@ -220,6 +223,7 @@ class BreachNoticeService(
       selectNextAppointment = it.selectNextAppointment,
       reviewEvent = it.reviewEvent,
       conditionBeingEnforced = it.conditionBeingEnforced,
+      furtherReasonDetails = it.furtherReasonDetails,
     )
   }
 

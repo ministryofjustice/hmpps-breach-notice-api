@@ -46,4 +46,5 @@ data class BreachNotice(
   var reviewEvent: String? = null,
   val conditionBeingEnforced: String? = null,
   val selectNextAppointment: Boolean? = null,
+  val furtherReasonDetails: String? = null,
 )
