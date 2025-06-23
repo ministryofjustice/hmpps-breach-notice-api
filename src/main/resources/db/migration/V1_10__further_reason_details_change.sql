@@ -1,0 +1,1 @@
+ALTER TABLE public.breach_notice ADD further_reason_details varchar(4000) NULL;
