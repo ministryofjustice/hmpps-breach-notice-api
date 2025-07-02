@@ -3,12 +3,15 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration
+import org.springframework.context.annotation.Import
 import org.springframework.http.ContentDisposition
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.util.UUID
 
+@Import(WebTestClientAutoConfiguration::class)
 class PdfGenerationTests : IntegrationTestBase() {
 
   @Autowired
