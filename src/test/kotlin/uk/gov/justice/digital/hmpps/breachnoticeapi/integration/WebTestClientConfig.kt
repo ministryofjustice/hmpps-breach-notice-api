@@ -12,11 +12,9 @@ class WebTestClientConfig {
   private var port: Int = 0
 
   @Bean
-  fun webTestClient(): WebTestClient {
-    return WebTestClient
-      .bindToServer()
-      .responseTimeout(Duration.ofSeconds(30))
-      .baseUrl("http://localhost:$port")
-      .build()
-  }
+  fun webTestClient(): WebTestClient = WebTestClient
+    .bindToServer()
+    .responseTimeout(Duration.ofSeconds(30))
+    .baseUrl("http://localhost:$port")
+    .build()
 }
