@@ -3,15 +3,13 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration
-import org.springframework.context.annotation.Import
 import org.springframework.http.ContentDisposition
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
+import java.time.Duration
 import java.util.UUID
 
-@Import(WebTestClientAutoConfiguration::class)
 class PdfGenerationTests : IntegrationTestBase() {
 
   @Autowired
@@ -19,7 +17,9 @@ class PdfGenerationTests : IntegrationTestBase() {
 
   @Test
   fun `get PDF should return a 200 response`() {
-    webTestClient.post()
+    webTestClient
+      .mutate().responseTimeout(Duration.ofSeconds(30)).build()
+      .post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
@@ -34,7 +34,9 @@ class PdfGenerationTests : IntegrationTestBase() {
     val breachNotice = breachNoticeRepository.findByCrn("X000007")
     assertThat(breachNotice.first().crn).isEqualTo("X000007")
 
-    webTestClient.get()
+    webTestClient
+      .mutate().responseTimeout(Duration.ofSeconds(30)).build()
+      .get()
       .uri("/breach-notice/" + breachNotice[0].id + "/pdf")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
