@@ -64,6 +64,7 @@
                 <p>
                 	<span>
 						<div th:if="${breachNotice.replyAddress != null}">
+              <div style="text-align: right">
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.officeDescription != null}" th:text="${breachNotice.replyAddress.officeDescription}">{replyAddress.officeDescription}</span></p>
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.buildingName != null}" th:text="${breachNotice.replyAddress.buildingName}">{replyAddress.buildingName}</span></p>
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.addressNumber != null}" th:text="${breachNotice.replyAddress.addressNumber}">{replyAddress.addressNumber}</span><span th:if="${breachNotice.replyAddress.addressNumber != null}"> </span><span th:if="${breachNotice.replyAddress.streetName != null}" th:text="${breachNotice.replyAddress.streetName}">{replyAddress.streetName}</span></p>
@@ -71,6 +72,7 @@
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.townCity != null}" th:text="${breachNotice.replyAddress.townCity}">{replyAddress.buildingName}</span></p>
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.county != null}" th:text="${breachNotice.replyAddress.county}">{replyAddress.county}</span></p>
 							<p style="margin: 0;"><span th:if="${breachNotice.replyAddress.postcode != null}" th:text="${breachNotice.replyAddress.postcode}">{replyAddress.postcode}</span></p>
+                </div>
 						</div>
                     </span>
                 </p>
