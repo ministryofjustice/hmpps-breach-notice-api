@@ -127,7 +127,6 @@
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
                             <p>
                             <span th:text="${req.requirementTypeMainCategoryDescription}">(Requirement Details)</span>
-                            <span th:if="${req.requirementTypeSubCategoryDescription != null}" th:text="${' ' + req.requirementTypeSubCategoryDescription}">(Requirement Sub Category Details)</span>
                             </p>
                     </tr>
                 </table>
