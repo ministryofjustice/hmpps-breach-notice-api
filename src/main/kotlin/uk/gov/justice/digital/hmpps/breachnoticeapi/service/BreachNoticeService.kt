@@ -6,17 +6,28 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.*
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.AddressEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeRequirementEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.ContactRequirementEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.*
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.ContactRequirement
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRequirementRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.RequirementRepository
 import java.time.LocalDate
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 @Service
@@ -64,14 +75,12 @@ class BreachNoticeService(
     return contactRepository.findByBreachNoticeId(id).map { it.toModel() }
   }
 
-  fun fetchBreachNoticeContact(id: UUID, contactId: Long): BreachNoticeContact {
-    return contactRepository.findFirstByBreachNoticeIdAndContactId(id, contactId).toModel()
-  }
+  fun fetchBreachNoticeContact(id: UUID, contactId: Long): BreachNoticeContact = contactRepository.findFirstByBreachNoticeIdAndContactId(id, contactId).toModel()
 
   @Transactional
   fun updateBreachNoticeRequirement(id: UUID, breachNoticeRequirement: BreachNoticeRequirement): BreachNoticeRequirement {
     val requirementList = requirementRepository.findByBreachNoticeIdAndRequirementId(id, breachNoticeRequirement.requirementId)
-    val existingRequirement = if(requirementList.isNotEmpty()) requirementList[0] else null
+    val existingRequirement = if (requirementList.isNotEmpty()) requirementList[0] else null
     val requirement = breachNoticeRequirement.toEntity(existingRequirement)
     return requirementRepository.save(requirement).toModel()
   }
@@ -84,19 +93,17 @@ class BreachNoticeService(
     contactRepository.deleteById(fetchedContact.id)
   }
 
-  fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID): List<ContactRequirement>{
-    return contactRequirementRepository.findByBreachNoticeId(breachNoticeId).map { cr -> cr.toModel() }
-  }
+  fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeId(breachNoticeId).map { cr -> cr.toModel() }
 
   fun updateContactRequirementLinksForBreachNotice(breachNoticeId: UUID, contactId: UUID, contactRequirements: List<ContactRequirement>) {
     // Grab links from DB
     val existingRecords = contactRequirementRepository.findByBreachNoticeIdAndContactId(breachNoticeId, contactId)
     val existingRequirementLinks = existingRecords.map { cr -> cr.requirementId }
     val newRequirementLinks = contactRequirements.map { cr -> cr.requirementId }
-    val recordsToRemove = existingRecords.filter{ cr -> !newRequirementLinks.contains(cr.requirementId) }
+    val recordsToRemove = existingRecords.filter { cr -> !newRequirementLinks.contains(cr.requirementId) }
     contactRequirementRepository.deleteAll(recordsToRemove)
     // Remove any links not present anymore
-    val recordsToAdd = contactRequirements.filter{cr -> !existingRequirementLinks.contains(cr.requirementId) }.map { cr -> cr.toEntity() }
+    val recordsToAdd = contactRequirements.filter { cr -> !existingRequirementLinks.contains(cr.requirementId) }.map { cr -> cr.toEntity() }
     // Add new links
     contactRequirementRepository.saveAll(recordsToAdd)
   }
@@ -139,8 +146,8 @@ class BreachNoticeService(
     furtherReasonDetails = furtherReasonDetails,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
-        existingEntity.breachNoticeContactList.find { existingContactEnitiy ->
-          existingContactEnitiy.id == it.id
+        existingEntity.breachNoticeContactList.find { existingContactEntity ->
+          existingContactEntity.id == it.id
         },
       )
     },
@@ -330,7 +337,7 @@ class BreachNoticeService(
     contactType = contactType,
     contactOutcome = contactOutcome,
     contactId = contactId,
-    breachNoticeId = breachNoticeId
+    breachNoticeId = breachNoticeId,
   )
 
   private fun BreachNoticeRequirementEntity.toModel() = BreachNoticeRequirement(

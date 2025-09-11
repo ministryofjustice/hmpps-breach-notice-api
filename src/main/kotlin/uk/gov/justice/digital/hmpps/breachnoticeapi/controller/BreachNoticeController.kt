@@ -23,11 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.*
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.ContactRequirement
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.SnsService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
-import java.util.*
+import java.util.UUID
 
 @Validated
 @RestController
@@ -138,11 +143,11 @@ class BreachNoticeController(
     ],
   )
   fun getBreachNoticeAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
-    var breachNotice = breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
-    var pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, breachNotice.completedDate == null)
-    var headers = HttpHeaders()
+    val breachNotice = breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
+    val pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, breachNotice.completedDate == null)
+    val headers = HttpHeaders()
     headers.contentType = MediaType.APPLICATION_PDF
-    headers.contentDisposition = ContentDisposition.attachment().filename("Breach_Notice_" + breachNotice?.crn + "_" + breachNotice?.referenceNumber + ".pdf").build()
+    headers.contentDisposition = ContentDisposition.attachment().filename("Breach_Notice_" + breachNotice.crn + "_" + breachNotice.referenceNumber + ".pdf").build()
     return ResponseEntity.ok().headers(headers).body(pdfBytes)
   }
 
@@ -171,7 +176,7 @@ class BreachNoticeController(
     ],
   )
   fun deleteBreachNotice(@PathVariable id: UUID) {
-    var breachNotice = breachNoticeService.getBreachNoticeById(id) ?: throw NotFoundException("Breach notice", "id", id)
+    val breachNotice = breachNoticeService.getBreachNoticeById(id) ?: throw NotFoundException("Breach notice", "id", id)
     breachNoticeService.deleteBreachNotice(id)
     sqsService.sendDeletedDomainEvent(breachNotice, id)
   }
@@ -200,9 +205,7 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun updateBreachNoticeContacts(@PathVariable id: UUID, @RequestBody breachNoticeContacts: List<BreachNoticeContact>): List<BreachNoticeContact> {
-    return breachNoticeService.updateBreachNoticeContacts(id, breachNoticeContacts)
-  }
+  fun updateBreachNoticeContacts(@PathVariable id: UUID, @RequestBody breachNoticeContacts: List<BreachNoticeContact>): List<BreachNoticeContact> = breachNoticeService.updateBreachNoticeContacts(id, breachNoticeContacts)
 
   @GetMapping("/{id}/contact/{contactId}")
   @Operation(
@@ -228,9 +231,7 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun getBreachNoticeContact(@PathVariable id: UUID, @PathVariable contactId: Long): BreachNoticeContact {
-    return breachNoticeService.fetchBreachNoticeContact(id, contactId)
-  }
+  fun getBreachNoticeContact(@PathVariable id: UUID, @PathVariable contactId: Long): BreachNoticeContact = breachNoticeService.fetchBreachNoticeContact(id, contactId)
 
   @DeleteMapping("/{id}/contact/{contactId}")
   @Operation(
@@ -256,9 +257,7 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun deleteBreachNoticeContact(@PathVariable id: UUID, @PathVariable contactId: Long) {
-    return breachNoticeService.deleteBreachNoticeContact(id, contactId)
-  }
+  fun deleteBreachNoticeContact(@PathVariable id: UUID, @PathVariable contactId: Long) = breachNoticeService.deleteBreachNoticeContact(id, contactId)
 
   @PutMapping("/{id}/requirement")
   @Operation(
@@ -284,9 +283,7 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun updateBreachNoticeRequirement(@PathVariable id: UUID, @RequestBody breachNoticeRequirement: BreachNoticeRequirement): BreachNoticeRequirement {
-    return breachNoticeService.updateBreachNoticeRequirement(id, breachNoticeRequirement)
-  }
+  fun updateBreachNoticeRequirement(@PathVariable id: UUID, @RequestBody breachNoticeRequirement: BreachNoticeRequirement): BreachNoticeRequirement = breachNoticeService.updateBreachNoticeRequirement(id, breachNoticeRequirement)
 
   @GetMapping("/{uuid}/crlinks")
   @Operation(
@@ -309,7 +306,6 @@ class BreachNoticeController(
   )
   fun getBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID): List<ContactRequirement>? = breachNoticeService.findAllLinksForBreachNoticeWithContactId(uuid)
 
-
   @PutMapping("/{uuid}/crlinks/{contactId}")
   @Operation(
     summary = "Update a links between contacts & requirements for a breach notice",
@@ -329,9 +325,7 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun updateBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID, @PathVariable contactId: UUID, @RequestBody links: List<ContactRequirement>)
-  {
+  fun updateBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID, @PathVariable contactId: UUID, @RequestBody links: List<ContactRequirement>) {
     breachNoticeService.updateContactRequirementLinksForBreachNotice(uuid, contactId, links)
   }
-
 }

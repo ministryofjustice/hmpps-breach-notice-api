@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 
 data class BreachNoticeContact(
   val id: UUID? = null,
