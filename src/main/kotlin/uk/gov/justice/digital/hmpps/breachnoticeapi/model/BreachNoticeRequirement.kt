@@ -5,6 +5,7 @@ import java.util.*
 
 data class BreachNoticeRequirement(
   val id: UUID? = null,
+  val breachNoticeId: UUID,
   val requirementId: Long,
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
