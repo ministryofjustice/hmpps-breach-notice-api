@@ -93,7 +93,9 @@ class BreachNoticeService(
     contactRepository.deleteById(fetchedContact.id)
   }
 
-  fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeId(breachNoticeId).map { cr -> cr.toModel() }
+  fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID, contactId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeIdAndContactId(breachNoticeId, contactId).map { cr -> cr.toModel() }
+
+  fun findAllLinksForBreachNotice(breachNoticeId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeId(breachNoticeId).map { cr -> cr.toModel() }
 
   fun updateContactRequirementLinksForBreachNotice(breachNoticeId: UUID, contactId: UUID, contactRequirements: List<ContactRequirement>) {
     // Grab links from DB

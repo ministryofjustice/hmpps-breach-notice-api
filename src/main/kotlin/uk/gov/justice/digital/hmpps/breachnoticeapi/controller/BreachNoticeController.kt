@@ -304,7 +304,28 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun getBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID): List<ContactRequirement>? = breachNoticeService.findAllLinksForBreachNoticeWithContactId(uuid)
+  fun getBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID): List<ContactRequirement>? = breachNoticeService.findAllLinksForBreachNotice(uuid)
+
+  @GetMapping("/{uuid}/crlinks/{contactId}")
+  @Operation(
+    summary = "Retrieve a links between contacts & requirements for a breach notice",
+    description = "Calls through the breach notice service to retrieve a set of object in the contact-requirement table which match the breach notice id",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "linked list returned"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun getBreachNoticeContactRequirementLinksWithContactId(@PathVariable uuid: UUID, @PathVariable contactId: UUID): List<ContactRequirement>? = breachNoticeService.findAllLinksForBreachNoticeWithContactId(uuid, contactId)
 
   @PutMapping("/{uuid}/crlinks/{contactId}")
   @Operation(
