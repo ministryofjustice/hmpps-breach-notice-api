@@ -12,7 +12,6 @@ import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -32,8 +31,8 @@ data class BreachNoticeRequirementEntity(
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
   val rejectionReason: String? = null,
-  val fromDate: LocalDate? = null,
-  val toDate: LocalDate? = null,
+  val fromDate: LocalDateTime? = null,
+  val toDate: LocalDateTime? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate
