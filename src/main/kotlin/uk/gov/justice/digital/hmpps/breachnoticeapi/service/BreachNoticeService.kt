@@ -91,6 +91,11 @@ class BreachNoticeService(
     val contactReqLinks = contactRequirementRepository.findByBreachNoticeIdAndContactId(id, fetchedContact.id)
     contactRequirementRepository.deleteAll(contactReqLinks)
     contactRepository.deleteById(fetchedContact.id)
+    // Find any unlinked requirements and delete
+    val breachNoticeRequirements = breachNoticeRepository.findById(id).get().breachNoticeRequirementList.map { r -> r.id }
+    val remainingContactReqLinks = contactRequirementRepository.findByBreachNoticeId(id).map { cr -> cr.requirementId }
+    val requirementsToDelete = breachNoticeRequirements.filter { it !in remainingContactReqLinks }
+    requirementRepository.deleteAllByIdInBatch(requirementsToDelete)
   }
 
   fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID, contactId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeIdAndContactId(breachNoticeId, contactId).map { cr -> cr.toModel() }
