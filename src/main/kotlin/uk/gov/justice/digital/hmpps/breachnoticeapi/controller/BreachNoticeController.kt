@@ -309,7 +309,7 @@ class BreachNoticeController(
   @GetMapping("/{uuid}/crlinks/{contactId}")
   @Operation(
     summary = "Retrieve a links between contacts & requirements for a breach notice",
-    description = "Calls through the breach notice service to retrieve a set of object in the contact-requirement table which match the breach notice id",
+    description = "Calls through the breach notice service to retrieve a set of object in the contact-requirement table which match the records breach notice id and contact id",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
       ApiResponse(responseCode = "200", description = "linked list returned"),
