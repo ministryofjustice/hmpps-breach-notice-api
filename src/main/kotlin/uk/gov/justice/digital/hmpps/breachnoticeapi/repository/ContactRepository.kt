@@ -6,4 +6,8 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEn
 import java.util.*
 
 @Repository
-interface ContactRepository : JpaRepository<BreachNoticeContactEntity, UUID>
+interface ContactRepository : JpaRepository<BreachNoticeContactEntity, UUID> {
+  fun findByBreachNoticeIdAndContactId(breachNoticeId: UUID, contactId: Long): List<BreachNoticeContactEntity>
+  fun findByBreachNoticeId(breachNoticeId: UUID): List<BreachNoticeContactEntity>
+  fun findFirstByBreachNoticeIdAndContactId(id: UUID, contactId: Long): BreachNoticeContactEntity
+}
