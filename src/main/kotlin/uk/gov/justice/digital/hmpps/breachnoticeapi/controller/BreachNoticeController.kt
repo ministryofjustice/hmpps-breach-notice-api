@@ -349,4 +349,30 @@ class BreachNoticeController(
   fun updateBreachNoticeContactRequirementLinks(@PathVariable uuid: UUID, @PathVariable contactId: UUID, @RequestBody links: List<ContactRequirement>) {
     breachNoticeService.updateContactRequirementLinksForBreachNotice(uuid, contactId, links)
   }
+
+  @DeleteMapping("/{id}/unlinkedrequirements")
+  @Operation(
+    summary = "Delete a Breach Notice Requirements",
+    description = "Calls through the breach notice service to delete any breach notice requirements which are not linked in the contact-requirement table",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Breach Notice Contact returned"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Breach Notice id was not found",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun deleteUnlinkedBreachNoticeRequirements(@PathVariable id: UUID) = breachNoticeService.deleteUnlinkedRequirements(id)
 }

@@ -26,6 +26,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRequirementRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.RequirementRepository
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
@@ -91,11 +92,16 @@ class BreachNoticeService(
     val contactReqLinks = contactRequirementRepository.findByBreachNoticeIdAndContactId(id, fetchedContact.id)
     contactRequirementRepository.deleteAll(contactReqLinks)
     contactRepository.deleteById(fetchedContact.id)
+  }
+
+  @Transactional
+  fun deleteUnlinkedRequirements(id: UUID) {
     // Find any unlinked requirements and delete
     val breachNoticeRequirements = breachNoticeRepository.findById(id).get().breachNoticeRequirementList.map { r -> r.id }
     val remainingContactReqLinks = contactRequirementRepository.findByBreachNoticeId(id).map { cr -> cr.requirementId }
     val requirementsToDelete = breachNoticeRequirements.filter { it !in remainingContactReqLinks }
     requirementRepository.deleteAllByIdInBatch(requirementsToDelete)
+    recalculateRequirementDates(id)
   }
 
   fun findAllLinksForBreachNoticeWithContactId(breachNoticeId: UUID, contactId: UUID): List<ContactRequirement> = contactRequirementRepository.findByBreachNoticeIdAndContactId(breachNoticeId, contactId).map { cr -> cr.toModel() }
@@ -113,9 +119,25 @@ class BreachNoticeService(
     val recordsToAdd = contactRequirements.filter { cr -> !existingRequirementLinks.contains(cr.requirementId) }.map { cr -> cr.toEntity() }
     // Add new links
     contactRequirementRepository.saveAll(recordsToAdd)
+    recalculateRequirementDates(breachNoticeId)
   }
 
   private fun findBreachNoticeEntity(id: UUID): BreachNoticeEntity = breachNoticeRepository.findByIdOrNull(id) ?: throw NotFoundException("BreachNoticeEntity", "id", id)
+
+  private fun recalculateRequirementDates(breachNoticeId: UUID) {
+    val existingRecords = requirementRepository.findByBreachNoticeId(breachNoticeId)
+    for (requirement in existingRecords) {
+      val linkedContacts =
+        contactRequirementRepository.findByBreachNoticeIdAndRequirementId(breachNoticeId, requirement.id)
+          .mapNotNull { cr -> cr.contact }.distinct()
+        val dateList: List<LocalDateTime> = linkedContacts.map{ contact -> contact.contactDate!! }
+        val maxDate = dateList.maxOrNull()
+        val minDate = dateList.minOrNull()
+        requirement.toDate = maxDate
+        requirement.fromDate = minDate
+        requirementRepository.save(requirement)
+    }
+  }
 
   private fun BreachNotice.toEntity(existingEntity: BreachNoticeEntity? = null) = existingEntity?.copy(
     titleAndFullName = titleAndFullName,
