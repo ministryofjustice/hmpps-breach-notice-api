@@ -130,12 +130,12 @@ class BreachNoticeService(
       val linkedContacts =
         contactRequirementRepository.findByBreachNoticeIdAndRequirementId(breachNoticeId, requirement.id)
           .mapNotNull { cr -> cr.contact }.distinct()
-        val dateList: List<LocalDateTime> = linkedContacts.map{ contact -> contact.contactDate!! }
-        val maxDate = dateList.maxOrNull()
-        val minDate = dateList.minOrNull()
-        requirement.toDate = maxDate
-        requirement.fromDate = minDate
-        requirementRepository.save(requirement)
+      val dateList: List<LocalDateTime> = linkedContacts.map { contact -> contact.contactDate!! }
+      val maxDate = dateList.maxOrNull()
+      val minDate = dateList.minOrNull()
+      requirement.toDate = maxDate
+      requirement.fromDate = minDate
+      requirementRepository.save(requirement)
     }
   }
 
