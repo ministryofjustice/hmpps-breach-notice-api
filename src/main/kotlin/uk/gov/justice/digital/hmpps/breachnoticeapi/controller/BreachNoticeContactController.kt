@@ -6,11 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
-import org.springframework.http.ContentDisposition
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,48 +18,23 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.breachnoticeapi.exception.NotFoundException
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
-import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
-import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
-import uk.gov.justice.digital.hmpps.breachnoticeapi.service.SnsService
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
+import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeContactService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.util.UUID
 
 @Validated
 @RestController
 @PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
-@RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
-class BreachNoticeController(
-  private val breachNoticeService: BreachNoticeService,
-  val sqsService: SnsService,
+@RequestMapping(value = ["/contact"], produces = ["application/json"])
+class BreachNoticeContactController(
+  private val breachNoticeContactService: BreachNoticeContactService,
 ) {
-  @GetMapping("/{uuid}")
-  @Operation(
-    summary = "Retrieve a draft breach notice by uuid - breach notice id",
-    description = "Calls through the breach notice service to retrieve breach requests",
-    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
-    responses = [
-      ApiResponse(responseCode = "200", description = "breach notice returned"),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "403",
-        description = "Forbidden to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  fun getBreachNoticeById(@PathVariable uuid: UUID): BreachNoticeDetails? = breachNoticeService.getBreachNoticeById(uuid)
 
   @PostMapping
   @Operation(
-    summary = "Initialises a Breach Notice",
-    description = "Calls through the breach notice service to initialise a breach notice",
+    summary = "Initialises a Breach Notice Requirement",
+    description = "Calls through the breach notice service to initialise a breach notice Requirement",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
       ApiResponse(responseCode = "201", description = "Breach Notice created"),
@@ -80,20 +51,41 @@ class BreachNoticeController(
     ],
   )
   @ResponseStatus(HttpStatus.CREATED)
-  fun initialiseBreachNotice(@Valid @RequestBody initialiseBreachNotice: InitialiseBreachNotice) = breachNoticeService.createBreachNotice(initialiseBreachNotice)
+  fun initialiseBreachNoticeContact(@Valid @RequestBody breachNoticeContact: BreachNoticeContact) = breachNoticeContactService.createBreachNoticeContact(breachNoticeContact)
 
   @PutMapping("/{id}")
   @Operation(
-    summary = "Update a Breach Notice",
-    description = "Calls through the breach notice service to update a breach notice",
+    summary = "Update a Breach Notice Contact",
+    description = "Calls through the breach notice service to add or update a breach notice contact",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
-      ApiResponse(responseCode = "200", description = "Breach Notice updated"),
+      ApiResponse(responseCode = "200", description = "Breach Notice Contact updated"),
       ApiResponse(
-        responseCode = "400",
-        description = "cant change the CRN on an update",
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Contact id was not found",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun updateBreachNoticeContact(@PathVariable id: UUID, @RequestBody breachNoticeContact: BreachNoticeContact) = breachNoticeContactService.updateBreachNoticeContact(id, breachNoticeContact)
+
+  @GetMapping("/bybreachnoticeidanddeliusid/{breachNoticeId}/{deliusContactId}")
+  @Operation(
+    summary = "Retrieve a Breach Notice Contact",
+    description = "Calls through the breach notice service to retrieve a breach notice contact using breach notice id and delius contact id",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Breach Notice Contact returned"),
       ApiResponse(
         responseCode = "401",
         description = "Unauthorized to access this endpoint",
@@ -111,52 +103,18 @@ class BreachNoticeController(
       ),
     ],
   )
-  fun updateBreachNotice(@PathVariable id: UUID, @RequestBody breachNotice: BreachNotice) {
-    val original = breachNoticeService.getBreachNoticeById(id)
-    breachNoticeService.updateBreachNotice(id, breachNotice)
+  fun getBreachNoticeContact(
+    @PathVariable breachNoticeId: UUID,
+    @PathVariable deliusContactId: Long,
+  ): BreachNoticeContact = breachNoticeContactService.fetchBreachNoticeContact(breachNoticeId, deliusContactId)
 
-    if (original != null && original.completedDate == null && breachNotice.completedDate != null) {
-      sqsService.sendPublishDomainEvent(breachNotice, id)
-    }
-  }
-
-  @GetMapping("/{uuid}/pdf")
+  @GetMapping("/bybreachnoticeid/{breachNoticeId}")
   @Operation(
-    summary = "Retrieve a breach notice pdf by uuid - breach notice id",
-    description = "Calls through the breach notice service to retrieve a generate ",
+    summary = "Retrieve a Breach Notice Contact",
+    description = "Calls through the breach notice service to retrieve a list of breach notice contacts using breach notice id",
     security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
     responses = [
-      ApiResponse(responseCode = "200", description = "breach notice pdf returned"),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "403",
-        description = "Forbidden to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  fun getBreachNoticeAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
-    val breachNotice =
-      breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
-    val pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, breachNotice.completedDate == null)
-    val headers = HttpHeaders()
-    headers.contentType = MediaType.APPLICATION_PDF
-    headers.contentDisposition = ContentDisposition.attachment()
-      .filename("Breach_Notice_" + breachNotice.crn + "_" + breachNotice.referenceNumber + ".pdf").build()
-    return ResponseEntity.ok().headers(headers).body(pdfBytes)
-  }
-
-  @DeleteMapping("/{id}")
-  @Operation(
-    summary = "Delete a Breach Notice",
-    description = "Calls through the breach notice service to delete a breach notice",
-    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
-    responses = [
-      ApiResponse(responseCode = "200", description = "Breach Notice deleted"),
+      ApiResponse(responseCode = "200", description = "Breach Notice Contact returned"),
       ApiResponse(
         responseCode = "401",
         description = "Unauthorized to access this endpoint",
@@ -169,14 +127,36 @@ class BreachNoticeController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "The Breach Notice id was not found",
+        description = "The Contact id was not found",
         content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
       ),
     ],
   )
-  fun deleteBreachNotice(@PathVariable id: UUID) {
-    val breachNotice = breachNoticeService.getBreachNoticeById(id) ?: throw NotFoundException("Breach notice", "id", id)
-    breachNoticeService.deleteBreachNotice(id)
-    sqsService.sendDeletedDomainEvent(breachNotice, id)
-  }
+  fun getBreachNoticeContacts(@PathVariable breachNoticeId: UUID): List<BreachNoticeContact> = breachNoticeContactService.fetchBreachNoticeContacts(breachNoticeId)
+
+  @DeleteMapping("/{contactId}")
+  @Operation(
+    summary = "Delete a Breach Notice Contact",
+    description = "Calls through the breach notice service to delete a breach notice contact and its contact_requirement links",
+    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
+    responses = [
+      ApiResponse(responseCode = "200", description = "Breach Notice Contact returned"),
+      ApiResponse(
+        responseCode = "401",
+        description = "Unauthorized to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "403",
+        description = "Forbidden to access this endpoint",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "The Contact id was not found",
+        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  fun deleteBreachNoticeContact(@PathVariable contactId: UUID) = breachNoticeContactService.deleteBreachNoticeContact(contactId)
 }

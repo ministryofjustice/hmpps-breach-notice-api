@@ -9,4 +9,5 @@ import java.util.*
 interface ContactRequirementRepository : JpaRepository<ContactRequirementEntity, UUID> {
   fun findByBreachNoticeId(breachNoticeId: UUID): List<ContactRequirementEntity>
   fun findByBreachNoticeIdAndContactId(breachNoticeId: UUID, contactId: UUID): List<ContactRequirementEntity>
+  fun findByBreachNoticeIdAndRequirementId(breachNoticeId: UUID, requirementId: UUID): List<ContactRequirementEntity>
 }

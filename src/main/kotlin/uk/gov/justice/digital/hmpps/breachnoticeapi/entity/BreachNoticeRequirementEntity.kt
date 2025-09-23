@@ -31,8 +31,8 @@ data class BreachNoticeRequirementEntity(
   val requirementTypeMainCategoryDescription: String? = null,
   val requirementTypeSubCategoryDescription: String? = null,
   val rejectionReason: String? = null,
-  val fromDate: LocalDateTime? = null,
-  val toDate: LocalDateTime? = null,
+  var fromDate: LocalDateTime? = null,
+  var toDate: LocalDateTime? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

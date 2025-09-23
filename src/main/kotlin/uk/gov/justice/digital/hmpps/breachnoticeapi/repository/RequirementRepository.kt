@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface RequirementRepository : JpaRepository<BreachNoticeRequirementEntity, UUID> {
   fun findByBreachNoticeIdAndRequirementId(breachNoticeId: UUID, requirementId: Long): List<BreachNoticeRequirementEntity>
+  fun findByBreachNoticeId(breachNoticeId: UUID): List<BreachNoticeRequirementEntity>
 }
