@@ -77,7 +77,7 @@ class BreachNoticeRequirementController(
     ],
   )
   fun updateBreachNoticeRequirement(
-    @RequestBody breachNoticeRequirement: BreachNoticeRequirement,
+    @PathVariable id: UUID, @RequestBody breachNoticeRequirement: BreachNoticeRequirement,
   ) = breachNoticeRequirementService.updateBreachNoticeRequirement(breachNoticeRequirement)
 
   @DeleteMapping("/unlinkedrequirements/{breachNoticeId}")
