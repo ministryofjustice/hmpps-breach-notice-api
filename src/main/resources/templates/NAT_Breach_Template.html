@@ -140,8 +140,11 @@
                 <table>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
                             <p>
-                            <span th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy HH:mm')}">(From Date)</span>
-                            <span th:if="${req.fromDate != req.toDate}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy HH:mm')}">(To Date)</span>
+                              <span th:if="${#temporals.format(req.fromDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy')}"></span>
+                              <span th:unless="${#temporals.format(req.fromDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy HH:mm')}"></span>
+                              <div th:if="${req.fromDate != req.toDate}" >
+                              <span th:if="${(#temporals.format(req.toDate, 'HH:mm') == '00:00')}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy')}">(To Date)</span>
+                              <span th:unless="${(#temporals.format(req.toDate, 'HH:mm') == '00:00')}" th:text="${' - ' + #temporals.format(req.toDate, 'dd/MM/yyyy HH:mm')}">(To Date)</span></div>
                             </p>
                     </tr>
                 </table>
