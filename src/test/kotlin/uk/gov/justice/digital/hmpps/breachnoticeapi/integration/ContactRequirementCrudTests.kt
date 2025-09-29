@@ -89,6 +89,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirement.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -182,6 +183,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementA.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -197,6 +199,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementB.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -308,6 +311,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementA.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -323,6 +327,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementB.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -431,6 +436,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementA.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -446,6 +452,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementA.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -461,6 +468,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirementB.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -552,6 +560,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirement.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
@@ -567,6 +576,7 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
           requirementId = insertedRequirement.id,
           contact = null,
           requirement = null,
+          id = null,
         ),
       ).exchange()
       .expectStatus()
