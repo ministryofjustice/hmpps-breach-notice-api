@@ -93,6 +93,7 @@ class ContactRequirementLinksService(
   )
 
   private fun ContactRequirementEntity.toModel() = ContactRequirement(
+    id = id,
     requirementId = requirementId,
     breachNoticeId = breachNoticeId,
     contactId = contactId,

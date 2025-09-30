@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.model
 import java.util.UUID
 
 data class ContactRequirement(
+  val id: UUID?,
   val breachNoticeId: UUID,
   val contact: BreachNoticeContact?,
   val contactId: UUID,
