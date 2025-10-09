@@ -305,12 +305,12 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "X000007"))
+      .bodyValue(BreachNotice(crn = "X000008"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("X000007").single()
+    val breachNotice = breachNoticeRepository.findByCrn("X000008").single()
 
     webTestClient.post()
       .uri("/requirement")
