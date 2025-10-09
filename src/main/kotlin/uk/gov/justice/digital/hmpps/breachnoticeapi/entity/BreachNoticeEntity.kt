@@ -7,6 +7,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.OneToMany
 import jakarta.persistence.OneToOne
+import jakarta.persistence.OrderBy
 import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -65,6 +66,7 @@ data class BreachNoticeEntity(
   var useDefaultReplyAddress: Boolean? = null,
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
   val breachNoticeContactList: List<BreachNoticeContactEntity> = emptyList(),
+  @OrderBy("requirementTypeMainCategoryDescription")
   @OneToMany(cascade = [CascadeType.ALL], orphanRemoval = true, mappedBy = "breachNotice")
   val breachNoticeRequirementList: List<BreachNoticeRequirementEntity> = emptyList(),
   var optionalNumberChecked: Boolean? = null,
