@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
+import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequirement
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -297,5 +298,116 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
     assertThat(breachNotice.completedDate == null)
     assertThat(breachNotice.offenderAddress == null)
     assertThat(breachNotice.replyAddress == null)
+  }
+
+  @Test
+  fun `should fetch requirements by alphabetical order`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "X000008"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("X000008").single()
+
+    webTestClient.post()
+      .uri("/requirement")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeRequirement(
+          breachNoticeId = breachNotice.id,
+          requirementId = 1L,
+          rejectionReason = "Failed to Comply",
+          requirementTypeMainCategoryDescription = "1Test",
+          requirementTypeSubCategoryDescription = "A Subcat",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/requirement")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeRequirement(
+          breachNoticeId = breachNotice.id,
+          requirementId = 2L,
+          rejectionReason = "Failed to Comply",
+          requirementTypeMainCategoryDescription = "Blunk",
+          requirementTypeSubCategoryDescription = "B Subcat",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/requirement")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeRequirement(
+          breachNoticeId = breachNotice.id,
+          requirementId = 3L,
+          rejectionReason = "Failed to Comply",
+          requirementTypeMainCategoryDescription = "1Block",
+          requirementTypeSubCategoryDescription = "C Subcat",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/requirement")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeRequirement(
+          breachNoticeId = breachNotice.id,
+          requirementId = 4L,
+          rejectionReason = "Failed to Comply",
+          requirementTypeMainCategoryDescription = "aligator",
+          requirementTypeSubCategoryDescription = "D Subcat",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.post()
+      .uri("/requirement")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeRequirement(
+          breachNoticeId = breachNotice.id,
+          requirementId = 5L,
+          rejectionReason = "Failed to Comply",
+          requirementTypeMainCategoryDescription = "20Test",
+          requirementTypeSubCategoryDescription = "E Subcat",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    webTestClient.get()
+      .uri("/breach-notice/" + breachNotice.id)
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectBody()
+      .jsonPath("$.breachNoticeRequirementList[0].requirementId").isEqualTo(3)
+      .jsonPath("$.breachNoticeRequirementList[0].requirementTypeMainCategoryDescription").value(containsString("1Block"))
+      .jsonPath("$.breachNoticeRequirementList[1].requirementId").isEqualTo(1)
+      .jsonPath("$.breachNoticeRequirementList[1].requirementTypeMainCategoryDescription").value(containsString("1Test"))
+      .jsonPath("$.breachNoticeRequirementList[2].requirementId").isEqualTo(5)
+      .jsonPath("$.breachNoticeRequirementList[2].requirementTypeMainCategoryDescription").value(containsString("20Test"))
+      .jsonPath("$.breachNoticeRequirementList[3].requirementId").isEqualTo(4)
+      .jsonPath("$.breachNoticeRequirementList[3].requirementTypeMainCategoryDescription").value(containsString("aligator"))
+      .jsonPath("$.breachNoticeRequirementList[4].requirementId").isEqualTo(2)
+      .jsonPath("$.breachNoticeRequirementList[4].requirementTypeMainCategoryDescription").value(containsString("Blunk"))
   }
 }
