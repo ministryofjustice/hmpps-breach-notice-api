@@ -33,7 +33,7 @@ import java.util.UUID
 
 @Validated
 @RestController
-@PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
+//@PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
 @RequestMapping(value = ["/breach-notice"], produces = ["application/json"])
 class BreachNoticeController(
   private val breachNoticeService: BreachNoticeService,

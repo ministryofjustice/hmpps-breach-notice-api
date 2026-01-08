@@ -44,12 +44,16 @@ class BreachNoticeContactService(
     contactOutcome = contactOutcome,
     contactId = contactId,
     breachNoticeId = breachNoticeId,
+    wholeSentence = wholeSentence,
+    rejectionReason = rejectionReason,
   ) ?: BreachNoticeContactEntity(
     contactDate = contactDate,
     contactType = contactType,
     contactOutcome = contactOutcome,
     contactId = contactId,
     breachNoticeId = breachNoticeId,
+    wholeSentence = wholeSentence,
+    rejectionReason = rejectionReason,
   )
 
   private fun BreachNoticeContactEntity.toModel() = BreachNoticeContact(
@@ -59,5 +63,7 @@ class BreachNoticeContactService(
     contactOutcome = contactOutcome,
     contactId = contactId,
     breachNoticeId = breachNoticeId,
+    wholeSentence = wholeSentence,
+    rejectionReason = rejectionReason,
   )
 }
