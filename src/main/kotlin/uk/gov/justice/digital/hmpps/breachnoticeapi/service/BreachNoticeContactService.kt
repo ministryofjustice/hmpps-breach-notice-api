@@ -43,7 +43,7 @@ class BreachNoticeContactService(
     updatedEntity.createdDatetime = existingBreachNoticeContactEntity.createdDatetime
     updatedEntity.lastUpdatedUser = existingBreachNoticeContactEntity.lastUpdatedUser
     updatedEntity.lastUpdatedDatetime = existingBreachNoticeContactEntity.lastUpdatedDatetime
-    updatedEntity.id = breachNoticeContact.id!!
+    updatedEntity.id = id
     contactRepository.save(updatedEntity)
   }
 
