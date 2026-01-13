@@ -11,5 +11,5 @@ data class BreachNoticeContact(
   val contactOutcome: String? = null,
   val contactId: Long,
   val wholeSentence: Boolean? = null,
-  val rejectionReason: String? = null,
+  var rejectionReason: String? = null,
 )
