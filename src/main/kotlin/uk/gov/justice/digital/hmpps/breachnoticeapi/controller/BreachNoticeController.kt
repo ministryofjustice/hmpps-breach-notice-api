@@ -31,7 +31,6 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.service.SnsService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.util.UUID
 
-
 @Validated
 @RestController
 @PreAuthorize("hasRole('ROLE_BREACH_NOTICE')")
