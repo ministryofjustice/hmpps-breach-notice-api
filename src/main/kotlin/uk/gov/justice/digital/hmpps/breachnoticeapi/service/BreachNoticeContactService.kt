@@ -27,14 +27,14 @@ class BreachNoticeContactService(
     // if we previously had No selected for whole sentence
     // and it is now yes. We must delete all contact_requirement links
     // for this form and for this contact
-    if(breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
-      if(breachNoticeContact.id != null) {
+    if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
+      if (breachNoticeContact.id != null) {
         contactRequirementRepository.deleteByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
       }
     }
 
     // if we had a whole sentence previously and now its not, delete the rejection reason
-    if((breachNoticeContact.wholeSentence == null || !breachNoticeContact.wholeSentence) && existingBreachNoticeContactEntity.wholeSentence == true) {
+    if ((breachNoticeContact.wholeSentence == null || !breachNoticeContact.wholeSentence) && existingBreachNoticeContactEntity.wholeSentence == true) {
       breachNoticeContact.rejectionReason = null
     }
 

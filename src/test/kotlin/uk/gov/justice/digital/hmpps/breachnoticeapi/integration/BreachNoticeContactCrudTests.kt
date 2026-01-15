@@ -118,13 +118,13 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-    //do a get and internalContactId
+    // do a get and internalContactId
     val updatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
 
-    //shouldnt save rejection reason on a non whole sentence contact
+    // shouldnt save rejection reason on a non whole sentence contact
     assertThat(updatedContact.rejectionReason).isBlank
 
-    //do a further update where we go from whole sentence false to whole sentence true
+    // do a further update where we go from whole sentence false to whole sentence true
     webTestClient.put()
       .uri("/contact/${insertedContact.id}")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
@@ -143,8 +143,8 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
 
-     val nextUpdatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
-    //should save rejection reason on a whole sentence contact
+    val nextUpdatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
+    // should save rejection reason on a whole sentence contact
     assertThat(nextUpdatedContact.rejectionReason).isNotBlank
   }
 
