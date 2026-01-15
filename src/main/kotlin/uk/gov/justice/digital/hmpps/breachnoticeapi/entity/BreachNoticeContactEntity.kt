@@ -30,6 +30,8 @@ data class BreachNoticeContactEntity(
   val contactType: String? = null,
   val contactOutcome: String? = null,
   val contactId: Long,
+  val wholeSentence: Boolean? = null,
+  val rejectionReason: String? = null,
   @CreatedBy
   var createdByUser: String? = null,
   @CreatedDate

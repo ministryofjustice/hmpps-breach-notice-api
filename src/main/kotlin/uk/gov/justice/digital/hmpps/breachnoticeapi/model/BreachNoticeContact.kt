@@ -10,4 +10,6 @@ data class BreachNoticeContact(
   val contactType: String? = null,
   val contactOutcome: String? = null,
   val contactId: Long,
+  val wholeSentence: Boolean? = null,
+  var rejectionReason: String? = null,
 )

@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
@@ -57,6 +58,94 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
     assertThat(insertedContact.contactOutcome).isEqualTo("ContactOutcome")
     assertThat(insertedContact.contactDate).isEqualTo(dateTime)
     assertThat(insertedContact.contactType).isEqualTo("ContactType")
+  }
+
+  @Test
+  fun `should update a breach notice contact`() {
+    webTestClient.post()
+      .uri("/breach-notice")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(BreachNotice(crn = "Z000001"))
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val breachNotice = breachNoticeRepository.findByCrn("Z000001").single()
+
+    webTestClient.post()
+      .uri("/contact")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeContact(
+          breachNoticeId = breachNotice.id,
+          contactId = 1L,
+          contactDate = dateTime,
+          contactType = "ContactType",
+          contactOutcome = "ContactOutcome",
+          wholeSentence = true,
+          rejectionReason = "Rejection Reason",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isCreated
+
+    val insertedContact = contactRepository.findByBreachNoticeId(breachNotice.id).single()
+    val internalContactId = insertedContact.id
+
+    assertThat(insertedContact.breachNoticeId).isEqualTo(breachNotice.id)
+    assertThat(insertedContact.contactId).isEqualTo(1L)
+    assertThat(insertedContact.contactOutcome).isEqualTo("ContactOutcome")
+    assertThat(insertedContact.contactDate).isEqualTo(dateTime)
+    assertThat(insertedContact.contactType).isEqualTo("ContactType")
+
+    // do the put
+    webTestClient.put()
+      .uri("/contact/${insertedContact.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeContact(
+          breachNoticeId = breachNotice.id,
+          contactId = 1L,
+          contactDate = dateTime,
+          contactType = "ContactType",
+          contactOutcome = "ContactOutcome",
+          wholeSentence = false,
+          rejectionReason = "Rejection Reason",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    // do a get and internalContactId
+    val updatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
+
+    // shouldnt save rejection reason on a non whole sentence contact
+    assertThat(updatedContact.rejectionReason).isBlank
+
+    // do a further update where we go from whole sentence false to whole sentence true
+    webTestClient.put()
+      .uri("/contact/${insertedContact.id}")
+      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
+      .bodyValue(
+        BreachNoticeContact(
+          breachNoticeId = breachNotice.id,
+          contactId = 1L,
+          contactDate = dateTime,
+          contactType = "ContactType",
+          contactOutcome = "ContactOutcome",
+          wholeSentence = true,
+          rejectionReason = "Test Rejection Reason",
+        ),
+      )
+      .exchange()
+      .expectStatus()
+      .isOk
+
+    val nextUpdatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
+    // should save rejection reason on a whole sentence contact
+    assertThat(nextUpdatedContact.rejectionReason).isNotBlank
   }
 
   @Test
