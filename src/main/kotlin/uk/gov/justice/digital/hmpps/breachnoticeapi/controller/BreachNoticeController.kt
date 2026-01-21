@@ -142,7 +142,9 @@ class BreachNoticeController(
   fun getBreachNoticeAsPdf(@PathVariable uuid: UUID): ResponseEntity<ByteArray> {
     val breachNotice =
       breachNoticeService.getBreachNoticeById(uuid) ?: throw NotFoundException("Breach notice", "id", uuid)
+
     val pdfBytes = breachNoticeService.getBreachNoticeAsPdf(uuid, breachNotice, breachNotice.completedDate == null)
+
     val headers = HttpHeaders()
     headers.contentType = MediaType.APPLICATION_PDF
     headers.contentDisposition = ContentDisposition.attachment()

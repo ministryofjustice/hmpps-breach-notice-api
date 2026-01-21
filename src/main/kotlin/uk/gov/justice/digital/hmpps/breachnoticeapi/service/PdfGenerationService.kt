@@ -26,8 +26,10 @@ class PdfGenerationService(
 ) {
 
   fun generateHtml(breachNoticeDetails: BreachNoticeDetails?): String? {
+    val wholeSentenceBreachNoticeContacts = breachNoticeDetails?.breachNoticeContactList?.filter { it.wholeSentence == true }
     val context = Context()
     context.setVariable("breachNotice", breachNoticeDetails)
+    context.setVariable("wholeSentenceContacts", wholeSentenceBreachNoticeContacts)
 
     return templateEngine.process("NAT_Breach_Template", context)
   }
