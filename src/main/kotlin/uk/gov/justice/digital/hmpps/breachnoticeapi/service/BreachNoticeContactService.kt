@@ -3,15 +3,18 @@ package uk.gov.justice.digital.hmpps.breachnoticeapi.service
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
+import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.ContactRequirementEntity
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRequirementRepository
-import java.util.UUID
+import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.RequirementRepository
+import java.util.*
 
 @Service
 class BreachNoticeContactService(
   val contactRequirementRepository: ContactRequirementRepository,
   val contactRepository: ContactRepository,
+  val requirementRepository: RequirementRepository,
 ) {
 
   fun createBreachNoticeContact(breachNoticeContact: BreachNoticeContact) {
@@ -29,7 +32,18 @@ class BreachNoticeContactService(
     // for this form and for this contact
     if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
       if (breachNoticeContact.id != null) {
-        contactRequirementRepository.deleteByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
+        val existingContactRequirements: List<ContactRequirementEntity> = contactRequirementRepository.findByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
+        val requirementsToRemove: List<UUID> = existingContactRequirements.map { it.requirementId }
+        if (!existingContactRequirements.isEmpty()) {
+          // first remove the links
+          contactRequirementRepository.deleteByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
+          // next remove the requirements
+          if (!requirementsToRemove.isEmpty()) {
+            for (requirementId in requirementsToRemove) {
+              requirementRepository.deleteById(requirementId)
+            }
+          }
+        }
       }
     }
 
