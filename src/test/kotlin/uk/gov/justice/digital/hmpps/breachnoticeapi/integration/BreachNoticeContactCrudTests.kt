@@ -13,6 +13,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 class BreachNoticeContactCrudTests : IntegrationTestBase() {
 
@@ -91,7 +92,6 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
       .isCreated
 
     val insertedContact = contactRepository.findByBreachNoticeId(breachNotice.id).single()
-    val internalContactId = insertedContact.id
 
     assertThat(insertedContact.breachNoticeId).isEqualTo(breachNotice.id)
     assertThat(insertedContact.contactId).isEqualTo(1L)
@@ -99,53 +99,36 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
     assertThat(insertedContact.contactDate).isEqualTo(dateTime)
     assertThat(insertedContact.contactType).isEqualTo("ContactType")
 
-    // do the put
+    // do the update
     webTestClient.put()
-      .uri("/contact/${insertedContact.id}")
+      .uri("/contacts/${insertedContact.breachNoticeId}")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
-        BreachNoticeContact(
-          breachNoticeId = breachNotice.id,
-          contactId = 1L,
-          contactDate = dateTime,
-          contactType = "ContactType",
-          contactOutcome = "ContactOutcome",
-          wholeSentence = false,
-          rejectionReason = "Rejection Reason",
-        ),
+        createBreachNoticeContactList(breachNotice.id, insertedContact),
       )
       .exchange()
       .expectStatus()
       .isOk
 
-    // do a get and internalContactId
-    val updatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
+    val updatedContact = contactRepository.findByBreachNoticeId(breachNotice.id).single()
+    assertThat(updatedContact.rejectionReason).isEqualTo("Test 2")
+  }
 
-    // shouldnt save rejection reason on a non whole sentence contact
-    assertThat(updatedContact.rejectionReason).isBlank
+  fun createBreachNoticeContactList(breachNoticeId: UUID, contact: BreachNoticeContactEntity): MutableList<BreachNoticeContactEntity> {
+    val breachNoticeContactList: MutableList<BreachNoticeContactEntity> = mutableListOf()
 
-    // do a further update where we go from whole sentence false to whole sentence true
-    webTestClient.put()
-      .uri("/contact/${insertedContact.id}")
-      .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(
-        BreachNoticeContact(
-          breachNoticeId = breachNotice.id,
-          contactId = 1L,
-          contactDate = dateTime,
-          contactType = "ContactType",
-          contactOutcome = "ContactOutcome",
-          wholeSentence = true,
-          rejectionReason = "Test Rejection Reason",
-        ),
-      )
-      .exchange()
-      .expectStatus()
-      .isOk
-
-    val nextUpdatedContact: BreachNoticeContactEntity = contactRepository.findById(internalContactId).get()
-    // should save rejection reason on a whole sentence contact
-    assertThat(nextUpdatedContact.rejectionReason).isNotBlank
+    val breachNoticeContact = BreachNoticeContactEntity(
+      id = contact.id,
+      breachNoticeId = breachNoticeId,
+      contactId = 1L,
+      contactDate = dateTime,
+      contactType = "ContactType",
+      contactOutcome = "ContactOutcome",
+      wholeSentence = true,
+      rejectionReason = "Test 2",
+    )
+    breachNoticeContactList.add(breachNoticeContact)
+    return breachNoticeContactList
   }
 
   @Test
@@ -188,17 +171,18 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
   }
 
   @Test
-  fun `should get and update a breach notice contact`() {
+  fun `should batch update breach notice contacts`() {
     webTestClient.post()
       .uri("/breach-notice")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
-      .bodyValue(BreachNotice(crn = "D000003"))
+      .bodyValue(BreachNotice(crn = "A100002"))
       .exchange()
       .expectStatus()
       .isCreated
 
-    val breachNotice = breachNoticeRepository.findByCrn("D000003").single()
+    val breachNotice = breachNoticeRepository.findByCrn("A100002").single()
 
+    // insert a contact
     webTestClient.post()
       .uri("/contact")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
@@ -215,29 +199,16 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
 
     val insertedContact = contactRepository.findByBreachNoticeIdAndContactId(breachNotice.id, 3).single()
 
+    // perform a batch update
     webTestClient.put()
-      .uri("/contact/${insertedContact.id}")
+      .uri("/contacts/${insertedContact.breachNoticeId}")
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .bodyValue(
-        BreachNoticeContact(
-          id = insertedContact.id,
-          breachNoticeId = breachNotice.id,
-          contactId = 3L,
-          contactDate = LocalDateTime.of(2025, 1, 1, 12, 0),
-          contactType = "ContactTypeTwo",
-          contactOutcome = "ContactOutcomeTwo",
-        ),
+        createBreachNoticeContactList(breachNotice.id, insertedContact),
       )
       .exchange()
       .expectStatus()
       .isOk
-
-    val updatedContact = contactRepository.findById(insertedContact.id).get()
-    assertThat(updatedContact.breachNoticeId).isEqualTo(breachNotice.id)
-    assertThat(updatedContact.contactId).isEqualTo(3L)
-    assertThat(updatedContact.contactOutcome).isEqualTo("ContactOutcomeTwo")
-    assertThat(updatedContact.contactDate).isEqualTo(LocalDateTime.of(2025, 1, 1, 12, 0))
-    assertThat(updatedContact.contactType).isEqualTo("ContactTypeTwo")
   }
 
   @Test

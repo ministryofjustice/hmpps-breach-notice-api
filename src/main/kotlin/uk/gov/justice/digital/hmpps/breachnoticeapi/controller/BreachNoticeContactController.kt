@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeContactService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
-import java.util.UUID
+import java.util.*
 
 @Validated
 @RestController
@@ -52,32 +51,6 @@ class BreachNoticeContactController(
   )
   @ResponseStatus(HttpStatus.CREATED)
   fun initialiseBreachNoticeContact(@Valid @RequestBody breachNoticeContact: BreachNoticeContact) = breachNoticeContactService.createBreachNoticeContact(breachNoticeContact)
-
-  @PutMapping("/{id}")
-  @Operation(
-    summary = "Update a Breach Notice Contact",
-    description = "Calls through the breach notice service to add or update a breach notice contact",
-    security = [SecurityRequirement(name = "breach-notice-api-ui-role")],
-    responses = [
-      ApiResponse(responseCode = "200", description = "Breach Notice Contact updated"),
-      ApiResponse(
-        responseCode = "401",
-        description = "Unauthorized to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "403",
-        description = "Forbidden to access this endpoint",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-      ApiResponse(
-        responseCode = "404",
-        description = "The Contact id was not found",
-        content = [Content(mediaType = "application/json", schema = Schema(implementation = ErrorResponse::class))],
-      ),
-    ],
-  )
-  fun updateBreachNoticeContact(@PathVariable id: UUID, @RequestBody breachNoticeContact: BreachNoticeContact) = breachNoticeContactService.updateBreachNoticeContact(id, breachNoticeContact)
 
   @GetMapping("/bybreachnoticeidanddeliusid/{breachNoticeId}/{deliusContactId}")
   @Operation(

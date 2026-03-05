@@ -11,4 +11,5 @@ interface ContactRequirementRepository : JpaRepository<ContactRequirementEntity,
   fun findByBreachNoticeIdAndContactId(breachNoticeId: UUID, contactId: UUID): List<ContactRequirementEntity>
   fun findByBreachNoticeIdAndRequirementId(breachNoticeId: UUID, requirementId: UUID): List<ContactRequirementEntity>
   fun deleteByBreachNoticeIdAndContactId(breachNoticeId: UUID, contactId: UUID)
+  fun countByBreachNoticeIdAndRequirementId(breachNoticeId: UUID, requirementId: UUID): Int
 }

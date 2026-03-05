@@ -23,42 +23,63 @@ class BreachNoticeContactService(
   }
 
   @Transactional
-  fun updateBreachNoticeContact(id: UUID, breachNoticeContact: BreachNoticeContact) {
-    // get the existing Breach Notice
-    val existingBreachNoticeContactEntity: BreachNoticeContactEntity = contactRepository.findById(id).get()
+  fun batchUpdateBreachNoticeContacts(breachNoticeId: UUID, breachNoticeContacts: List<BreachNoticeContact>) {
+    val requirementsToRemoveAtTheEndOfTheProcess: MutableList<UUID> = mutableListOf()
 
-    // if we previously had No selected for whole sentence
-    // and it is now yes. We must delete all contact_requirement links
-    // for this form and for this contact
-    if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
-      if (breachNoticeContact.id != null) {
-        val existingContactRequirements: List<ContactRequirementEntity> = contactRequirementRepository.findByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
-        val requirementsToRemove: List<UUID> = existingContactRequirements.map { it.requirementId }
-        if (!existingContactRequirements.isEmpty()) {
-          // first remove the links
-          contactRequirementRepository.deleteByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
-          // next remove the requirements
-          if (!requirementsToRemove.isEmpty()) {
-            for (requirementId in requirementsToRemove) {
-              requirementRepository.deleteById(requirementId)
-            }
-          }
+    if (!breachNoticeContacts.isEmpty()) {
+      for (contact in breachNoticeContacts) {
+        val requirementsToBeDeletedForContact = updateContactAndReturnRequirementsToDelete(contact)
+        if (!requirementsToBeDeletedForContact.isEmpty()) {
+          requirementsToRemoveAtTheEndOfTheProcess.addAll(requirementsToBeDeletedForContact)
         }
       }
     }
 
-    // if we had a whole sentence previously and now its not, delete the rejection reason
-    if ((breachNoticeContact.wholeSentence == null || !breachNoticeContact.wholeSentence) && existingBreachNoticeContactEntity.wholeSentence == true) {
-      breachNoticeContact.rejectionReason = null
+    if (!requirementsToRemoveAtTheEndOfTheProcess.isEmpty()) {
+      for (requirementId in requirementsToRemoveAtTheEndOfTheProcess.distinct()) {
+        val count: Int = contactRequirementRepository.countByBreachNoticeIdAndRequirementId(breachNoticeId, requirementId)
+        if (count == 1) {
+          requirementRepository.deleteById(requirementId)
+        }
+      }
+    }
+  }
+
+  private fun updateContactAndReturnRequirementsToDelete(breachNoticeContact: BreachNoticeContact): List<UUID> {
+    var requirementsRelatedToThisContact = mutableListOf<UUID>()
+
+    if (breachNoticeContact.id != null) {
+      // get the existing Breach Notice
+      val existingBreachNoticeContactEntity: BreachNoticeContactEntity = contactRepository.findById(breachNoticeContact.id).get()
+
+      // if we previously had No selected for whole sentence
+      // and it is now yes. We must delete all contact_requirement links
+      // for this form and for this contact
+      if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
+        val existingContactRequirements: List<ContactRequirementEntity> = contactRequirementRepository.findByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
+        requirementsRelatedToThisContact = existingContactRequirements.map { it.requirementId } as MutableList<UUID>
+
+        if (!existingContactRequirements.isEmpty()) {
+          // remove the contact > requirement links
+          contactRequirementRepository.deleteByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
+        }
+      }
+
+      // if we had a whole sentence previously and now its not, delete the rejection reason
+      if ((breachNoticeContact.wholeSentence == null || !breachNoticeContact.wholeSentence) && existingBreachNoticeContactEntity.wholeSentence == true) {
+        breachNoticeContact.rejectionReason = null
+      }
+
+      val updatedEntity: BreachNoticeContactEntity = breachNoticeContact.toEntity()
+      updatedEntity.createdByUser = existingBreachNoticeContactEntity.createdByUser
+      updatedEntity.createdDatetime = existingBreachNoticeContactEntity.createdDatetime
+      updatedEntity.lastUpdatedUser = existingBreachNoticeContactEntity.lastUpdatedUser
+      updatedEntity.lastUpdatedDatetime = existingBreachNoticeContactEntity.lastUpdatedDatetime
+      updatedEntity.id = breachNoticeContact.id
+      contactRepository.save(updatedEntity)
     }
 
-    val updatedEntity: BreachNoticeContactEntity = breachNoticeContact.toEntity()
-    updatedEntity.createdByUser = existingBreachNoticeContactEntity.createdByUser
-    updatedEntity.createdDatetime = existingBreachNoticeContactEntity.createdDatetime
-    updatedEntity.lastUpdatedUser = existingBreachNoticeContactEntity.lastUpdatedUser
-    updatedEntity.lastUpdatedDatetime = existingBreachNoticeContactEntity.lastUpdatedDatetime
-    updatedEntity.id = id
-    contactRepository.save(updatedEntity)
+    return requirementsRelatedToThisContact
   }
 
   fun fetchBreachNoticeContact(id: UUID, contactId: Long): BreachNoticeContact = contactRepository.findFirstByBreachNoticeIdAndContactId(id, contactId).toModel()
