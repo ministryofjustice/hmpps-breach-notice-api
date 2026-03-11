@@ -124,14 +124,6 @@
         <tr>
             <td style="width:111.15pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
-
-                    <!--/*@thymesVar id="breachNotice" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice"*/-->
-                    <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
-                    <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
-                      <p>
-                        <span th:text="${breachNoticeContact.contactType}">(Requirement Details)</span>
-                      </p>
-                    </tr>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
                             <p>
                             <span th:text="${req.requirementTypeMainCategoryDescription}">(Requirement Details)</span>
@@ -146,13 +138,6 @@
             </td>
             <td style="width:106.75pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
-                  <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
-                  <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
-                    <p>
-                      <span th:if="${#temporals.format(breachNoticeContact.contactDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(breachNoticeContact.contactDate, 'dd/MM/yyyy')}"></span>
-                      <span th:unless="${#temporals.format(breachNoticeContact.contactDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(breachNoticeContact.contactDate, 'dd/MM/yyyy')}"></span>
-                    </p>
-                  </tr>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
                             <p>
                               <span th:if="${#temporals.format(req.fromDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(req.fromDate, 'dd/MM/yyyy')}"></span>
@@ -171,12 +156,6 @@
             </td>
             <td style="width:149.35pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
                 <table>
-                  <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
-                  <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
-                    <p>
-                      <b><span th:text="${breachNoticeContact.rejectionReason}">(Reason)</span></b>
-                    </p>
-                  </tr>
                     <tr th:each="req: ${breachNotice.breachNoticeRequirementList}">
                         <p>
                           <b><span th:text="${req.rejectionReason}">(Reason)</span></b>
@@ -185,6 +164,58 @@
                 </table>
             </td>
         </tr>
+      <tr>
+        <td colspan="5"
+            style="width:496.3pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <p>
+            <strong><span>Additional Information regarding Whole Sentence </span></strong><span>:</span>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="width:111.15pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <table>
+            <!--/*@thymesVar id="breachNotice" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice"*/-->
+            <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
+            <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
+              <p>
+                <span th:text="${breachNoticeContact.contactType}">(Whole Sentence Contact Type)</span>
+              </p>
+            </tr>
+          </table>
+        </td>
+        <td style="width:47.9pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <p>
+            <span>On or between Date(s)</span>
+          </p>
+        </td>
+        <td style="width:106.75pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <table>
+            <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
+            <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
+              <p>
+                <span th:if="${#temporals.format(breachNoticeContact.contactDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(breachNoticeContact.contactDate, 'dd/MM/yyyy')}"></span>
+                <span th:unless="${#temporals.format(breachNoticeContact.contactDate, 'HH:mm') == '00:00'}" th:text="${#temporals.format(breachNoticeContact.contactDate, 'dd/MM/yyyy')}"></span>
+              </p>
+            </tr>
+          </table>
+        </td>
+        <td style="width:37.95pt; border-style:solid; border-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <p>
+            <span>Reason</span>
+          </p>
+        </td>
+        <td style="width:149.35pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
+          <table>
+            <!--/*@thymesVar id="breachNoticeContact" type="uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeContact"*/-->
+            <tr th:each="breachNoticeContact: ${wholeSentenceContacts}">
+              <p>
+                <b><span th:text="${breachNoticeContact.rejectionReason}">(Reason)</span></b>
+              </p>
+            </tr>
+          </table>
+        </td>
+      </tr>
         <tr style="height:26pt">
           <td colspan="5"
               style="width:496.3pt; border-top-style:solid; border-top-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top">
