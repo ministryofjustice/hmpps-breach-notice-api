@@ -91,6 +91,8 @@ class BreachNoticeService(
     conditionBeingEnforced = conditionBeingEnforced,
     selectNextAppointment = selectNextAppointment,
     furtherReasonDetails = furtherReasonDetails,
+    alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toEntity(existingEntity.alternateNextAppointmentLocation),
+    alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEntity ->
@@ -130,6 +132,8 @@ class BreachNoticeService(
     completedDate = completedDate,
     offenderAddress = offenderAddress?.toEntity(),
     replyAddress = replyAddress?.toEntity(),
+    alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toEntity(),
+    alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
     basicDetailsSaved = basicDetailsSaved,
     warningTypeSaved = warningTypeSaved,
     warningDetailsSaved = warningDetailsSaved,
@@ -168,6 +172,8 @@ class BreachNoticeService(
     completedDate = completedDate,
     offenderAddress = offenderAddress?.toModel(),
     replyAddress = replyAddress?.toModel(),
+    alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toModel(),
+    alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
     basicDetailsSaved = basicDetailsSaved,
     warningTypeSaved = warningTypeSaved,
     warningDetailsSaved = warningDetailsSaved,
@@ -224,6 +230,8 @@ class BreachNoticeService(
       reviewEvent = it.reviewEvent,
       conditionBeingEnforced = it.conditionBeingEnforced,
       furtherReasonDetails = it.furtherReasonDetails,
+      alternateNextAppointmentLocation = it.alternateNextAppointmentLocation?.toModel(),
+      alternateNextAppointmentLocationSelected = it.alternateNextAppointmentLocationSelected,
     )
   }
 

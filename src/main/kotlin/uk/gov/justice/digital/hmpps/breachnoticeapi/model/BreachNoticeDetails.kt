@@ -47,4 +47,6 @@ data class BreachNoticeDetails(
   val conditionBeingEnforced: String? = null,
   val selectNextAppointment: Boolean? = null,
   val furtherReasonDetails: String? = null,
+  val alternateNextAppointmentLocation: Address? = null,
+  val alternateNextAppointmentLocationSelected: Boolean? = null,
 )

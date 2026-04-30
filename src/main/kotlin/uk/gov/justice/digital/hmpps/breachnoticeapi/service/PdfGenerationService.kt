@@ -28,8 +28,30 @@ class PdfGenerationService(
   fun generateHtml(breachNoticeDetails: BreachNoticeDetails?): String? {
     val wholeSentenceBreachNoticeContacts = breachNoticeDetails?.breachNoticeContactList?.filter { it.wholeSentence == true }
     val context = Context()
+
     context.setVariable("breachNotice", breachNoticeDetails)
     context.setVariable("wholeSentenceContacts", wholeSentenceBreachNoticeContacts)
+
+    if(breachNoticeDetails?.alternateNextAppointmentLocationSelected == true) {
+      if(breachNoticeDetails.alternateNextAppointmentLocation != null) {
+        var alternateLocationDisplayString: String
+
+        if(breachNoticeDetails.alternateNextAppointmentLocation.addressNumber == null || breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isEmpty()){
+          alternateLocationDisplayString = ""
+        } else {
+          alternateLocationDisplayString = breachNoticeDetails.alternateNextAppointmentLocation.addressNumber
+        }
+
+        if(breachNoticeDetails.alternateNextAppointmentLocation.streetName != null && !breachNoticeDetails.alternateNextAppointmentLocation.streetName.isEmpty()){
+          alternateLocationDisplayString = alternateLocationDisplayString + " " + breachNoticeDetails.alternateNextAppointmentLocation.streetName
+        }
+        context.setVariable("nextAppointmentLocation", alternateLocationDisplayString)
+      }
+    }
+
+    else {
+      context.setVariable("nextAppointmentLocation", breachNoticeDetails?.nextAppointmentLocation)
+    }
 
     return templateEngine.process("NAT_Breach_Template", context)
   }
