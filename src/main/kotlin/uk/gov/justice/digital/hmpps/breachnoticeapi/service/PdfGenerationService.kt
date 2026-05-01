@@ -32,24 +32,22 @@ class PdfGenerationService(
     context.setVariable("breachNotice", breachNoticeDetails)
     context.setVariable("wholeSentenceContacts", wholeSentenceBreachNoticeContacts)
 
-    if(breachNoticeDetails?.alternateNextAppointmentLocationSelected == true) {
-      if(breachNoticeDetails.alternateNextAppointmentLocation != null) {
+    if (breachNoticeDetails?.alternateNextAppointmentLocationSelected == true) {
+      if (breachNoticeDetails.alternateNextAppointmentLocation != null) {
         var alternateLocationDisplayString: String
 
-        if(breachNoticeDetails.alternateNextAppointmentLocation.addressNumber == null || breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isEmpty()){
+        if (breachNoticeDetails.alternateNextAppointmentLocation.addressNumber == null || breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isEmpty()) {
           alternateLocationDisplayString = ""
         } else {
           alternateLocationDisplayString = breachNoticeDetails.alternateNextAppointmentLocation.addressNumber
         }
 
-        if(breachNoticeDetails.alternateNextAppointmentLocation.streetName != null && !breachNoticeDetails.alternateNextAppointmentLocation.streetName.isEmpty()){
+        if (breachNoticeDetails.alternateNextAppointmentLocation.streetName != null && !breachNoticeDetails.alternateNextAppointmentLocation.streetName.isEmpty()) {
           alternateLocationDisplayString = alternateLocationDisplayString + " " + breachNoticeDetails.alternateNextAppointmentLocation.streetName
         }
         context.setVariable("nextAppointmentLocation", alternateLocationDisplayString)
       }
-    }
-
-    else {
+    } else {
       context.setVariable("nextAppointmentLocation", breachNoticeDetails?.nextAppointmentLocation)
     }
 
