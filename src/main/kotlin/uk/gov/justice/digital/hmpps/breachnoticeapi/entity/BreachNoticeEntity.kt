@@ -76,4 +76,8 @@ data class BreachNoticeEntity(
   val conditionBeingEnforced: String? = null,
   val selectNextAppointment: Boolean? = null,
   val furtherReasonDetails: String? = null,
+  @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true)
+  @JoinColumn(name = "alternate_next_appointment_location", unique = true)
+  val alternateNextAppointmentLocation: AddressEntity? = null,
+  val alternateNextAppointmentLocationSelected: Boolean? = null,
 )
