@@ -36,15 +36,66 @@ class PdfGenerationService(
       if (breachNoticeDetails.alternateNextAppointmentLocation != null) {
         var alternateLocationDisplayString: String
 
-        if (breachNoticeDetails.alternateNextAppointmentLocation.addressNumber == null || breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isEmpty()) {
+        if (breachNoticeDetails.alternateNextAppointmentLocation.officeDescription.isNullOrEmpty()) {
           alternateLocationDisplayString = ""
         } else {
-          alternateLocationDisplayString = breachNoticeDetails.alternateNextAppointmentLocation.addressNumber
+          alternateLocationDisplayString = breachNoticeDetails.alternateNextAppointmentLocation.officeDescription
         }
 
-        if (breachNoticeDetails.alternateNextAppointmentLocation.streetName != null && !breachNoticeDetails.alternateNextAppointmentLocation.streetName.isEmpty()) {
-          alternateLocationDisplayString = alternateLocationDisplayString + " " + breachNoticeDetails.alternateNextAppointmentLocation.streetName
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.buildingName.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.buildingName
         }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.addressNumber
+        }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.streetName.isNullOrEmpty()) {
+          // if we had an address number we know to add a space
+          if (!breachNoticeDetails.alternateNextAppointmentLocation.addressNumber.isNullOrEmpty()) {
+            alternateLocationDisplayString = alternateLocationDisplayString + " " + breachNoticeDetails.alternateNextAppointmentLocation.streetName
+          } else {
+            if (alternateLocationDisplayString.isNotEmpty()) {
+              alternateLocationDisplayString = "$alternateLocationDisplayString, "
+            }
+            alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.streetName
+          }
+        }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.district.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.district
+        }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.townCity.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.townCity
+        }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.county.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.county
+        }
+
+        if (!breachNoticeDetails.alternateNextAppointmentLocation.postcode.isNullOrEmpty()) {
+          if (alternateLocationDisplayString.isNotEmpty()) {
+            alternateLocationDisplayString = "$alternateLocationDisplayString, "
+          }
+          alternateLocationDisplayString += breachNoticeDetails.alternateNextAppointmentLocation.postcode
+        }
+
         context.setVariable("nextAppointmentLocation", alternateLocationDisplayString)
       }
     } else {
