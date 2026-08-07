@@ -80,4 +80,6 @@ data class BreachNoticeEntity(
   @JoinColumn(name = "alternate_next_appointment_location", unique = true)
   val alternateNextAppointmentLocation: AddressEntity? = null,
   val alternateNextAppointmentLocationSelected: Boolean? = null,
+  var terminated: Boolean? = false,
+  var terminatedUnterminatedDate: LocalDateTime? = null,
 )

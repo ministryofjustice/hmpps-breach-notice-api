@@ -49,4 +49,6 @@ data class BreachNotice(
   val furtherReasonDetails: String? = null,
   val alternateNextAppointmentLocation: Address? = null,
   val alternateNextAppointmentLocationSelected: Boolean? = null,
+  val terminated: Boolean? = false,
+  val terminatedUnterminatedDate: LocalDateTime? = null,
 )
