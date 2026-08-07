@@ -17,7 +17,7 @@ class NDeliusIntegrationService(
     .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
     .block()
 
-  fun getBreachEventDocuments(crn: String, eventNumber: Number): List<String> = webClient.get()
+  fun getBreachEventDocuments(crn: String, eventNumber: String): List<String> = webClient.get()
     .uri("/breach-event-documents/{crn}/{eventNumber}", crn, eventNumber)
     .retrieve()
     .bodyToMono(BreachNoticeIdList::class.java)
