@@ -76,12 +76,12 @@ class DomainEventsListener(
       }
 
       "probation-case.sentence.terminated" -> {
-        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as Number)
+        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as String)
         updateTerminationEvent(true, breachNoticeIds, message.occurredAt)
       }
 
       "probation-case.sentence.unterminated" -> {
-        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as Number)
+        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as String)
         updateTerminationEvent(false, breachNoticeIds, message.occurredAt)
       }
     }
