@@ -13,7 +13,6 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.enums.ReviewEventType
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.BreachNoticeService
 import uk.gov.justice.digital.hmpps.breachnoticeapi.service.NDeliusIntegrationService
 import java.time.ZonedDateTime
-import java.util.UUID
 
 @Service
 class DomainEventsListener(
@@ -97,7 +96,7 @@ class DomainEventsListener(
       breachNoticeService.updateTerminatedStatus(
         terminated,
         breachNoticeId,
-        occurredAt
+        occurredAt,
       )
     }
   }

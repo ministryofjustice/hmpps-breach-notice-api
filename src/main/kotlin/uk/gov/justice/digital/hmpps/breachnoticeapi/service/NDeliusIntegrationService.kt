@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
-import java.util.UUID
 
 @Service
 class NDeliusIntegrationService(
@@ -31,5 +30,5 @@ data class NDeliusCrn(
 )
 
 data class BreachNoticeIdList(
-  val breachIdList: List<String>
+  val breachIdList: List<String>,
 )
