@@ -93,6 +93,8 @@ class BreachNoticeService(
     furtherReasonDetails = furtherReasonDetails,
     alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toEntity(existingEntity.alternateNextAppointmentLocation),
     alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     breachNoticeContactList = breachNoticeContactList.map {
       it.toEntity(
         existingEntity.breachNoticeContactList.find { existingContactEntity ->
@@ -134,6 +136,8 @@ class BreachNoticeService(
     replyAddress = replyAddress?.toEntity(),
     alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toEntity(),
     alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     basicDetailsSaved = basicDetailsSaved,
     warningTypeSaved = warningTypeSaved,
     warningDetailsSaved = warningDetailsSaved,
@@ -174,6 +178,8 @@ class BreachNoticeService(
     replyAddress = replyAddress?.toModel(),
     alternateNextAppointmentLocation = alternateNextAppointmentLocation?.toModel(),
     alternateNextAppointmentLocationSelected = alternateNextAppointmentLocationSelected,
+    terminated = terminated,
+    terminatedUnterminatedDate = terminatedUnterminatedDate,
     basicDetailsSaved = basicDetailsSaved,
     warningTypeSaved = warningTypeSaved,
     warningDetailsSaved = warningDetailsSaved,
@@ -232,6 +238,8 @@ class BreachNoticeService(
       furtherReasonDetails = it.furtherReasonDetails,
       alternateNextAppointmentLocation = it.alternateNextAppointmentLocation?.toModel(),
       alternateNextAppointmentLocationSelected = it.alternateNextAppointmentLocationSelected,
+      terminated = it.terminated,
+      terminatedUnterminatedDate = it.terminatedUnterminatedDate,
     )
   }
 
@@ -352,6 +360,13 @@ class BreachNoticeService(
   fun updateReviewEvent(eventType: ReviewEventType, breachNotice: BreachNoticeEntity, occurredAt: ZonedDateTime) {
     breachNotice.reviewEvent = eventType.name
     breachNotice.reviewRequiredDate = occurredAt.toLocalDateTime()
+    breachNoticeRepository.save(breachNotice)
+  }
+
+  fun updateTerminatedStatus(newStatus: Boolean, breachNoticeId: String, occurredAt: ZonedDateTime) {
+    val breachNotice = breachNoticeRepository.findById(UUID.fromString(breachNoticeId)).orElseThrow { IllegalArgumentException("Breach notice not found") }
+    breachNotice.terminated = newStatus
+    breachNotice.terminatedUnterminatedDate = occurredAt.toLocalDateTime()
     breachNoticeRepository.save(breachNotice)
   }
 

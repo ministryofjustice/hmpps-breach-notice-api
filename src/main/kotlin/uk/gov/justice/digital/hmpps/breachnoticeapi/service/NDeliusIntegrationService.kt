@@ -16,8 +16,19 @@ class NDeliusIntegrationService(
     .bodyToMono(NDeliusCrn::class.java)
     .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
     .block()
+
+  fun getBreachEventDocuments(crn: String, eventNumber: Number): List<String> = webClient.get()
+    .uri("/breach-event-documents/{crn}/{eventNumber}", crn, eventNumber)
+    .retrieve()
+    .bodyToMono(BreachNoticeIdList::class.java)
+    .onErrorResume(WebClientResponseException.NotFound::class.java) { Mono.empty() }
+    .block()?.breachIdList ?: emptyList()
 }
 
 data class NDeliusCrn(
   val crn: String,
+)
+
+data class BreachNoticeIdList(
+  val breachIdList: List<String>,
 )

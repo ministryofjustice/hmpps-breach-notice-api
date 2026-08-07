@@ -74,11 +74,31 @@ class DomainEventsListener(
       "probation-case.deleted.gdpr" -> {
         message.crn?.let { breachNoticeService.deleteAllByCrn(it) }
       }
+
+      "probation-case.sentence.terminated" -> {
+        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as Number)
+        updateTerminationEvent(true, breachNoticeIds, message.occurredAt)
+      }
+
+      "probation-case.sentence.unterminated" -> {
+        val breachNoticeIds = nDeliusIntegrationService.getBreachEventDocuments(message.crn!!, message.additionalInformation?.get("eventNumber") as Number)
+        updateTerminationEvent(false, breachNoticeIds, message.occurredAt)
+      }
     }
   }
 
   private fun updateReviewEvent(eventType: ReviewEventType, breachNotices: Collection<BreachNoticeEntity>, occurredAt: ZonedDateTime) {
     breachNotices.forEach { breachNotice -> breachNoticeService.updateReviewEvent(eventType, breachNotice, occurredAt) }
+  }
+
+  private fun updateTerminationEvent(terminated: Boolean, breachNoticeIds: Collection<String>, occurredAt: ZonedDateTime) {
+    breachNoticeIds.forEach { breachNoticeId ->
+      breachNoticeService.updateTerminatedStatus(
+        terminated,
+        breachNoticeId,
+        occurredAt,
+      )
+    }
   }
 }
 

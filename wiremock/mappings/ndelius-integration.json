@@ -14,6 +14,21 @@
           "Content-Type": "application/json;charset=UTF-8"
         }
       }
+    },
+    {
+      "request": {
+        "urlPattern": "/breach-event-documents/X023038/(.*?)",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "breachIdList": ["d8a23bf2-c451-4944-b9a2-7ae738b3ddb1", "caacdb95-ce8c-4de2-8f05-e189a649bff8"]
+        },
+        "headers": {
+          "Content-Type": "application/json;charset=UTF-8"
+        }
+      }
     }
   ]
 }
