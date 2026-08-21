@@ -359,14 +359,14 @@ class BreachNoticeService(
 
   fun updateReviewEvent(eventType: ReviewEventType, breachNotice: BreachNoticeEntity, occurredAt: ZonedDateTime) {
     breachNotice.reviewEvent = eventType.name
-    breachNotice.reviewRequiredDate = occurredAt.toLocalDateTime()
+    breachNotice.reviewRequiredDate = occurredAt
     breachNoticeRepository.save(breachNotice)
   }
 
   fun updateTerminatedStatus(newStatus: Boolean, breachNoticeId: String, occurredAt: ZonedDateTime) {
     val breachNotice = breachNoticeRepository.findById(UUID.fromString(breachNoticeId)).orElseThrow { IllegalArgumentException("Breach notice not found") }
     breachNotice.terminated = newStatus
-    breachNotice.terminatedUnterminatedDate = occurredAt.toLocalDateTime()
+    breachNotice.terminatedUnterminatedDate = occurredAt
     breachNoticeRepository.save(breachNotice)
   }
 

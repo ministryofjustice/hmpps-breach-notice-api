@@ -42,7 +42,7 @@ data class BreachNotice(
   val breachNoticeRequirementList: List<BreachNoticeRequirement> = emptyList(),
   val optionalNumberChecked: Boolean? = null,
   val optionalNumber: String? = null,
-  var reviewRequiredDate: LocalDateTime? = null,
+  var reviewRequiredDate: ZonedDateTime? = null,
   var reviewEvent: String? = null,
   val conditionBeingEnforced: String? = null,
   val selectNextAppointment: Boolean? = null,
@@ -50,5 +50,5 @@ data class BreachNotice(
   val alternateNextAppointmentLocation: Address? = null,
   val alternateNextAppointmentLocationSelected: Boolean? = null,
   val terminated: Boolean? = false,
-  val terminatedUnterminatedDate: LocalDateTime? = null,
+  val terminatedUnterminatedDate: ZonedDateTime? = null,
 )
