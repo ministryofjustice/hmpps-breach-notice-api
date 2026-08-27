@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class OpenApiConfiguration(buildProperties: BuildProperties) {
-  private val version: String = buildProperties.version
+  private val version: String = buildProperties.version!!
 
   @Bean
   fun customOpenAPI(): OpenAPI = OpenAPI()
@@ -24,6 +24,9 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
         Server().url("https://breach-notice-api.hmpps.service.justice.gov.uk").description("Production"),
         Server().url("http://localhost:8080").description("Local"),
       ),
+    )
+    .tags(
+      listOf(),
     )
     .info(
       Info().title("HMPPS Breach Notice Api").version(version)

@@ -55,7 +55,7 @@ class BreachNoticeContactService(
       // if we previously had No selected for whole sentence
       // and it is now yes. We must delete all contact_requirement links
       // for this form and for this contact
-      if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence)) {
+      if (breachNoticeContact.wholeSentence == true && (existingBreachNoticeContactEntity.wholeSentence == null || !existingBreachNoticeContactEntity.wholeSentence!!)) {
         val existingContactRequirements: List<ContactRequirementEntity> = contactRequirementRepository.findByBreachNoticeIdAndContactId(existingBreachNoticeContactEntity.breachNoticeId, breachNoticeContact.id)
         requirementsRelatedToThisContact = existingContactRequirements.map { it.requirementId } as MutableList<UUID>
 
