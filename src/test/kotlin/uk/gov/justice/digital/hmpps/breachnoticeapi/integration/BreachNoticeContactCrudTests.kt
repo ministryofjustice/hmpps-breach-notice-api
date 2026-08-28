@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.entity.BreachNoticeContactEntity
@@ -246,10 +245,16 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.breachNoticeId").value(containsString(breachNotice.id.toString()))
+      .jsonPath("$.breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
       .jsonPath("$.contactId").isEqualTo(4)
-      .jsonPath("$.contactType").value(containsString("ContactType"))
-      .jsonPath("$.contactOutcome").value(containsString("ContactOutcome"))
+      .jsonPath("$.contactType").value<String> {
+        assertThat(it).contains("ContactType")
+      }
+      .jsonPath("$.contactOutcome").value<String> {
+        assertThat(it).contains("ContactOutcome")
+      }
   }
 
   @Test
@@ -303,13 +308,25 @@ class BreachNoticeContactCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.[0].breachNoticeId").value(containsString(breachNotice.id.toString()))
+      .jsonPath("$.[0].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
       .jsonPath("$.[0].contactId").isEqualTo(5)
-      .jsonPath("$.[0].contactType").value(containsString("ContactType"))
-      .jsonPath("$.[0].contactOutcome").value(containsString("ContactOutcome"))
-      .jsonPath("$.[1].breachNoticeId").value(containsString(breachNotice.id.toString()))
+      .jsonPath("$.[0].contactType").value<String> {
+        assertThat(it).contains("ContactType")
+      }
+      .jsonPath("$.[0].contactOutcome").value<String> {
+        assertThat(it).contains("ContactOutcome")
+      }
+      .jsonPath("$.[1].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
       .jsonPath("$.[1].contactId").isEqualTo(6)
-      .jsonPath("$.[1].contactType").value(containsString("ContactTypeSIX"))
-      .jsonPath("$.[1].contactOutcome").value(containsString("ContactOutcomeSIX"))
+      .jsonPath("$.[1].contactType").value<String> {
+        assertThat(it).contains("ContactTypeSIX")
+      }
+      .jsonPath("$.[1].contactOutcome").value<String> {
+        assertThat(it).contains("ContactOutcomeSIX")
+      }
   }
 }

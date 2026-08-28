@@ -19,6 +19,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
   implementation("org.flywaydb:flyway-core")
   implementation("org.apache.pdfbox:pdfbox:2.0.37")
+  implementation("org.springframework.boot:spring-boot-starter-flyway")
 
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
   runtimeOnly("org.postgresql:postgresql")
@@ -26,7 +27,7 @@ dependencies {
   testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:2.5.0")
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
   testImplementation("org.wiremock:wiremock-standalone:3.13.2")
-  testImplementation("org.testcontainers:postgresql")
+  testImplementation("org.testcontainers:testcontainers-postgresql")
   testImplementation("io.swagger.parser.v3:swagger-parser:2.1.44") {
     exclude(group = "io.swagger.core.v3")
   }

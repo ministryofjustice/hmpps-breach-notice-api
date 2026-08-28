@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNotice
@@ -171,7 +170,6 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
 
     val insertedRequirementA = requirementRepository.findByBreachNoticeIdAndRequirementId(breachNotice.id, 2).single()
     val insertedRequirementB = requirementRepository.findByBreachNoticeIdAndRequirementId(breachNotice.id, 3).single()
-    val insertedRequirementC = requirementRepository.findByBreachNoticeIdAndRequirementId(breachNotice.id, 4).single()
 
     webTestClient.post()
       .uri("/crlinks")
@@ -340,12 +338,24 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.[0].breachNoticeId").value(containsString(breachNotice.id.toString()))
-      .jsonPath("$.[0].contactId").value(containsString(insertedContactA.id.toString()))
-      .jsonPath("$.[0].requirementId").value(containsString(insertedRequirementA.id.toString()))
-      .jsonPath("$.[1].breachNoticeId").value(containsString(breachNotice.id.toString()))
-      .jsonPath("$.[1].contactId").value(containsString(insertedContactB.id.toString()))
-      .jsonPath("$.[1].requirementId").value(containsString(insertedRequirementB.id.toString()))
+      .jsonPath("$.[0].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
+      .jsonPath("$.[0].contactId").value<String> {
+        assertThat(it).contains(insertedContactA.id.toString())
+      }
+      .jsonPath("$.[0].requirementId").value<String> {
+        assertThat(it).contains(insertedRequirementA.id.toString())
+      }
+      .jsonPath("$.[1].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
+      .jsonPath("$.[1].contactId").value<String> {
+        assertThat(it).contains(insertedContactB.id.toString())
+      }
+      .jsonPath("$.[1].requirementId").value<String> {
+        assertThat(it).contains(insertedRequirementB.id.toString())
+      }
   }
 
   @Test
@@ -481,12 +491,24 @@ class ContactRequirementCrudTests : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("$.[0].breachNoticeId").value(containsString(breachNotice.id.toString()))
-      .jsonPath("$.[0].contactId").value(containsString(insertedContactB.id.toString()))
-      .jsonPath("$.[0].requirementId").value(containsString(insertedRequirementA.id.toString()))
-      .jsonPath("$.[1].breachNoticeId").value(containsString(breachNotice.id.toString()))
-      .jsonPath("$.[1].contactId").value(containsString(insertedContactB.id.toString()))
-      .jsonPath("$.[1].requirementId").value(containsString(insertedRequirementB.id.toString()))
+      .jsonPath("$.[0].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
+      .jsonPath("$.[0].contactId").value<String> {
+        assertThat(it).contains(insertedContactB.id.toString())
+      }
+      .jsonPath("$.[0].requirementId").value<String> {
+        assertThat(it).contains(insertedRequirementA.id.toString())
+      }
+      .jsonPath("$.[1].breachNoticeId").value<String> {
+        assertThat(it).contains(breachNotice.id.toString())
+      }
+      .jsonPath("$.[1].contactId").value<String> {
+        assertThat(it).contains(insertedContactB.id.toString())
+      }
+      .jsonPath("$.[1].requirementId").value<String> {
+        assertThat(it).contains(insertedRequirementB.id.toString())
+      }
   }
 
   @Test

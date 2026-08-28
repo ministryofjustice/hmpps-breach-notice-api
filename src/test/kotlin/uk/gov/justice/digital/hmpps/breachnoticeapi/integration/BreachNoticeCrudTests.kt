@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
 import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
@@ -148,7 +147,10 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       )
       .exchange()
       .expectStatus().isBadRequest
-      .expectBody().jsonPath("$.userMessage").value(containsString("Invalid UUID string: testone"))
+      .expectBody()
+      .jsonPath("$.userMessage").value<String> {
+        assertThat(it).contains("Invalid UUID string: testone")
+      }
   }
 
   @Test
@@ -238,7 +240,10 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .headers(setAuthorisation(roles = listOf("ROLE_BREACH_NOTICE")))
       .exchange()
       .expectStatus().isBadRequest
-      .expectBody().jsonPath("$.userMessage").value(containsString("Invalid UUID string: TESTONE"))
+      .expectBody()
+      .jsonPath("$.userMessage").value<String> {
+        assertThat(it).contains("Invalid UUID string: TESTONE")
+      }
   }
 
   @Test
@@ -400,14 +405,24 @@ class BreachNoticeCrudTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.breachNoticeRequirementList[0].requirementId").isEqualTo(3)
-      .jsonPath("$.breachNoticeRequirementList[0].requirementTypeMainCategoryDescription").value(containsString("1Block"))
+      .jsonPath("$.breachNoticeRequirementList[0].requirementTypeMainCategoryDescription").value<String> {
+        assertThat(it).contains("1Block")
+      }
       .jsonPath("$.breachNoticeRequirementList[1].requirementId").isEqualTo(1)
-      .jsonPath("$.breachNoticeRequirementList[1].requirementTypeMainCategoryDescription").value(containsString("1Test"))
+      .jsonPath("$.breachNoticeRequirementList[1].requirementTypeMainCategoryDescription").value<String> {
+        assertThat(it).contains("1Test")
+      }
       .jsonPath("$.breachNoticeRequirementList[2].requirementId").isEqualTo(5)
-      .jsonPath("$.breachNoticeRequirementList[2].requirementTypeMainCategoryDescription").value(containsString("20Test"))
+      .jsonPath("$.breachNoticeRequirementList[2].requirementTypeMainCategoryDescription").value<String> {
+        assertThat(it).contains("20Test")
+      }
       .jsonPath("$.breachNoticeRequirementList[3].requirementId").isEqualTo(4)
-      .jsonPath("$.breachNoticeRequirementList[3].requirementTypeMainCategoryDescription").value(containsString("aligator"))
+      .jsonPath("$.breachNoticeRequirementList[3].requirementTypeMainCategoryDescription").value<String> {
+        assertThat(it).contains("aligator")
+      }
       .jsonPath("$.breachNoticeRequirementList[4].requirementId").isEqualTo(2)
-      .jsonPath("$.breachNoticeRequirementList[4].requirementTypeMainCategoryDescription").value(containsString("Blunk"))
+      .jsonPath("$.breachNoticeRequirementList[4].requirementTypeMainCategoryDescription").value<String> {
+        assertThat(it).contains("Blunk")
+      }
   }
 }

@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.breachnoticeapi.integration
 
-import org.hamcrest.Matchers.containsString
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.Address
@@ -246,37 +246,91 @@ class SARGenerationTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.content.length()").isEqualTo(1)
-      .jsonPath("$.content.[0].crn").value(containsString("X000009"))
-      .jsonPath("$.content.[0].dateOfLetter").value(containsString("2010-01-01"))
-      .jsonPath("$.content.[0].referenceNumber").value(containsString("REFERENCE_NUMBER"))
-      .jsonPath("$.content.[0].breachNoticeTypeCode").value(containsString("BRCH"))
-      .jsonPath("$.content.[0].breachNoticeTypeDescription").value(containsString("BREACH DESCRIPTION"))
-      .jsonPath("$.content.[0].breachConditionTypeCode").value(containsString("TYPE_CODE"))
-      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("CONDITION DESCRIPTION"))
-      .jsonPath("$.content.[0].breachSentenceTypeCode").value(containsString("BR_SNTC"))
-      .jsonPath("$.content.[0].breachSentenceTypeDescription").value(containsString("SENTENCE DESCRIPTION"))
-      .jsonPath("$.content.[0].responseRequiredDate").value(containsString("2012-01-01"))
-      .jsonPath("$.content.[0].nextAppointmentType").value(containsString("NXTTYP"))
-      .jsonPath("$.content.[0].nextAppointmentDate").value(containsString("2010-12-31T10:00:00"))
-      .jsonPath("$.content.[0].nextAppointmentLocation").value(containsString("NXT_LOCATION"))
+      .jsonPath("$.content.[0].crn").value<String> {
+        assertThat(it).contains("X000009")
+      }
+      .jsonPath("$.content.[0].dateOfLetter").value<String> {
+        assertThat(it).contains("2010-01-01")
+      }
+      .jsonPath("$.content.[0].referenceNumber").value<String> {
+        assertThat(it).contains("REFERENCE_NUMBER")
+      }
+      .jsonPath("$.content.[0].breachNoticeTypeCode").value<String> {
+        assertThat(it).contains("BRCH")
+      }
+      .jsonPath("$.content.[0].breachNoticeTypeDescription").value<String> {
+        assertThat(it).contains("BREACH DESCRIPTION")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeCode").value<String> {
+        assertThat(it).contains("TYPE_CODE")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("CONDITION DESCRIPTION")
+      }
+      .jsonPath("$.content.[0].breachSentenceTypeCode").value<String> {
+        assertThat(it).contains("BR_SNTC")
+      }
+      .jsonPath("$.content.[0].breachSentenceTypeDescription").value<String> {
+        assertThat(it).contains("SENTENCE DESCRIPTION")
+      }
+      .jsonPath("$.content.[0].responseRequiredDate").value<String> {
+        assertThat(it).contains("2012-01-01")
+      }
+      .jsonPath("$.content.[0].nextAppointmentType").value<String> {
+        assertThat(it).contains("NXTTYP")
+      }
+      .jsonPath("$.content.[0].nextAppointmentDate").value<String> {
+        assertThat(it).contains("2010-12-31T10:00:00")
+      }
+      .jsonPath("$.content.[0].nextAppointmentLocation").value<String> {
+        assertThat(it).contains("NXT_LOCATION")
+      }
       .jsonPath("$.content.[0].nextAppointmentId").isEqualTo(1234)
       .jsonPath("$.content.[0].completedDate").exists()
       .jsonPath("$.content.[0].offenderAddress.addressId").isEqualTo(25)
-      .jsonPath("$.content.[0].offenderAddress.buildingName").value(containsString("MOO"))
-      .jsonPath("$.content.[0].offenderAddress.buildingNumber").value(containsString("1"))
-      .jsonPath("$.content.[0].offenderAddress.streetName").value(containsString("strasse"))
-      .jsonPath("$.content.[0].offenderAddress.district").value(containsString("westminster"))
-      .jsonPath("$.content.[0].offenderAddress.townCity").value(containsString("London"))
-      .jsonPath("$.content.[0].offenderAddress.county").value(containsString("Metropolitan"))
-      .jsonPath("$.content.[0].offenderAddress.postcode").value(containsString("AB123CD"))
+      .jsonPath("$.content.[0].offenderAddress.buildingName").value<String> {
+        assertThat(it).contains("MOO")
+      }
+      .jsonPath("$.content.[0].offenderAddress.buildingNumber").value<String> {
+        assertThat(it).contains("1")
+      }
+      .jsonPath("$.content.[0].offenderAddress.streetName").value<String> {
+        assertThat(it).contains("strasse")
+      }
+      .jsonPath("$.content.[0].offenderAddress.district").value<String> {
+        assertThat(it).contains("westminster")
+      }
+      .jsonPath("$.content.[0].offenderAddress.townCity").value<String> {
+        assertThat(it).contains("London")
+      }
+      .jsonPath("$.content.[0].offenderAddress.county").value<String> {
+        assertThat(it).contains("Metropolitan")
+      }
+      .jsonPath("$.content.[0].offenderAddress.postcode").value<String> {
+        assertThat(it).contains("AB123CD")
+      }
       .jsonPath("$.content.[0].replyAddress.addressId").isEqualTo(1)
-      .jsonPath("$.content.[0].replyAddress.buildingName").value(containsString("ADDR"))
-      .jsonPath("$.content.[0].replyAddress.buildingNumber").value(containsString("2"))
-      .jsonPath("$.content.[0].replyAddress.streetName").value(containsString("A Street 1"))
-      .jsonPath("$.content.[0].replyAddress.district").value(containsString("The fun district"))
-      .jsonPath("$.content.[0].replyAddress.townCity").value(containsString("NoddyLand"))
-      .jsonPath("$.content.[0].replyAddress.county").value(containsString("Suffolk"))
-      .jsonPath("$.content.[0].replyAddress.postcode").value(containsString("ZY987XW"))
+      .jsonPath("$.content.[0].replyAddress.buildingName").value<String> {
+        assertThat(it).contains("ADDR")
+      }
+      .jsonPath("$.content.[0].replyAddress.buildingNumber").value<String> {
+        assertThat(it).contains("2")
+      }
+      .jsonPath("$.content.[0].replyAddress.streetName").value<String> {
+        assertThat(it).contains("A Street 1")
+      }
+      .jsonPath("$.content.[0].replyAddress.district").value<String> {
+        assertThat(it).contains("The fun district")
+      }
+      .jsonPath("$.content.[0].replyAddress.townCity").value<String> {
+        assertThat(it).contains("NoddyLand")
+      }
+      .jsonPath("$.content.[0].replyAddress.county").value<String> {
+        assertThat(it).contains("Suffolk")
+      }
+      .jsonPath("$.content.[0].replyAddress.postcode").value<String> {
+        assertThat(it).contains("ZY987XW")
+      }
       .jsonPath("$.content.[0].basicDetailsSaved").isEqualTo(true)
       .jsonPath("$.content.[0].warningTypeSaved").isEqualTo(true)
       .jsonPath("$.content.[0].warningDetailsSaved").isEqualTo(false)
@@ -370,12 +424,24 @@ class SARGenerationTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.content.length()").isEqualTo(3)
-      .jsonPath("$.content.[0].crn").value(containsString("X000010"))
-      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("third_app"))
-      .jsonPath("$.content.[1].crn").value(containsString("X000010"))
-      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("first_app"))
-      .jsonPath("$.content.[2].crn").value(containsString("X000010"))
-      .jsonPath("$.content.[2].breachConditionTypeDescription").value(containsString("second_app"))
+      .jsonPath("$.content.[0].crn").value<String> {
+        assertThat(it).contains("X000010")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("third_app")
+      }
+      .jsonPath("$.content.[1].crn").value<String> {
+        assertThat(it).contains("X000010")
+      }
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("first_app")
+      }
+      .jsonPath("$.content.[2].crn").value<String> {
+        assertThat(it).contains("X000010")
+      }
+      .jsonPath("$.content.[2].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("second_app")
+      }
   }
 
   @Test
@@ -464,10 +530,18 @@ class SARGenerationTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.content.length()").isEqualTo(2)
-      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("first_app"))
-      .jsonPath("$.content.[1].crn").value(containsString("X000011"))
-      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("second_app"))
+      .jsonPath("$.content.[0].crn").value<String> {
+        assertThat(it).contains("X000011")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("first_app")
+      }
+      .jsonPath("$.content.[1].crn").value<String> {
+        assertThat(it).contains("X000011")
+      }
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("second_app")
+      }
 
     // Test using only fromDate filters results
     webTestClient.get()
@@ -481,10 +555,18 @@ class SARGenerationTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.content.length()").isEqualTo(2)
-      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("third_app"))
-      .jsonPath("$.content.[1].crn").value(containsString("X000011"))
-      .jsonPath("$.content.[1].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.[0].crn").value<String> {
+        assertThat(it).contains("X000011")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("third_app")
+      }
+      .jsonPath("$.content.[1].crn").value<String> {
+        assertThat(it).contains("X000011")
+      }
+      .jsonPath("$.content.[1].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("first_app")
+      }
 
     // Test using both toDate and fromDate filters results
     webTestClient.get()
@@ -499,7 +581,11 @@ class SARGenerationTests : IntegrationTestBase() {
       .isOk
       .expectBody()
       .jsonPath("$.content.length()").isEqualTo(1)
-      .jsonPath("$.content.[0].crn").value(containsString("X000011"))
-      .jsonPath("$.content.[0].breachConditionTypeDescription").value(containsString("first_app"))
+      .jsonPath("$.content.[0].crn").value<String> {
+        assertThat(it).contains("X000011")
+      }
+      .jsonPath("$.content.[0].breachConditionTypeDescription").value<String> {
+        assertThat(it).contains("first_app")
+      }
   }
 }
