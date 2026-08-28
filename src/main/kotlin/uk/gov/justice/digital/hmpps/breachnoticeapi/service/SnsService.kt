@@ -16,7 +16,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeDetails
 import uk.gov.justice.hmpps.sqs.HmppsQueueService
 import uk.gov.justice.hmpps.sqs.MissingQueueException
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -27,6 +27,7 @@ class SnsService(
 ) {
   fun sendPublishDomainEvent(breachNotice: BreachNotice, id: UUID) {
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachnoticepublishtopic") ?: throw MissingQueueException("HmppsTopic hmppsbreachnoticepublishtopic not found")
+    val userName: String? = SecurityContextHolder.getContext().authentication?.name
     val messageObject = DomainEventsMessage(
       description = "A breach notice has been completed for a person on probation",
       version = 1,
@@ -36,7 +37,7 @@ class SnsService(
       detailUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/breach-notice/" + id + "/pdf",
       additionalInformation = mapOf(
         "breachNoticeId" to id,
-        "username" to SecurityContextHolder.getContext().authentication.name,
+        "username" to userName!!,
       ),
 
     )
@@ -53,6 +54,7 @@ class SnsService(
     val outboundTopic = hmppsQueueService.findByTopicId("hmppsbreachnoticepublishtopic") ?: throw MissingQueueException(
       "HmppsTopic hmppsbreachnoticepublishtopic not found",
     )
+    val userName: String? = SecurityContextHolder.getContext().authentication?.name
     val messageObject = DomainEventsMessage(
       description = "A breach notice has been deleted for a person on probation",
       version = 1,
@@ -63,7 +65,7 @@ class SnsService(
         .toUriString() + "/breach-notice/report-deleted/" + id,
       additionalInformation = mapOf(
         "breachNoticeId" to id,
-        "username" to SecurityContextHolder.getContext().authentication.name,
+        "username" to userName!!,
       ),
     )
     val publishResponse = outboundTopic.snsClient.publish(
