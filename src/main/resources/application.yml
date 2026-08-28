@@ -67,6 +67,7 @@ management:
         time-to-live: 2000ms
 
 hmpps.sar.additionalAccessRole: BREACH_NOTICE
+springdoc.swagger-ui.version: 5.32.11
 
 ---
 spring.config.activate.on-profile: dev
