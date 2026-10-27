@@ -6,16 +6,6 @@ ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 WORKDIR /builder
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    rm -rf /var/lib/apt/lists/*
-
-ENV TZ=Europe/London
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
-
-RUN addgroup --gid 2000 --system appgroup && \
-    adduser --uid 2000 --system appuser --gid 2000
-
 COPY hmpps-breach-notice-api-${BUILD_NUMBER}.jar app.jar
 RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
