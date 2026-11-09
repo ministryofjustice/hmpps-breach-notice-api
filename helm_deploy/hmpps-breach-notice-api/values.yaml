@@ -91,4 +91,3 @@ gotenberg:
 
 generic-prometheus-alerts:
   targetApplication: hmpps-breach-notice-api
-  alertSeverity: breach-notice-notifications
