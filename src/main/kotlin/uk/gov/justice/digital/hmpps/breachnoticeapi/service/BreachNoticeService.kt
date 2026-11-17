@@ -20,6 +20,7 @@ import uk.gov.justice.digital.hmpps.breachnoticeapi.model.BreachNoticeRequiremen
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.CreateResponse
 import uk.gov.justice.digital.hmpps.breachnoticeapi.model.InitialiseBreachNotice
 import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.BreachNoticeRepository
+import uk.gov.justice.digital.hmpps.breachnoticeapi.repository.ContactRequirementRepository
 import java.time.LocalDate
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -28,6 +29,7 @@ import kotlin.jvm.optionals.getOrNull
 @Service
 class BreachNoticeService(
   val breachNoticeRepository: BreachNoticeRepository,
+  val contactRequirementRepository: ContactRequirementRepository,
   val pdfGenerationService: PdfGenerationService,
   @Value("\${frontend.url}") val frontendUrl: String,
 ) {
@@ -52,6 +54,7 @@ class BreachNoticeService(
         HttpStatus.NOT_FOUND,
       )
     }
+    contactRequirementRepository.deleteAll(contactRequirementRepository.findByBreachNoticeId(id))
     return breachNoticeRepository.deleteById(id)
   }
 
@@ -370,7 +373,11 @@ class BreachNoticeService(
     breachNoticeRepository.save(breachNotice)
   }
 
+  @Transactional
   fun deleteAllByCrn(crn: String) {
+    breachNoticeRepository.findByCrnOrderByDateOfLetterDesc(crn).forEach {
+      contactRequirementRepository.deleteAll(contactRequirementRepository.findByBreachNoticeId(it.id))
+    }
     breachNoticeRepository.deleteByCrn(crn)
   }
 
