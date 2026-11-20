@@ -89,7 +89,7 @@ jobs:
         ports:
           - 4566:4566
       postgres:
-        image: postgres:18
+        image: postgres:19
         env:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: postgres
