@@ -1,0 +1,21 @@
+# curl -X POST -u 'hmpps-typescript-template-system:clientsecret' "http://localhost:9090/auth/oauth/token?grant_type=client_credentials"
+POST http://localhost:9090/auth/oauth/token?grant_type=client_credentials
+Authorization: Basic hmpps-typescript-template-system clientsecret
+
+> {%
+    client.global.set("token", response.body.access_token);
+%}
+
+### Insert a new cosso record
+POST http://localhost:8080/breach-notice
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "crn": "X012345"
+}
+
+### Get a cosso record by ID
+#GET http://localhost:8080/cosso/8e5720c0-f33b-4dda-9480-8ed7f5b17592
+#Authorization: Bearer {{token}}
+#Accept: application/json
